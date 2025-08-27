@@ -35,6 +35,17 @@ module.exports = async function handler(req, res) {
       return res.status(204).end();
     }
 
+    // Vérifie si MyMemory a retourné une erreur de langue
+    if (
+      data?.responseStatus !== 200 ||
+      (data?.responseDetails && data.responseDetails.toUpperCase().includes("INVALID TARGET LANGUAGE"))
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: `${to} IS AN INVALID TARGET LANGUAGE. PLEASE REFER TO THE SUPPORTED LANGUAGES FILE.`
+      });
+    }
+
     res.status(200).json({
       success: true,
       original: text,
