@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="images/Logo_Transparent_White.png", "width=700">
+    <img src="images/Logo_Transparent_White.png", width="700">
 </div>
 
 # MIKLIUM
