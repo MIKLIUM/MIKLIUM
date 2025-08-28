@@ -1,4 +1,4 @@
-![img]("images/Logo_Transparent_White.png)
+![img](images/Logo_Transparent_White.png)
 
 # MIKLIUM
 
