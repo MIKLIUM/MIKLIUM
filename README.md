@@ -1,6 +1,6 @@
 # MIKLIUM
 
-The github repo for the miklium agency.
+The github repo for the miklium software company.
 
 ## Free APIs & Software for Everyone
 
