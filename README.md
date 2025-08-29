@@ -1,6 +1,5 @@
-<div align="center">
-    <img src="images/Logo_Transparent_White.png", width="150">
-</div>
+<img src="images/Logo_Header.png">
+
 
 # MIKLIUM
 
