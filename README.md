@@ -5,6 +5,8 @@
 
 # MIKLIUM
 
+### [https://miklium.github.io/MIKLIUM](https://miklium.github.io/MIKLIUM)
+
 The github repo for the miklium software company.
 
 ## Free APIs & Software for Everyone
@@ -15,4 +17,6 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 
 # Notes
 
-check the [Todo](TODO.md) for things to work on.
+Check the [Todo](TODO.md) for things to work on.
+
+Our [API Documentation](APIDOCS.html) is available for developers who want to integrate with our services.
