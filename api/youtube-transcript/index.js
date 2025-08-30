@@ -2,10 +2,21 @@ const cheerio = require('cheerio');
 
 export default async function handler(req, res) {
   try {
-    const videoId = extractVideoId(req.query.url);
+    let input;
+    
+    if (req.method === "GET") {
+      input = req.query.url || "";
+    } else if (req.method === "POST") {
+      const body = req.body || {};
+      input = body.url;
+    } else {
+      return res.status(405).json({ success: false, error: "Method not allowed" });
+    }
+    
+    const videoId = extractVideoId(input);
 
     if (!videoId) {
-      return res.status(400).json({ error: 'Invalid YouTube URL.' });
+      return res.status(400).json({ success: false, error: 'Invalid YouTube URL.' });
     }
 
     const transcriptUrl = `https://youtubetotranscript.com/transcript?v=${videoId}&current_language_code=en`;
@@ -18,7 +29,7 @@ export default async function handler(req, res) {
     });
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: 'Error fetching transcript' });
+      return res.status(response.status).json({ success: false, error: 'Error fetching transcript' });
     }
 
     const rawTranscript = await response.text();
@@ -29,9 +40,9 @@ export default async function handler(req, res) {
   } catch (error) {
     console.error('Error:', error.message);
     if (error.name === 'AbortError') {
-      res.status(504).json({ error: 'Request timed out' });
+      res.status(504).json({ success: false, error: 'Request timed out' });
     } else {
-      res.status(500).json({ error: 'Internal server error' });
+      res.status(500).json({ success: false, error: 'Internal server error' });
     }
   }
 }
