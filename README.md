@@ -20,7 +20,6 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 # Notes
 
 Check the [Todo](TODO.md) for things to work on.
-
 Our [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
 ## Stats
