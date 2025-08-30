@@ -1,5 +1,6 @@
 ![](https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Dark.png#gh-light-mode-only)
 ![](https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
+
 <div align= "center">
   <a href="https://github.com/MIKLIUM/MIKLIUM/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/MIKLIUM/MIKLIUM"></a>
 </div>
@@ -23,4 +24,5 @@ Check the [Todo](TODO.md) for things to work on.
 Our [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
 ## Stats
+
 ![](https://repobeats.axiom.co/api/embed/c42a15b5310e14cdf02106d3e2bea022b0c39cc3.svg "Repobeats analytics image")
