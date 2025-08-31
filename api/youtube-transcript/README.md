@@ -1,6 +1,6 @@
-## YouTube Transcription API
+# YouTube Transcription API
 
-### Navigation
+## Navigation
 
 - [YouTube Transcription API](#youtube-transcription-api)
     - [Navigation](#navigation)
@@ -13,9 +13,11 @@
         - [Error](#error)
     - [What Services Does This API Use?](#what-services-does-this-api-use-)
 
-### About YouTube Transcription
+## About YouTube Transcription
 
-### Request Body
+**Get text from a YouTube video in seconds.** Also with the transcription of the video you will get the name of the channel and the title of the video. _Works only with YouTube links._
+
+## Request Body
 
 Link: `https://miklium.vercel.app/api/youtube-transcript`
 
@@ -23,35 +25,56 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 | :--- | :--- | :--- |
 | `url` | Yes | Link to the YouTube video from which you want to extract the text. |
 
-#### GET Method
+### GET Method
 
-`GET https://miklium.vercel.app/api/youtube-transcript?url=URL**`
+`https://miklium.vercel.app/api/youtube-transcript?url=URL`
 
 **Important!** The link to the YouTube video should be URL-encoded!
 
 **Request Link Example:**
-
 `https://miklium.vercel.app/api/youtube-transcript?url=https://youtu.be/Qz8u00pX738`
 
-#### POST Method
+### POST Method
 
-`POST https://miklium.vercel.app/api/youtube-transcript`
+`https://miklium.vercel.app/api/youtube-transcript`
 
 ```json
 {"url":URL}
 ```
 
 **Request Body Example (JSON):**
-
 ```json
 {"url":"https://youtu.be/Qz8u00pX738"}
 ```
 
-### API Responses
+## API Responses
 
-#### Success
+### Success
 
+| Parameter | Value |
+| :--- | :--- |
+| `success` | `true` |
+| `channel` | `String`, YouTube channel name |
+| `title` | `String`, Video title |
+| `text` | `String`, Video transcription |
 
-#### Error
+**Success response example:**
+```json
+{"success":true,"channel":"Apple","title":"New things on the way from Apple","text":"Transcripiton…"}
+```
 
-### What Services Does This API Use?
+### Error
+
+| Parameter | Value |
+| :--- | :--- |
+| `success` | `false` |
+| `error` | `String`, Error message |
+
+**Error response example:**
+```json
+{"success":false,"error":"Invalid YouTube URL."}
+```
+
+## What Services Does This API Use?
+
+- [YouTube To Transcript](https://youtubetotranscript.com)
