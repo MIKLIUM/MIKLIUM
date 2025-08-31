@@ -39,12 +39,16 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 `https://miklium.vercel.app/api/youtube-transcript`
 
 ```json
-{"url":URL}
+{
+  "url": URL
+}
 ```
 
 **Request Body Example (JSON):**
 ```json
-{"url":"https://youtu.be/Qz8u00pX738"}
+{
+  "url": "https://youtu.be/Qz8u00pX738"
+}
 ```
 
 ## API Responses
@@ -60,7 +64,12 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 **Success response example:**
 ```json
-{"success":true,"channel":"Apple","title":"New things on the way from Apple","text":"Transcripiton…"}
+{
+  "success": true,
+  "channel": "Apple",
+  "title": "New things on the way from Apple",
+  "text": "Voiceover: Want to see..."
+}
 ```
 
 ### Error
@@ -72,7 +81,10 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 **Error response example:**
 ```json
-{"success":false,"error":"Invalid YouTube URL."}
+{
+  "success": false,
+  "error": "Invalid YouTube URL."
+}
 ```
 
 ## What Services Does This API Use?
