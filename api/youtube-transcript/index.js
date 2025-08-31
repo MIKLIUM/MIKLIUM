@@ -88,8 +88,9 @@ function processTranscript(rawText) {
   } else {
     text = 'No transcript available';
   }
-  
+  let success = true
   return {
+    success,
     channel,
     title,
     text
