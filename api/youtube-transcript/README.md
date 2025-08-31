@@ -1,8 +1,8 @@
-# YouTube Transcription API
+# YouTube Transcription API Documentation
 
 ## Navigation
 
-- [YouTube Transcription API](#youtube-transcription-api)
+- [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
     - [Navigation](#navigation)
     - [About YouTube Transcription](#about-youtube-transcription)
     - [Request Body](#request-body)
