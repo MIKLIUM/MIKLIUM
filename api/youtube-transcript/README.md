@@ -30,10 +30,10 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 ### GET Method
 
-`https://miklium.vercel.app/api/youtube-transcript?url=URL`
+`https://miklium.vercel.app/api/youtube-transcript?url=Paste Your link here`
 
 > [!IMPORTANT]
-> Replace the `URL` with the link of YouTube video. The link to the YouTube video should be URL-encoded!
+> For GET Method the link to the YouTube video should be URL-encoded!
 
 **Request Link Example:**
 `https://miklium.vercel.app/api/youtube-transcript?url=https://youtu.be/Qz8u00pX738`
@@ -44,7 +44,7 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 ```json
 {
-  "url": URL
+  "url": "Paste Your link here"
 }
 ```
 
