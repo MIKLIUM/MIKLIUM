@@ -15,7 +15,10 @@
 
 ## About YouTube Transcription
 
-**Get text from a YouTube video in seconds.** Also with the transcription of the video you will get the name of the channel and the title of the video. _Works only with YouTube links._
+**Get text from a YouTube video in seconds.** Also with the transcription of the video you will get the name of the channel and the title of the video.
+
+> [!NOTE]
+> This API works only with YouTube videos.
 
 ## Request Body
 
@@ -29,7 +32,8 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 `https://miklium.vercel.app/api/youtube-transcript?url=URL`
 
-**Important!** The link to the YouTube video should be URL-encoded!
+> [!IMPORTANT]
+> Replace the `URL` with the link of YouTube video. The link to the YouTube video should be URL-encoded!
 
 **Request Link Example:**
 `https://miklium.vercel.app/api/youtube-transcript?url=https://youtu.be/Qz8u00pX738`
