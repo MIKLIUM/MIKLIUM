@@ -15,7 +15,7 @@
 
 ## About YouTube Transcription
 
-**Get text from a YouTube video in seconds.** Also with the transcription of the video you will get the name of the channel and the title of the video.
+**Get text from a YouTube video in seconds using our API.** Also with the transcription of the video you will get the name of the channel and the title of the video. To work, you only need a link to a YouTube video.
 
 > [!NOTE]
 > This API works only with YouTube videos.
