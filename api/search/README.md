@@ -1,4 +1,3 @@
-
 # Search API Documentation
 
 ## Navigation
@@ -28,9 +27,9 @@ Link: `https://miklium.vercel.app/api/search`
 | Parameter | Required | Type | Description |
 | :--- | :--- | :--- | :--- |
 | `search` | Yes | Array | Search queries (maximum 3) |
-| `maxSmallSnippets`| No | Number | The number of small information for each request (by default 5) |
-| `maxLargeSnippets` | No | Number | The number of large information for each request (by default 2) |
-| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one large information (by default 4500) |
+| `maxSmallSnippets`| No | Number | The number of short information for each request (by default 5) |
+| `maxLargeSnippets` | No | Number | The number of long information for each request (by default 2) |
+| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one long information (by default 4500) |
 
 ### GET Method
 
@@ -133,17 +132,17 @@ Components of `results` elements
 
 ### Types of the Information
 
-As you have already noticed, the API returns two types of information: `small` and `large`. How are they different? Information marked `small` is obtained from a brief description of the site from the search engine. And the `large` information is already the full text from the site.
+As you have already noticed, the API returns two types of information: `short` and `long`. How are they different? Information marked `short` is obtained from a brief description of the site from the search engine. And the `long` information is already the full text from the site.
 
 ### Choosing the Right Information Format
 
-* You can change the amount of information issued and its type using parameters maxSmallSnippets` (the number of small information for each request (by default 5), `maxLargeSnippets` (the number of large information for each request (by default 2) and `maxLargeSnippetSymbols` (maximum number of characters for one large information (by default 4500).
+* You can change the amount of information issued and its type using parameters maxSmallSnippets` (the number of short information for each request (by default 5), `maxLargeSnippets` (the number of long information for each request (by default 2) and `maxLargeSnippetSymbols` (maximum number of characters for one long information (by default 4500).
 
-* By setting the parameter `maxSmallSnippets` to 0, you will receive only information with `large` type, full information from sites. And by setting `maxLargeSnippets` to 0, you will only receive information with `small` type, brief information.
+* By setting the parameter `maxSmallSnippets` to 0, you will receive only information with `long` type, full information from sites. And by setting `maxLargeSnippets` to 0, you will only receive information with `short` type, brief information.
 
-* The number behind the parameters `maxSmallSnippets` and `maxLargeSnippets` is responsible for the amount of relevant information for each request. For example, if we have two quires  in `search`, we set `maxSmallSnippets` to 2, and `maxLargeSnippets` to 1. Thus, 4 small information and 2 large will be found: 2 small and 1 large for each request.
+* The number behind the parameters `maxSmallSnippets` and `maxLargeSnippets` is responsible for the amount of relevant information for each request. For example, if we have two quires  in `search`, we set `maxSmallSnippets` to 2, and `maxLargeSnippets` to 1. Thus, 4 short information and 2 long will be found: 2 short and 1 long for each request.
 
-* The parameter `maxLargeSnippetSymbols` is responsible for the maximum number of characters in large information (by default 4500). If the limit is increased, the large information will be cut off.
+* The parameter `maxLargeSnippetSymbols` is responsible for the maximum number of characters in long information (by default 4500). If the limit is increased, the long information will be cut off.
 
 ### 
 ## What Services Does This API Use?
