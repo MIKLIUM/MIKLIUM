@@ -11,7 +11,7 @@
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
-    - [Additional Information)(#additional-information)
+    - [Additional Information](#additional-information)
         - [Types of the Information](#types-of-the-information)
         - [Choosing the Right Information Format](#choosing-the-right-information-format)
     - [What Services Does This API Use?](#what-services-does-this-api-use-)
