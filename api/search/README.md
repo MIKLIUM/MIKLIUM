@@ -127,6 +127,7 @@ Components of `results` elements
   "success": false,
   "error": "Invalid or missing \"search\" parameter."
 }
+```
 
 ## Additional Information
 
