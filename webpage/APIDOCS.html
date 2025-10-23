@@ -238,7 +238,29 @@
       border-color: #ff5722;
       color: #ff5722;
     }
-
+    
+    .anchor-header {
+      position: relative;
+      padding-right: 1.5rem;
+    }
+    
+    .anchor-link {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #00d8ff;
+      text-decoration: none;
+      opacity: 0;
+      font-weight: bold;
+      transition: opacity 0.2s;
+      font-size: 1.1em;
+    }
+    
+    .anchor-header:hover .anchor-link {
+      opacity: 1;
+    }
+    
     .loading {
       text-align: center;
       color: #00d8ff;
@@ -359,8 +381,19 @@
           },
 
           heading(text, level, raw) {
-            const id = (raw || text).toString().toLowerCase().replace(/[^\w]+/g, '-');
-            return `<h${level} id="${id}">${text}</h${level}>`;
+            const id = raw
+              .toLowerCase()
+              .replace(/[^a-z0-9\u00A0-\uFFFF -]/g, '')
+              .replace(/\s+/g, '-');
+          
+            const safeText = typeof text === 'string' ? text : String(text);
+            
+            return `
+              <h${level} id="${id}" class="anchor-header">
+                ${safeText}
+                <a href="#${id}" class="anchor-link" aria-hidden="true">#</a>
+              </h${level}>
+            `;
           }
         };
 
