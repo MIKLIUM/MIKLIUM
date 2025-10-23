@@ -13,7 +13,7 @@
     - [Request Body](#request-body-1)
     - [API Responses](#api-responses-1)
     - [Additional Information](#additional-information)
-  - [What Services Does MIKLIUM APIs Use?](#what-services-does-miklium-apis-use-)
+  - [What Services Does MIKLIUM APIs Use?](#what-services-does-miklium-apis-use)
 
 # About MIKLIUM APIs
 
