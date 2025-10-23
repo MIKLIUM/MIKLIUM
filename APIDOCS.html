@@ -81,7 +81,6 @@
       color: #ffffff;
       text-decoration: none;
     }
-
     #api-content {
       background: #111;
       padding: 2rem;
@@ -90,7 +89,6 @@
       margin-top: 2rem;
       overflow-wrap: break-word;
     }
-
     #api-content h1,
     #api-content h2,
     #api-content h3,
@@ -98,30 +96,25 @@
       color: #00d8ff;
       margin: 1.5rem 0 1rem 0;
     }
-
     #api-content h1 {
       font-size: 2rem;
       border-bottom: 2px solid #00d8ff;
       padding-bottom: 0.5rem;
     }
-
     #api-content h2 {
       font-size: 1.6rem;
       border-bottom: 1px solid #333;
       padding-bottom: 0.3rem;
     }
-
     #api-content h3 {
       font-size: 1.3rem;
     }
-
     #api-content p {
       text-align: left;
       margin-bottom: 1rem;
       line-height: 1.6;
       color: #ccc;
     }
-
     #api-content code {
       background: #222;
       padding: 0.2rem 0.4rem;
@@ -129,7 +122,6 @@
       font-family: 'Courier New', monospace;
       color: #00d8ff;
     }
-
     #api-content pre {
       background: #1a1a1a;
       padding: 1.5rem;
@@ -140,7 +132,6 @@
       white-space: pre;
       -webkit-overflow-scrolling: touch;
     }
-
     #api-content pre code {
       background: none;
       padding: 0;
@@ -148,18 +139,15 @@
       font-size: 0.9rem;
       white-space: pre;
     }
-
     #api-content ul,
     #api-content ol {
       margin: 1rem 0;
       padding-left: 2rem;
     }
-
     #api-content li {
       margin-bottom: 0.5rem;
       color: #ccc;
     }
-
     #api-content blockquote {
       border-left: 4px solid #00d8ff;
       padding: 1rem 1.5rem;
@@ -167,13 +155,11 @@
       background: #1a1a1a;
       border-radius: 0 8px 8px 0;
     }
-
     #api-content blockquote p {
       margin: 0;
       color: #bbb;
       font-style: italic;
     }
-
     #api-content table {
       width: 100%;
       border-collapse: collapse;
@@ -186,7 +172,6 @@
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
     }
-
     #api-content th,
     #api-content td {
       border: 1px solid #333;
@@ -194,56 +179,46 @@
       text-align: left;
       min-width: 120px;
     }
-
     #api-content th {
       background: #222;
       color: #00d8ff;
       font-weight: 600;
     }
-
     #api-content td {
       color: #ccc;
     }
-
     #api-content a {
       color: #00d8ff;
       text-decoration: none;
     }
-
     #api-content a:hover {
       text-decoration: underline;
     }
-
     .alert {
       padding: 1rem 1.5rem;
       margin: 1.5rem 0;
       border-radius: 8px;
       border-left: 4px solid;
     }
-
     .alert-important {
       background: rgba(255, 193, 7, 0.1);
       border-color: #ffc107;
       color: #ffc107;
     }
-
     .alert-note {
       background: rgba(0, 216, 255, 0.1);
       border-color: #00d8ff;
       color: #00d8ff;
     }
-
     .alert-warning {
       background: rgba(255, 87, 34, 0.1);
       border-color: #ff5722;
       color: #ff5722;
     }
-    
     .anchor-header {
       position: relative;
       padding-right: 1.5rem;
     }
-    
     .anchor-link {
       position: absolute;
       right: 0;
@@ -256,18 +231,15 @@
       transition: opacity 0.2s;
       font-size: 1.1em;
     }
-    
     .anchor-header:hover .anchor-link {
       opacity: 1;
     }
-    
     .loading {
       text-align: center;
       color: #00d8ff;
       font-size: 1.2rem;
       padding: 2rem;
     }
-
     .error {
       text-align: center;
       color: #ff4444;
@@ -276,42 +248,6 @@
       border-radius: 8px;
       border: 1px solid #ff4444;
     }
-
-    .toc {
-      background: #1a1a1a;
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin: 1.5rem 0;
-      border-left: 4px solid #00d8ff;
-    }
-
-    .toc ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .toc li {
-      margin-bottom: 0.5rem;
-    }
-
-    .toc a {
-      color: #00d8ff;
-    }
-
-    .method-badge {
-      display: inline-block;
-      padding: 0.3rem 0.8rem;
-      border-radius: 4px;
-      font-weight: 600;
-      font-size: 0.8rem;
-      margin-right: 0.5rem;
-    }
-
-    .method-get { background: #4caf50; color: white; }
-    .method-post { background: #2196f3; color: white; }
-    .method-put { background: #ff9800; color: white; }
-    .method-delete { background: #f44336; color: white; }
-    .method-patch { background: #9c27b0; color: white; }
   </style>
 </head>
 <body>
@@ -322,39 +258,34 @@
   <main>
     <h2>API Docs</h2>
     <p>MIKLIUM API Documentation</p>
-
     <div id="api-content">
       <div class="loading">
         <i class="fas fa-spinner fa-spin"></i> Loading documentation...
       </div>
     </div>
-
     <div class="cta">
       <button onclick="location.href='index.html'">Go back home</button>
     </div>
   </main>
-
   <script>
-    function escapeHtml(unsafe) {
-      if (typeof unsafe !== 'string') {
-        unsafe = String(unsafe ?? '');
-      }
-      return unsafe
+    function escapeHtml(str) {
+      if (typeof str !== 'string') str = String(str ?? '');
+      return str
         .replace(/&/g, '&amp;')
         .replace(/</g, '<')
         .replace(/>/g, '>')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     }
-
     async function loadAPIDocs() {
       const apiContent = document.getElementById('api-content');
-
       try {
         const response = await fetch('APIDOCS.md');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const markdown = await response.text();
-
+        const slugify = (text) => {
+          return text.toString().toLowerCase().replace(/[^a-z0-9\u00A0-\uFFFF\s-]/g, '').replace(/\s+/g, '-');
+        };
         const renderer = {
           blockquote(quote) {
             const rawText = typeof quote === 'string' ? quote : quote.text;
@@ -372,43 +303,27 @@
             }
             return false;
           },
-
           code(code, info) {
             const codeText = typeof code === 'string' ? code : (code?.text || '');
             const lang = typeof info === 'string' ? info : (info?.text || '');
             const language = lang.split(/\s+/)[0] || 'text';
             return `<pre><code class="language-${escapeHtml(language)}">${escapeHtml(codeText)}</code></pre>`;
           },
-
-          heading(text, level, raw) {
-            let sourceText = '';
-            if (typeof raw === 'string') {
-              sourceText = raw;
-            } else if (typeof text === 'string') {
-              sourceText = text.replace(/<[^>]*>/g, '');
-            } else {
-              sourceText = String(text);
-            }
-          
-            const id = sourceText
-              .toLowerCase()
-              .replace(/[^a-z0-9\u00A0-\uFFFF\s-]/g, '')
-              .replace(/\s+/g, '-');
-          
-            const safeText = typeof text === 'string' ? text : String(text);
-          
-            return `
-              <h${level} id="${id}" class="anchor-header">
-                ${safeText}
-                <a href="#${id}" class="anchor-link" aria-hidden="true">#</a>
-              </h${level}>
-            `;
+          heading(text, level) {
+            const cleanText = text.replace(/<[^>]*>/g, '');
+            const id = slugify(cleanText);
+            return `<h${level} id="${id}" class="anchor-header">${text}<a href="#${id}" class="anchor-link" aria-hidden="true">#</a></h${level}>`;
           }
         };
-
         marked.use({ renderer });
         const html = marked.parse(markdown);
         apiContent.innerHTML = html;
+        if (location.hash) {
+          setTimeout(() => {
+            const el = document.querySelector(location.hash);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }, 300);
+        }
       } catch (error) {
         console.error('Error loading API docs:', error);
         apiContent.innerHTML = `
@@ -421,7 +336,6 @@
         `;
       }
     }
-
     document.addEventListener('DOMContentLoaded', loadAPIDocs);
   </script>
 </body>
