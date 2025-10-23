@@ -16,14 +16,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Prepare deployment files
-        run: |
-          mkdir -p _site
-          cp -r webpage/* _site/
-          cp APIDOCS.md _site/
-          
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./_site
+          publish_dir: ./webpage
