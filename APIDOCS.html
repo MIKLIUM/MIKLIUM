@@ -1,342 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>API Docs - MIKLIUM</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #0d0d0d;
-      color: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background-color: #111;
-      flex-shrink: 0;
-    }
-    header i {
-      font-size: 3rem;
-      color: #00d8ff;
-      margin-right: 1rem;
-    }
-    header h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #00d8ff;
-    }
-    main {
-      flex: 1;
-      padding: 2rem;
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    main h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #00d8ff;
-      text-align: center;
-    }
-    main p {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 2rem;
-      color: #ccc;
-      text-align: center;
-    }
-    .cta {
-      text-align: center;
-      margin-top: 2rem;
-    }
-    button {
-      background-color: #00d8ff;
-      color: #0d0d0d;
-      border: none;
-      border-radius: 55px;
-      padding: 0.9rem 2.2rem;
-      font-weight: 600;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    button:hover {
-      background-color: #00b8cc;
-    }
-    a {
-      color: #ffffff;
-      text-decoration: none;
-    }
-    #api-content {
-      background: #111;
-      padding: 2rem;
-      border-radius: 15px;
-      border: 1px solid #222;
-      margin-top: 2rem;
-      overflow-wrap: break-word;
-    }
-    #api-content h1,
-    #api-content h2,
-    #api-content h3,
-    #api-content h4 {
-      color: #00d8ff;
-      margin: 1.5rem 0 1rem 0;
-    }
-    #api-content h1 {
-      font-size: 2rem;
-      border-bottom: 2px solid #00d8ff;
-      padding-bottom: 0.5rem;
-    }
-    #api-content h2 {
-      font-size: 1.6rem;
-      border-bottom: 1px solid #333;
-      padding-bottom: 0.3rem;
-    }
-    #api-content h3 {
-      font-size: 1.3rem;
-    }
-    #api-content p {
-      text-align: left;
-      margin-bottom: 1rem;
-      line-height: 1.6;
-      color: #ccc;
-    }
-    #api-content code {
-      background: #222;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-family: 'Courier New', monospace;
-      color: #00d8ff;
-    }
-    #api-content pre {
-      background: #1a1a1a;
-      padding: 1.5rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      margin: 1.5rem 0;
-      border-left: 4px solid #00d8ff;
-      white-space: pre;
-      -webkit-overflow-scrolling: touch;
-    }
-    #api-content pre code {
-      background: none;
-      padding: 0;
-      color: #f5f5f5;
-      font-size: 0.9rem;
-      white-space: pre;
-    }
-    #api-content ul,
-    #api-content ol {
-      margin: 1rem 0;
-      padding-left: 2rem;
-    }
-    #api-content li {
-      margin-bottom: 0.5rem;
-      color: #ccc;
-    }
-    #api-content blockquote {
-      border-left: 4px solid #00d8ff;
-      padding: 1rem 1.5rem;
-      margin: 1.5rem 0;
-      background: #1a1a1a;
-      border-radius: 0 8px 8px 0;
-    }
-    #api-content blockquote p {
-      margin: 0;
-      color: #bbb;
-      font-style: italic;
-    }
-    #api-content table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 1.5rem 0;
-      background: #1a1a1a;
-      border-radius: 8px;
-      overflow: hidden;
-      display: block;
-      max-width: 100%;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-    #api-content th,
-    #api-content td {
-      border: 1px solid #333;
-      padding: 1rem;
-      text-align: left;
-      min-width: 120px;
-    }
-    #api-content th {
-      background: #222;
-      color: #00d8ff;
-      font-weight: 600;
-    }
-    #api-content td {
-      color: #ccc;
-    }
-    #api-content a {
-      color: #00d8ff;
-      text-decoration: none;
-    }
-    #api-content a:hover {
-      text-decoration: underline;
-    }
-    .alert {
-      padding: 1rem 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 8px;
-      border-left: 4px solid;
-    }
-    .alert-important {
-      background: rgba(255, 193, 7, 0.1);
-      border-color: #ffc107;
-      color: #ffc107;
-    }
-    .alert-note {
-      background: rgba(0, 216, 255, 0.1);
-      border-color: #00d8ff;
-      color: #00d8ff;
-    }
-    .alert-warning {
-      background: rgba(255, 87, 34, 0.1);
-      border-color: #ff5722;
-      color: #ff5722;
-    }
-    .anchor-header {
-      position: relative;
-      padding-right: 1.5rem;
-    }
-    .anchor-link {
-      position: absolute;
-      right: 0;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #00d8ff;
-      text-decoration: none;
-      opacity: 0;
-      font-weight: bold;
-      transition: opacity 0.2s;
-      font-size: 1.1em;
-    }
-    .anchor-header:hover .anchor-link {
-      opacity: 1;
-    }
-    .loading {
-      text-align: center;
-      color: #00d8ff;
-      font-size: 1.2rem;
-      padding: 2rem;
-    }
-    .error {
-      text-align: center;
-      color: #ff4444;
-      background: #1a1a1a;
-      padding: 2rem;
-      border-radius: 8px;
-      border: 1px solid #ff4444;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <i class="fas fa-cow"></i>
-    <h1>MIKLIUM</h1>
-  </header>
-  <main>
-    <h2>API Docs</h2>
-    <p>MIKLIUM API Documentation</p>
-    <div id="api-content">
-      <div class="loading">
-        <i class="fas fa-spinner fa-spin"></i> Loading documentation...
-      </div>
-    </div>
-    <div class="cta">
-      <button onclick="location.href='index.html'">Go back home</button>
-    </div>
-  </main>
-  <script>
-    function escapeHtml(str) {
-      if (typeof str !== 'string') str = String(str ?? '');
-      return str
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '<')
-        .replace(/>/g, '>')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-    async function loadAPIDocs() {
-      const apiContent = document.getElementById('api-content');
-      try {
-        const response = await fetch('APIDOCS.md');
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const markdown = await response.text();
-        const slugify = (text) => {
-          return text.toString().toLowerCase().replace(/[^a-z0-9\u00A0-\uFFFF\s-]/g, '').replace(/\s+/g, '-');
-        };
-        const renderer = {
-          blockquote(quote) {
-            const rawText = typeof quote === 'string' ? quote : quote.text;
-            if (rawText.startsWith('[!IMPORTANT]')) {
-              const content = rawText.replace('[!IMPORTANT]', '').trim();
-              return `<div class="alert alert-important">${escapeHtml(content)}</div>`;
-            }
-            if (rawText.startsWith('[!WARNING]')) {
-              const content = rawText.replace('[!WARNING]', '').trim();
-              return `<div class="alert alert-warning">${escapeHtml(content)}</div>`;
-            }
-            if (rawText.startsWith('[!NOTE]')) {
-              const content = rawText.replace('[!NOTE]', '').trim();
-              return `<div class="alert alert-note">${escapeHtml(content)}</div>`;
-            }
-            return false;
-          },
-          code(code, info) {
-            const codeText = typeof code === 'string' ? code : (code?.text || '');
-            const lang = typeof info === 'string' ? info : (info?.text || '');
-            const language = lang.split(/\s+/)[0] || 'text';
-            return `<pre><code class="language-${escapeHtml(language)}">${escapeHtml(codeText)}</code></pre>`;
-          },
-          heading(text, level) {
-            const cleanText = text.replace(/<[^>]*>/g, '');
-            const id = slugify(cleanText);
-            return `<h${level} id="${id}" class="anchor-header">${text}<a href="#${id}" class="anchor-link" aria-hidden="true">#</a></h${level}>`;
-          }
-        };
-        marked.use({ renderer });
-        const html = marked.parse(markdown);
-        apiContent.innerHTML = html;
-        if (location.hash) {
-          setTimeout(() => {
-            const el = document.querySelector(location.hash);
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }, 300);
-        }
-      } catch (error) {
-        console.error('Error loading API docs:', error);
-        apiContent.innerHTML = `
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>API Docs - MIKLIUM</title>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		/>
+		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+			}
+			body {
+				background: #0d0d0d;
+				color: #f5f5f5;
+				display: flex;
+				flex-direction: column;
+				min-height: 100vh;
+			}
+			header {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 2rem;
+				background: #111;
+				flex-shrink: 0;
+			}
+			header i {
+				font-size: 3rem;
+				color: #00d8ff;
+				margin-right: 1rem;
+			}
+			header h1 {
+				font-size: 2.2rem;
+				font-weight: 700;
+				letter-spacing: 2px;
+				color: #00d8ff;
+			}
+			main {
+				flex: 1;
+				padding: 2rem;
+				max-width: 1200px;
+				margin: 0 auto;
+				width: 100%;
+			}
+			main h2 {
+				font-size: 1.8rem;
+				margin-bottom: 1rem;
+				color: #00d8ff;
+				text-align: center;
+			}
+			main p {
+				font-size: 1.1rem;
+				line-height: 1.6;
+				margin-bottom: 2rem;
+				color: #ccc;
+				text-align: center;
+			}
+			.cta {
+				text-align: center;
+				margin-top: 2rem;
+			}
+			button {
+				background: #00d8ff;
+				color: #0d0d0d;
+				border: none;
+				border-radius: 55px;
+				padding: 0.9rem 2.2rem;
+				font-weight: 600;
+				font-size: 1.1rem;
+				cursor: pointer;
+				transition: all 0.3s ease;
+			}
+			button:hover {
+				background: #00b8cc;
+			}
+			a {
+				color: #fff;
+				text-decoration: none;
+			}
+			#api-content {
+				background: #111;
+				padding: 2rem;
+				border-radius: 15px;
+				border: 1px solid #222;
+				margin-top: 2rem;
+				overflow-wrap: break-word;
+			}
+			#api-content h1,
+			#api-content h2,
+			#api-content h3,
+			#api-content h4 {
+				color: #00d8ff;
+				margin: 1.5rem 0 1rem 0;
+			}
+			#api-content h1 {
+				font-size: 2rem;
+				border-bottom: 2px solid #00d8ff;
+				padding-bottom: 0.5rem;
+			}
+			#api-content h2 {
+				font-size: 1.6rem;
+				border-bottom: 1px solid #333;
+				padding-bottom: 0.3rem;
+			}
+			#api-content h3 {
+				font-size: 1.3rem;
+			}
+			#api-content p {
+				text-align: left;
+				margin-bottom: 1rem;
+				line-height: 1.6;
+				color: #ccc;
+			}
+			#api-content code {
+				background: #222;
+				padding: 0.2rem 0.4rem;
+				border-radius: 4px;
+				font-family: "Courier New", monospace;
+				color: #00d8ff;
+			}
+			#api-content pre {
+				background: #1a1a1a;
+				padding: 1.5rem;
+				border-radius: 8px;
+				overflow-x: auto;
+				margin: 1.5rem 0;
+				border-left: 4px solid #00d8ff;
+				white-space: pre;
+				-webkit-overflow-scrolling: touch;
+			}
+			#api-content pre code {
+				background: none;
+				padding: 0;
+				color: #f5f5f5;
+				font-size: 0.9rem;
+				white-space: pre;
+			}
+			#api-content ul,
+			#api-content ol {
+				margin: 1rem 0;
+				padding-left: 2rem;
+			}
+			#api-content li {
+				margin-bottom: 0.5rem;
+				color: #ccc;
+			}
+			#api-content blockquote {
+				border-left: 4px solid #00d8ff;
+				padding: 1rem 1.5rem;
+				margin: 1.5rem 0;
+				background: #1a1a1a;
+				border-radius: 0 8px 8px 0;
+			}
+			#api-content blockquote p {
+				margin: 0;
+				color: #bbb;
+				font-style: italic;
+			}
+			#api-content table {
+				width: 100%;
+				border-collapse: collapse;
+				margin: 1.5rem 0;
+				background: #1a1a1a;
+				border-radius: 8px;
+				overflow: hidden;
+				display: block;
+				max-width: 100%;
+				overflow-x: auto;
+				-webkit-overflow-scrolling: touch;
+			}
+			#api-content th,
+			#api-content td {
+				border: 1px solid #333;
+				padding: 1rem;
+				text-align: left;
+				min-width: 120px;
+			}
+			#api-content th {
+				background: #222;
+				color: #00d8ff;
+				font-weight: 600;
+			}
+			#api-content td {
+				color: #ccc;
+			}
+			#api-content a {
+				color: #00d8ff;
+				text-decoration: none;
+			}
+			#api-content a:hover {
+				text-decoration: underline;
+			}
+			.alert {
+				padding: 1rem 1.5rem;
+				margin: 1.5rem 0;
+				border-radius: 8px;
+				border-left: 4px solid;
+			}
+			.alert-important {
+				background: rgba(255, 193, 7, 0.1);
+				border-color: #ffc107;
+				color: #ffc107;
+			}
+			.alert-note {
+				background: rgba(0, 216, 255, 0.1);
+				border-color: #00d8ff;
+				color: #00d8ff;
+			}
+			.alert-warning {
+				background: rgba(255, 87, 34, 0.1);
+				border-color: #ff5722;
+				color: #ff5722;
+			}
+			.anchor-header {
+				position: relative;
+				padding-right: 1.5rem;
+			}
+			.anchor-link {
+				position: absolute;
+				right: 0;
+				top: 50%;
+				transform: translateY(-50%);
+				color: #00d8ff;
+				text-decoration: none;
+				opacity: 0;
+				font-weight: bold;
+				transition: opacity 0.2s;
+				font-size: 1.1em;
+			}
+			.anchor-header:hover .anchor-link {
+				opacity: 1;
+			}
+			.loading {
+				text-align: center;
+				color: #00d8ff;
+				font-size: 1.2rem;
+				padding: 2rem;
+			}
+			.error {
+				text-align: center;
+				color: #ff4444;
+				background: #1a1a1a;
+				padding: 2rem;
+				border-radius: 8px;
+				border: 1px solid #ff4444;
+			}
+		</style>
+	</head>
+	<body>
+		<header>
+			<i class="fas fa-cow"></i>
+			<h1>MIKLIUM</h1>
+		</header>
+		<main>
+			<h2>API Docs</h2>
+			<p>MIKLIUM API Documentation</p>
+			<div id="api-content">
+				<div class="loading">
+					<i class="fas fa-spinner fa-spin"></i> Loading
+					documentation...
+				</div>
+			</div>
+			<div class="cta">
+				<button onclick="location.href='index.html'">
+					Go back home
+				</button>
+			</div>
+		</main>
+		<script>
+			function escapeHtml(str) {
+				if (str == null) return "";
+				if (typeof str !== "string") str = String(str);
+				return str
+					.replace(/&/g, "&amp;")
+					.replace(/</g, "&lt;")
+					.replace(/>/g, "&gt;")
+					.replace(/"/g, "&quot;")
+					.replace(/'/g, "&#039;");
+			}
+
+			function slugify(text) {
+				return String(text)
+					.toLowerCase()
+					.replace(/[^a-z0-9\s-]/g, "")
+					.replace(/\s+/g, "-");
+			}
+
+			async function loadAPIDocs() {
+				const el = document.getElementById("api-content");
+				try {
+					const res = await fetch(
+						"https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/APIDOCS.md"
+					);
+					if (!res.ok) throw new Error(`HTTP ${res.status}`);
+					const md = await res.text();
+
+					const renderer = {
+						blockquote(token) {
+							const raw = token.text;
+							if (raw.startsWith("[!IMPORTANT]")) {
+								const content = raw
+									.replace("[!IMPORTANT]", "")
+									.trim();
+								return `<div class="alert alert-important">${escapeHtml(
+									content
+								)}</div>`;
+							}
+							if (raw.startsWith("[!WARNING]")) {
+								const content = raw
+									.replace("[!WARNING]", "")
+									.trim();
+								return `<div class="alert alert-warning">${escapeHtml(
+									content
+								)}</div>`;
+							}
+							if (raw.startsWith("[!NOTE]")) {
+								const content = raw
+									.replace("[!NOTE]", "")
+									.trim();
+								return `<div class="alert alert-note">${escapeHtml(
+									content
+								)}</div>`;
+							}
+							return false;
+						},
+						code(token) {
+							const codeText = token.text;
+							const info = token.lang || "";
+							const language = info.split(/\s+/)[0] || "text";
+							return `<pre><code class="language-${escapeHtml(
+								language
+							)}">${escapeHtml(codeText)}</code></pre>`;
+						},
+						heading(token) {
+							const textStr = this.parser.parseInline(
+								token.tokens
+							);
+							const clean = token.text;
+							const id = slugify(clean);
+							return `<h${token.depth} id="${id}" class="anchor-header">${textStr}<a href="#${id}" class="anchor-link" aria-hidden="true">#</a></h${token.depth}>`;
+						},
+					};
+
+					marked.use({ renderer });
+					const html = marked.parse(md);
+					el.innerHTML = html;
+
+					if (location.hash) {
+						setTimeout(() => {
+							const target = document.querySelector(
+								location.hash
+							);
+							if (target)
+								target.scrollIntoView({ behavior: "smooth" });
+						}, 100);
+					}
+				} catch (err) {
+					console.error(err);
+					el.innerHTML = `
           <div class="error">
             <i class="fas fa-exclamation-triangle"></i>
             <h3>Error Loading Documentation</h3>
             <p>Unable to load API documentation. Please try again later.</p>
-            <p><small>Error: ${escapeHtml(error.message)}</small></p>
+            <p><small>Error: ${escapeHtml(err.message)}</small></p>
           </div>
         `;
-      }
-    }
-    document.addEventListener('DOMContentLoaded', loadAPIDocs);
-  </script>
-</body>
+				}
+			}
+
+			document.addEventListener("DOMContentLoaded", loadAPIDocs);
+		</script>
+	</body>
 </html>
