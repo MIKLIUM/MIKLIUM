@@ -381,13 +381,22 @@
           },
 
           heading(text, level, raw) {
-            const id = raw
+            let sourceText = '';
+            if (typeof raw === 'string') {
+              sourceText = raw;
+            } else if (typeof text === 'string') {
+              sourceText = text.replace(/<[^>]*>/g, '');
+            } else {
+              sourceText = String(text);
+            }
+          
+            const id = sourceText
               .toLowerCase()
-              .replace(/[^a-z0-9\u00A0-\uFFFF -]/g, '')
+              .replace(/[^a-z0-9\u00A0-\uFFFF\s-]/g, '')
               .replace(/\s+/g, '-');
           
             const safeText = typeof text === 'string' ? text : String(text);
-            
+          
             return `
               <h${level} id="${id}" class="anchor-header">
                 ${safeText}
