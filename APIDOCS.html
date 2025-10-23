@@ -318,9 +318,9 @@
             const type = quote.includes('[!IMPORTANT]') ? 'important' : 
                         quote.includes('[!WARNING]') ? 'warning' : 'note';
             const content = quote.replace(/\[\!(IMPORTANT|NOTE|WARNING)\]\n?/g, '').trim();
-            return `<div class="alert alert-${type}">${this.parse(content)}</div>`;
+            return `<div class="alert alert-${type}">${marked.parse(content)}</div>`;
           }
-          return `<blockquote>${this.parse(quote)}</blockquote>`;
+          return `<blockquote>${marked.parse(quote)}</blockquote>`;
         },
         
         code(code, language) {
@@ -333,7 +333,7 @@
         },
         
         heading(text, level) {
-          const id = text.toLowerCase().replace(/[^\w]+/g, '-');
+          const id = String(text).toLowerCase().replace(/[^\w]+/g, '-');
           return `<h${level} id="${id}">${text}</h${level}>`;
         }
       };
