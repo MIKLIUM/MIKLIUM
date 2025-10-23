@@ -19,6 +19,8 @@
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
 
+---
+
 # YouTube Transcription API Documentation
 
 ## About MIKLIUM YouTube Transcription API
@@ -98,6 +100,8 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
   "error": "Invalid YouTube URL."
 }
 ```
+
+---
 
 # Search API Documentation
 
@@ -228,6 +232,8 @@ As you have already noticed, the API returns two types of information: `short` a
 * The number behind the parameters `maxSmallSnippets` and `maxLargeSnippets` is responsible for the amount of relevant information for each request. For example, if we have two quires  in `search`, we set `maxSmallSnippets` to 2, and `maxLargeSnippets` to 1. Thus, 4 short information and 2 long will be found: 2 short and 1 long for each request.
 
 * The parameter `maxLargeSnippetSymbols` is responsible for the maximum number of characters in long information (by default 4500). If the limit is increased, the long information will be cut off.
+
+---
 
 # What Services Does MIKLIUM APIs Use?
 
