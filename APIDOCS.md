@@ -1,8 +1,19 @@
 # MIKLIUM API Documentation
 
 # Navigation
-
-# About
+- [MIKLIUM API Documentation](#miklium-api-documentation)
+  - [Navigation](#navigation)
+  - [About MIKLIUM APIs](#about-miklium-apis)
+  - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
+    - [About MIKLIUM YouTube Transcription API](#about-miklium-youtube-transcription-api)
+    - [Request Body](#request-body)
+    - [API Responses](#api-responses)
+  - [Search API Documentation](#search-api-documentation)
+    - [About MIKLIUM Search API](#about-miklium-search-api)
+    - [Request Body](#request-body-1)
+    - [API Responses](#api-responses-1)
+    - [Additional Information](#additional-information)
+# About MIKLIUM APIs
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
 
