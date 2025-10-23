@@ -144,7 +144,6 @@ As you have already noticed, the API returns two types of information: `short` a
 
 * The parameter `maxLargeSnippetSymbols` is responsible for the maximum number of characters in long information (by default 4500). If the limit is increased, the long information will be cut off.
 
-### 
 ## What Services Does This API Use?
 
 - [Yahoo Search](https://search.yahoo.com)
