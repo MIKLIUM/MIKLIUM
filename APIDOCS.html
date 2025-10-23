@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>API Docs - MIKLIUM</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
     * {
@@ -41,7 +41,7 @@
     }
     main {
       flex: 1;
-      padding: 3rem 2rem;
+      padding: 2rem;
       max-width: 1200px;
       margin: 0 auto;
       width: 100%;
@@ -61,7 +61,7 @@
     }
     .cta {
       text-align: center;
-      margin-top: 3rem;
+      margin-top: 2rem;
     }
     button {
       background-color: #00d8ff;
@@ -73,7 +73,6 @@
       font-size: 1.1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 20px;
     }
     button:hover {
       background-color: #00b8cc;
@@ -89,9 +88,13 @@
       border-radius: 15px;
       border: 1px solid #222;
       margin-top: 2rem;
+      overflow-wrap: break-word;
     }
 
-    #api-content h1, #api-content h2, #api-content h3, #api-content h4 {
+    #api-content h1,
+    #api-content h2,
+    #api-content h3,
+    #api-content h4 {
       color: #00d8ff;
       margin: 1.5rem 0 1rem 0;
     }
@@ -134,6 +137,8 @@
       overflow-x: auto;
       margin: 1.5rem 0;
       border-left: 4px solid #00d8ff;
+      white-space: pre;
+      -webkit-overflow-scrolling: touch;
     }
 
     #api-content pre code {
@@ -141,9 +146,11 @@
       padding: 0;
       color: #f5f5f5;
       font-size: 0.9rem;
+      white-space: pre;
     }
 
-    #api-content ul, #api-content ol {
+    #api-content ul,
+    #api-content ol {
       margin: 1rem 0;
       padding-left: 2rem;
     }
@@ -174,12 +181,18 @@
       background: #1a1a1a;
       border-radius: 8px;
       overflow: hidden;
+      display: block;
+      max-width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
-    #api-content th, #api-content td {
+    #api-content th,
+    #api-content td {
       border: 1px solid #333;
       padding: 1rem;
       text-align: left;
+      min-width: 120px;
     }
 
     #api-content th {
@@ -300,82 +313,74 @@
   </main>
 
   <script>
-  async function loadAPIDocs() {
-    const apiContent = document.getElementById('api-content');
-    
-    try {
-      const response = await fetch('APIDOCS.md');
-      
-      if (!response.ok) {
-        throw new Error(`Failed to load documentation: ${response.status}`);
+    function escapeHtml(unsafe) {
+      if (typeof unsafe !== 'string') {
+        unsafe = String(unsafe ?? '');
       }
-      
-      const markdown = await response.text();
-      
-      const renderer = {
-        blockquote(quote) {
-          const rawText = typeof quote === 'string' ? quote : quote.text;
-          
-          if (rawText.includes('[!IMPORTANT]')) {
-            const content = rawText.replace('[!IMPORTANT]', '').trim();
-            return `<div class="alert alert-important">${marked.parse(content)}</div>`;
-          }
-          if (rawText.includes('[!WARNING]')) {
-            const content = rawText.replace('[!WARNING]', '').trim();
-            return `<div class="alert alert-warning">${marked.parse(content)}</div>`;
-          }
-          if (rawText.includes('[!NOTE]')) {
-            const content = rawText.replace('[!NOTE]', '').trim();
-            return `<div class="alert alert-note">${marked.parse(content)}</div>`;
-          }
-        
-          return `<blockquote>${marked.parse(rawText)}</blockquote>`;
-        },
-        
-        code(code, language) {
-          const validLanguage = language && language !== 'null' ? language : 'text';
-          return `<pre><code class="language-${validLanguage}">${escapeHtml(code)}</code></pre>`;
-        },
-        
-        table(header, body) {
-          return `<table><thead>${header}</thead><tbody>${body}</tbody></table>`;
-        },
-        
-        heading(text, level) {
-          const id = String(text).toLowerCase().replace(/[^\w]+/g, '-');
-          return `<h${level} id="${id}">${text}</h${level}>`;
-        }
-      };
-  
-      marked.use({ renderer });
-  
-      const html = marked.parse(markdown);
-      apiContent.innerHTML = html;
-      
-    } catch (error) {
-      console.error('Error loading API docs:', error);
-      apiContent.innerHTML = `
-        <div class="error">
-          <i class="fas fa-exclamation-triangle"></i>
-          <h3>Error Loading Documentation</h3>
-          <p>Unable to load API documentation. Please try again later.</p>
-          <p><small>Error: ${error.message}</small></p>
-        </div>
-      `;
+      return unsafe
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '<')
+        .replace(/>/g, '>')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
     }
-  }
-  
-  function escapeHtml(unsafe) {
-    if (typeof unsafe !== 'string') unsafe = String(unsafe || '');
-    return unsafe
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "<")
-      .replace(/>/g, ">")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
-  }
-  
-  document.addEventListener('DOMContentLoaded', loadAPIDocs);
+
+    async function loadAPIDocs() {
+      const apiContent = document.getElementById('api-content');
+
+      try {
+        const response = await fetch('APIDOCS.md');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const markdown = await response.text();
+
+        const renderer = {
+          blockquote(quote) {
+            const rawText = typeof quote === 'string' ? quote : quote.text;
+            if (rawText.startsWith('[!IMPORTANT]')) {
+              const content = rawText.replace('[!IMPORTANT]', '').trim();
+              return `<div class="alert alert-important">${escapeHtml(content)}</div>`;
+            }
+            if (rawText.startsWith('[!WARNING]')) {
+              const content = rawText.replace('[!WARNING]', '').trim();
+              return `<div class="alert alert-warning">${escapeHtml(content)}</div>`;
+            }
+            if (rawText.startsWith('[!NOTE]')) {
+              const content = rawText.replace('[!NOTE]', '').trim();
+              return `<div class="alert alert-note">${escapeHtml(content)}</div>`;
+            }
+            return false;
+          },
+
+          code(code, info) {
+            const codeText = typeof code === 'string' ? code : (code?.text || '');
+            const lang = typeof info === 'string' ? info : (info?.text || '');
+            const language = lang.split(/\s+/)[0] || 'text';
+            return `<pre><code class="language-${escapeHtml(language)}">${escapeHtml(codeText)}</code></pre>`;
+          },
+
+          heading(text, level, raw) {
+            const id = (raw || text).toString().toLowerCase().replace(/[^\w]+/g, '-');
+            return `<h${level} id="${id}">${text}</h${level}>`;
+          }
+        };
+
+        marked.use({ renderer });
+        const html = marked.parse(markdown);
+        apiContent.innerHTML = html;
+      } catch (error) {
+        console.error('Error loading API docs:', error);
+        apiContent.innerHTML = `
+          <div class="error">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h3>Error Loading Documentation</h3>
+            <p>Unable to load API documentation. Please try again later.</p>
+            <p><small>Error: ${escapeHtml(error.message)}</small></p>
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAPIDocs);
   </script>
 </body>
 </html>
