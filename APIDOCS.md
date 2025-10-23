@@ -13,6 +13,8 @@
     - [Request Body](#request-body-1)
     - [API Responses](#api-responses-1)
     - [Additional Information](#additional-information)
+  - [What Services Does MIKLIUM APIs Use?](#what-services-does-miklium-apis-use-)
+
 # About MIKLIUM APIs
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
@@ -96,10 +98,6 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
   "error": "Invalid YouTube URL."
 }
 ```
-
-## What Services Does This API Use?
-
-- [YouTube To Transcript](https://youtubetotranscript.com)
 
 # Search API Documentation
 
@@ -231,6 +229,7 @@ As you have already noticed, the API returns two types of information: `short` a
 
 * The parameter `maxLargeSnippetSymbols` is responsible for the maximum number of characters in long information (by default 4500). If the limit is increased, the long information will be cut off.
 
-## What Services Does This API Use?
+# What Services Does MIKLIUM APIs Use?
 
+- [YouTube To Transcript](https://youtubetotranscript.com)
 - [Yahoo Search](https://search.yahoo.com)
