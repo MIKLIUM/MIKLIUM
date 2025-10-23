@@ -300,86 +300,72 @@
   </main>
 
   <script>
-    async function loadAPIDocs() {
-      const apiContent = document.getElementById('api-content');
+  async function loadAPIDocs() {
+    const apiContent = document.getElementById('api-content');
+    
+    try {
+      const response = await fetch('APIDOCS.md');
       
-      try {
-        const response = await fetch('APIDOCS.md');
-        
-        if (!response.ok) {
-          throw new Error(`Failed to load documentation: ${response.status}`);
-        }
-        
-        const markdown = await response.text();
-        
-        const renderer = new marked.Renderer();
-        
-        renderer.blockquote = function(quote) {
+      if (!response.ok) {
+        throw new Error(`Failed to load documentation: ${response.status}`);
+      }
+      
+      const markdown = await response.text();
+      
+      const renderer = {
+        blockquote(quote) {
           if (quote.includes('[!IMPORTANT]') || quote.includes('[!NOTE]') || quote.includes('[!WARNING]')) {
             const type = quote.includes('[!IMPORTANT]') ? 'important' : 
                         quote.includes('[!WARNING]') ? 'warning' : 'note';
             const content = quote.replace(/\[\!(IMPORTANT|NOTE|WARNING)\]\n?/g, '').trim();
-            return `<div class="alert alert-${type}">${content}</div>`;
+            return `<div class="alert alert-${type}">${this.parse(content)}</div>`;
           }
-          return `<blockquote>${quote}</blockquote>`;
-        };
-
-        renderer.code = function(code, language) {
+          return `<blockquote>${this.parse(quote)}</blockquote>`;
+        },
+        
+        code(code, language) {
           const validLanguage = language && language !== 'null' ? language : 'text';
           return `<pre><code class="language-${validLanguage}">${escapeHtml(code)}</code></pre>`;
-        };
-
-        renderer.table = function(header, body) {
-          return `<table><thead>${header}</thead><tbody>${body}</tbody></table>`;
-        };
-
-        renderer.heading = function(text, level, raw) {
-          const id = raw.toLowerCase().replace(/[^\w]+/g, '-');
-          return `<h${level} id="${id}">${text}</h${level}>`;
-        };
-
-        renderer.paragraph = function(text) {
-          if (text.includes('class="method-badge"')) {
-            return text;
-          }
-          return `<p>${text}</p>`;
-        };
-
-        marked.setOptions({
-          renderer: renderer,
-          highlight: function(code, lang) {
-            return code;
-          },
-          breaks: true,
-          gfm: true
-        });
-
-        const html = marked.parse(markdown);
-        apiContent.innerHTML = html;
+        },
         
-      } catch (error) {
-        console.error('Error loading API docs:', error);
-        apiContent.innerHTML = `
-          <div class="error">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Error Loading Documentation</h3>
-            <p>Unable to load API documentation. Please try again later.</p>
-            <p><small>Error: ${error.message}</small></p>
-          </div>
-        `;
-      }
+        table(header, body) {
+          return `<table><thead>${header}</thead><tbody>${body}</tbody></table>`;
+        },
+        
+        heading(text, level) {
+          const id = text.toLowerCase().replace(/[^\w]+/g, '-');
+          return `<h${level} id="${id}">${text}</h${level}>`;
+        }
+      };
+  
+      marked.use({ renderer });
+  
+      const html = marked.parse(markdown);
+      apiContent.innerHTML = html;
+      
+    } catch (error) {
+      console.error('Error loading API docs:', error);
+      apiContent.innerHTML = `
+        <div class="error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <h3>Error Loading Documentation</h3>
+          <p>Unable to load API documentation. Please try again later.</p>
+          <p><small>Error: ${error.message}</small></p>
+        </div>
+      `;
     }
-
-    function escapeHtml(unsafe) {
-      return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    document.addEventListener('DOMContentLoaded', loadAPIDocs);
+  }
+  
+  function escapeHtml(unsafe) {
+    return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+  
+  document.addEventListener('DOMContentLoaded', loadAPIDocs);
   </script>
 </body>
 </html>
