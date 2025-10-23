@@ -4,7 +4,7 @@
 
 - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
     - [Navigation](#navigation)
-    - [About YouTube Transcription](#about-youtube-transcription)
+    - [About MIKLIUM YouTube Transcription API](#about-miklium-youtube-transcription-api)
     - [Request Body](#request-body)
         - [GET Method](#get-method)
         - [POST Method](#post-method)
@@ -13,7 +13,7 @@
         - [Error](#error)
     - [What Services Does This API Use?](#what-services-does-this-api-use-)
 
-## About YouTube Transcription
+## About MIKLIUM YouTube Transcription API
 
 **Get text from a YouTube video in seconds using our API.** Also with the transcription of the video you will get the name of the channel and the title of the video. To work, you only need a link to a YouTube video.
 
