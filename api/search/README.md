@@ -41,8 +41,8 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 > For GET Method the search requests should be URL-encoded!
 
 **Request Link Examples:**
-`https://miklium.vercel.app/api/search?search=iPhone%20Air`
-`https://miklium.vercel.app/api/search?search=iPhone%20Air~iPhone%2017%20Pro&maxSmallSnippets=3&maxLargeSnippets=0`
+* `https://miklium.vercel.app/api/search?search=iPhone%20Air`
+* `https://miklium.vercel.app/api/search?search=iPhone%20Air~iPhone%2017%20Pro&maxSmallSnippets=3&maxLargeSnippets=0`
 
 ### POST Method
 
