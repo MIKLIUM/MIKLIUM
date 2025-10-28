@@ -81,7 +81,7 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 | `success` | `true` |
 | `results` | `Array with Dictionaries`, Search results |
 
-Components of `results` elements
+**Components of `results` elements:**
 | Parameter | Value |
 | :--- | :--- |
 | `query` | `String`, The request to which the information was found |
