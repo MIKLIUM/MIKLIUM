@@ -11,7 +11,7 @@
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
-    - [What Services Does This API Use?](#what-services-does-this-api-use-)
+    - [What Services Does This API Use?](#what-services-does-this-api-use)
 
 ## About MIKLIUM Apple Shortcuts Data API
 
