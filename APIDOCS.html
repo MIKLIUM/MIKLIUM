@@ -197,6 +197,13 @@
 			#api-content a:hover {
 				text-decoration: underline;
 			}
+			/* --- NEW STYLE FOR HORIZONTAL RULE --- */
+			#api-content hr {
+				border: none;
+				height: 2px;
+				background-color: #333;
+				margin: 2rem 0;
+			}
 			.alert {
 				padding: 1rem 1.5rem;
 				margin: 1.5rem 0;
@@ -251,6 +258,46 @@
 				border-radius: 8px;
 				border: 1px solid #ff4444;
 			}
+
+			@media (max-width: 600px) {
+				header {
+					padding: 1.5rem 1rem;
+				}
+				header h1 {
+					font-size: 1.8rem;
+				}
+				header i {
+					font-size: 2.5rem;
+				}
+				main {
+					padding: 1rem;
+				}
+				main h2 {
+					font-size: 1.5rem;
+				}
+				main p {
+					font-size: 1rem;
+				}
+				#api-content {
+					padding: 1.5rem;
+				}
+				#api-content h1 {
+					font-size: 1.7rem;
+				}
+				#api-content h2 {
+					font-size: 1.4rem;
+				}
+				#api-content h3 {
+					font-size: 1.2rem;
+				}
+				#api-content pre {
+					padding: 1rem;
+				}
+				#api-content th,
+				#api-content td {
+					padding: 0.8rem;
+				}
+			}
 		</style>
 	</head>
 	<body>
@@ -300,6 +347,10 @@
 					);
 					if (!res.ok) throw new Error(`HTTP ${res.status}`);
 					const md = await res.text();
+					const processedMd = md.replace(
+						/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/,
+						""
+					);
 
 					const renderer = {
 						blockquote(token) {
@@ -349,7 +400,7 @@
 					};
 
 					marked.use({ renderer });
-					const html = marked.parse(md);
+					const html = marked.parse(processedMd);
 					el.innerHTML = html;
 
 					if (location.hash) {
