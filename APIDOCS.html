@@ -53,14 +53,12 @@
 				font-size: 1.8rem;
 				margin-bottom: 1rem;
 				color: #00d8ff;
-				text-align: center;
 			}
 			main p {
 				font-size: 1.1rem;
 				line-height: 1.6;
 				margin-bottom: 2rem;
 				color: #ccc;
-				text-align: center;
 			}
 			.cta {
 				text-align: center;
@@ -197,11 +195,10 @@
 			#api-content a:hover {
 				text-decoration: underline;
 			}
-			/* --- NEW STYLE FOR HORIZONTAL RULE --- */
 			#api-content hr {
 				border: none;
 				height: 2px;
-				background-color: #333;
+				background-color: #00d8ff;
 				margin: 2rem 0;
 			}
 			.alert {
@@ -321,6 +318,8 @@
 			</div>
 		</main>
 		<script>
+			const slugs = {};
+
 			function escapeHtml(str) {
 				if (str == null) return "";
 				if (typeof str !== "string") str = String(str);
@@ -333,13 +332,26 @@
 			}
 
 			function slugify(text) {
-				return String(text)
+				let slug = String(text)
 					.toLowerCase()
 					.replace(/[^a-z0-9\s-]/g, "")
 					.replace(/\s+/g, "-");
+				
+				if (slugs[slug]) {
+					slugs[slug]++;
+					slug = slug + "-" + (slugs[slug] - 1);
+				} else {
+					slugs[slug] = 1;
+				}
+
+				return slug;
 			}
 
 			async function loadAPIDocs() {
+				for (const key in slugs) {
+					delete slugs[key];
+				}
+
 				const el = document.getElementById("api-content");
 				try {
 					const res = await fetch(
@@ -347,6 +359,7 @@
 					);
 					if (!res.ok) throw new Error(`HTTP ${res.status}`);
 					const md = await res.text();
+
 					const processedMd = md.replace(
 						/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/,
 						""
