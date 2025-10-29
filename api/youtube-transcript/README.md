@@ -42,14 +42,14 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 
 `https://miklium.vercel.app/api/youtube-transcript`
 
-```json
+```javascript
 {
   "url": "Paste Your link here"
 }
 ```
 
 **Request Body Example (JSON):**
-```json
+```javascript
 {
   "url": "https://youtu.be/Qz8u00pX738"
 }
@@ -67,7 +67,7 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 | `text` | `String`, Video transcription |
 
 **Success response example:**
-```json
+```javascript
 {
   "success": true,
   "channel": "Apple",
@@ -84,7 +84,7 @@ Link: `https://miklium.vercel.app/api/youtube-transcript`
 | `error` | `String`, Error message |
 
 **Error response example:**
-```json
+```javascript
 {
   "success": false,
   "error": "Invalid YouTube URL."
