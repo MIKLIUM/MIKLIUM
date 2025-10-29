@@ -48,22 +48,22 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 
 `https://miklium.vercel.app/api/search`
 
-```json
+```javascript
 {
   "search": ["Paste Your query here", "If You need more requests at a time, add new objects to the list (maximum 3)"],
-  "maxSmallSnippets": Number (Not necessarily),
-  "maxLargeSnippets": Number (Not necessarily),
-  "maxLargeSnippetSymbols": Number (Not necessarily)
+  "maxSmallSnippets": 0 // Number (Not necessarily),
+  "maxLargeSnippets": 0 // Number (Not necessarily),
+  "maxLargeSnippetSymbols": 0 // Number (Not necessarily)
 }
 ```
 
 **Request Body Examples (JSON):**
-```json
+```javascript
 {
   "search": ["iPhone Air"]
 }
 ```
-```json
+```javascript
 {
   "search": ["iPhone Air", "iPhone 17 Pro"],
   "maxSmallSnippets": 3,
@@ -91,7 +91,7 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 | `snippet` | `String`, The information itself |
 
 **Success response example:**
-```json
+```javascript
 {
   "success": true,
   "results": [
@@ -121,7 +121,7 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 | `error` | `String`, Error message |
 
 **Error response example:**
-```json
+```javascript
 {
   "success": false,
   "error": "Invalid or missing \"search\" parameter."
