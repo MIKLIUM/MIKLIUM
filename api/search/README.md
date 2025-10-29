@@ -14,7 +14,7 @@
     - [Additional Information](#additional-information)
         - [Types of the Information](#types-of-the-information)
         - [Choosing the Right Information Format](#choosing-the-right-information-format)
-    - [What Services Does This API Use?](#what-services-does-this-api-use-)
+    - [What Services Does This API Use?](#what-services-does-this-api-use)
 
 ## About MIKLIUM Search API
 
