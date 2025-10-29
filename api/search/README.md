@@ -124,7 +124,7 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 ```javascript
 {
   "success": false,
-  "error": "Invalid or missing \"search\" parameter."
+  "error": "Invalid or missing 'search' parameter."
 }
 ```
 
