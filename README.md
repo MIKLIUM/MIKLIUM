@@ -5,7 +5,7 @@
   <a href="https://github.com/MIKLIUM/MIKLIUM/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/MIKLIUM/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
   <a href="https://discord.gg/d3txS4q8"><img alt="Discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
 
-  The GitHub repositorie for the MIKLIUM software company.
+  The GitHub Repository for the MIKLIUM software company.
 </div>
 
 ## Free APIs & Software for Everyone
