@@ -13,8 +13,9 @@ module.exports = async function handler(req, res) {
       return res.status(405).json({ success: false, error: "Method not allowed" });
     }
     
-    const videoId = extractVideoId(input);
-
+//    const videoId = extractVideoId(input);
+    const videoId = input
+    
     if (!videoId) {
       return res.status(400).json({ success: false, error: 'Invalid YouTube URL.' });
     }
