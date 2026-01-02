@@ -18,7 +18,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 # Search API Documentation
 
 ## Navigation
-**[Back to MIKLIUM APIs navigation](#navigation-1)**
+**[Back to MIKLIUM APIs navigation](#navigation)**
 
 
 - [Search API Documentation](#search-api-documentation)
@@ -46,9 +46,9 @@ Link: `https://miklium.vercel.app/api/search`
 | Parameter | Required | Type | Description |
 | :--- | :--- | :--- | :--- |
 | `search` | Yes | Array | Search queries (maximum 3) |
-| `maxSmallSnippets`| No | Number | The number of short information for each request (by default 5) |
-| `maxLargeSnippets` | No | Number | The number of long information for each request (by default 2) |
-| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one long information (by default 4500) |
+| `maxSmallSnippets`| No | Number | The number of short information for each request (by default `5`) |
+| `maxLargeSnippets` | No | Number | The number of long information for each request (by default `2`) |
+| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one long information (by default `4500`) |
 
 ### GET Method
 
@@ -172,19 +172,19 @@ As you have already noticed, the API returns two types of information: `short` a
 # Apple Shortcuts Data API Documentation
 
 ## Navigation
-**[Back to MIKLIUM APIs navigation](#navigation-2)**
+**[Back to MIKLIUM APIs navigation](#navigation)**
 
 
 - [Apple Shortcuts Data API Documentation](#apple-shortcuts-data-api-documentation)
     - [Navigation](#navigation-2)
     - [About MIKLIUM Apple Shortcuts Data API](#about-miklium-apple-shortcuts-data-api)
-    - [Request Body](#request-body)
-        - [GET Method](#get-method)
-        - [POST Method](#post-method)
-    - [API Responses](#api-responses)
-        - [Success](#success)
-        - [Error](#error)
-    - [What Services Does This API Use?](#what-services-does-this-api-use)
+    - [Request Body](#request-body-1)
+        - [GET Method](#get-method-1)
+        - [POST Method](#post-method-1)
+    - [API Responses](#api-responses-1)
+        - [Success](#success-1)
+        - [Error](#error-1)
+    - [What Services Does This API Use?](#what-services-does-this-api-use-1)
 
 ## About MIKLIUM Apple Shortcuts Data API
 
@@ -363,19 +363,19 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
 # YouTube Transcription API Documentation
 
 ## Navigation
-**[Back to MIKLIUM APIs navigation](#navigation-3)**
+**[Back to MIKLIUM APIs navigation](#navigation)**
 
 
 - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
     - [Navigation](#navigation-3)
     - [About MIKLIUM YouTube Transcription API](#about-miklium-youtube-transcription-api)
-    - [Request Body](#request-body)
-        - [GET Method](#get-method)
-        - [POST Method](#post-method)
-    - [API Responses](#api-responses)
-        - [Success](#success)
-        - [Error](#error)
-    - [What Services Does This API Use?](#what-services-does-this-api-use)
+    - [Request Body](#request-body-2)
+        - [GET Method](#get-method-2)
+        - [POST Method](#post-method-2)
+    - [API Responses](#api-responses-2)
+        - [Success](#success-2)
+        - [Error](#error-2)
+    - [What Services Does This API Use?](#what-services-does-this-api-use-2)
 
 ## About MIKLIUM YouTube Transcription API
 
