@@ -1,0 +1,79 @@
+name: Generate API Documentation
+
+on:
+  push:
+    paths:
+      - 'api/**/README.md'
+      - '!api/beta/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Generate APIDOCS.md
+        run: |
+          python3 -c "
+          import os
+          import re
+
+          root = 'api'
+          exclude = 'beta'
+          out = 'APIDOCS.md'
+          docs = []
+
+          if os.path.exists(root):
+              dirs = sorted([d for d in os.listdir(root) if os.path.isdir(os.path.join(root, d))])
+              for d in dirs:
+                  if d == exclude: continue
+                  path = os.path.join(root, d, 'README.md')
+                  if os.path.exists(path):
+                      with open(path, 'r', encoding='utf-8') as f:
+                          c = f.read()
+                      m = re.search(r'^#\s+(.+)$', c, re.MULTILINE)
+                      t = m.group(1).strip() if m else d
+                      s = re.sub(r'[^a-z0-9\- ]', '', t.lower()).replace(' ', '-')
+                      docs.append({'t': t, 's': s, 'c': c})
+
+          md = '# MIKLIUM API Documentation\n\n# Navigation\n### Information\n - [MIKLIUM API Documentation](#miklium-api-documentation)\n - [Navigation](#navigation)\n - [About MIKLIUM APIs](#about-miklium-apis)\n### APIs Documentations\n'
+
+          for d in docs:
+              md += f' - [{d['t']}](#{d['s']})\n'
+
+          md += '\n# About MIKLIUM APIs\n\nAt MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.\n'
+
+          cnt = 0
+          for d in docs:
+              cnt += 1
+              md += '\n---\n'
+              lines = d['c'].split('\n')
+              res = []
+              for l in lines:
+                  res.append(l)
+                  if l.strip().startswith('## Navigation'):
+                      res.append('**[Back to MIKLIUM APIs navigation](#navigation)**\n')
+              
+              chunk = '\n'.join(res)
+              chunk = chunk.replace('(#navigation)', f'(#navigation-{cnt})')
+              md += chunk + '\n'
+
+          with open(out, 'w', encoding='utf-8') as f:
+              f.write(md)
+          "
+
+      - name: Commit and Push changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update APIDOCS.md"
+          file_pattern: APIDOCS.md
