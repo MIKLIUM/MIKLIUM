@@ -51,8 +51,8 @@ If you want to write several requests at once (maximum 3), connect them with `~`
 ```javascript
 {
   "search": ["Paste Your query here", "If You need more requests at a time, add new objects to the list (maximum 3)"],
-  "maxSmallSnippets": 0 // Number (Not necessarily),
-  "maxLargeSnippets": 0 // Number (Not necessarily),
+  "maxSmallSnippets": 0, // Number (Not necessarily)
+  "maxLargeSnippets": 0, // Number (Not necessarily)
   "maxLargeSnippetSymbols": 0 // Number (Not necessarily)
 }
 ```
