@@ -27,9 +27,9 @@ Link: `https://miklium.vercel.app/api/search`
 | Parameter | Required | Type | Description |
 | :--- | :--- | :--- | :--- |
 | `search` | Yes | Array | Search queries (maximum 3) |
-| `maxSmallSnippets`| No | Number | The number of short information for each request (by default 5) |
-| `maxLargeSnippets` | No | Number | The number of long information for each request (by default 2) |
-| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one long information (by default 4500) |
+| `maxSmallSnippets`| No | Number | The number of short information for each request (by default `5`) |
+| `maxLargeSnippets` | No | Number | The number of long information for each request (by default `2`) |
+| `maxLargeSnippetSymbols` | No | Number | Maximum number of characters for one long information (by default `4500`) |
 
 ### GET Method
 
