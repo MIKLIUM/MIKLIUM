@@ -87,6 +87,7 @@ function buildResponse(data, options) {
   if (includeInfo) {
     response.info = {
       video: {
+        id: data.id
         title: data.title,
         description: data.text,
         duration: data.duration,
