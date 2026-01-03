@@ -448,6 +448,7 @@ If you want to add additional parameters, write them through `&`.
 ```javascript
 {
   "video": {
+    "id": "...", // Video ID
     "title": "...", // Video title
     "description": "...", // Video description
     "duration": "00:00:00", // Video duration in 'HH:MM:SS' format
@@ -477,6 +478,7 @@ If you want to add additional parameters, write them through `&`.
   "transcript": "Voiceover: Want to see something gorgeous…",
   "info": {
     "video": {
+      "id": "Qz8u00pX738",
       "title": "New things on the way from Apple",
       "description": "Woah. Here’s your guide to some of the big announcements from this year’s Worldwide Developers Conference...",
       "duration": "00:02:13",
