@@ -1,4 +1,5 @@
 import json
+import sys
 import subprocess
 import tempfile
 import os
@@ -143,7 +144,7 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             result = subprocess.run(
-                ["python3", "-u", tmp],
+                [sys.executable, "-u", tmp],
                 input=stdin_data,
                 capture_output=True,
                 text=True,
@@ -181,7 +182,7 @@ class handler(BaseHTTPRequestHandler):
 
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS, GET")
+        self.send_header("Access-Control-Allow-Methods", "POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
 
     def log_message(self, *a):
