@@ -45,6 +45,8 @@ ALL_BLOCKED = (
 
 COMPILED = [(re.compile(p), name) for p, name in ALL_BLOCKED]
 
+TMP_FILE_RE = re.compile(r'File "/tmp/[^"]+", ')
+
 
 def strip_strings(code):
     r = re.sub(r'"""[\s\S]*?"""', '""', code)
@@ -58,6 +60,10 @@ def strip_strings(code):
 def check(code):
     clean = strip_strings(code)
     return [name for pat, name in COMPILED if pat.search(clean)]
+
+
+def clean_stderr(text):
+    return TMP_FILE_RE.sub("", text)
 
 
 WRAPPER = '''
@@ -91,6 +97,9 @@ builtins.breakpoint = None
 
 
 class handler(BaseHTTPRequestHandler):
+
+    def do_GET(self):
+        return self._json(405, {"success": False, "error": "Only POST method is supported"})
 
     def do_OPTIONS(self):
         self.send_response(204)
@@ -138,11 +147,12 @@ class handler(BaseHTTPRequestHandler):
         )
         start = time.perf_counter()
 
-        with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, dir="/tmp") as f:
-            f.write(script)
-            tmp = f.name
-
+        tmp = None
         try:
+            with tempfile.NamedTemporaryFile(mode="w", suffix=".py", delete=False, dir="/tmp") as f:
+                f.write(script)
+                tmp = f.name
+
             result = subprocess.run(
                 [sys.executable, "-u", tmp],
                 input=stdin_data,
@@ -153,24 +163,47 @@ class handler(BaseHTTPRequestHandler):
                 env={"PATH": "/usr/bin:/bin", "HOME": "/tmp", "PYTHONDONTWRITEBYTECODE": "1"},
             )
             ms = round((time.perf_counter() - start) * 1000, 2)
+
+            stderr_clean = clean_stderr(result.stderr[:MAX_STDERR]) if result.stderr else None
+
+            if result.returncode != 0:
+                error_msg = "Runtime error"
+                if stderr_clean:
+                    error_msg += ": " + stderr_clean.strip()
+                return self._json(200, {
+                    "success": False,
+                    "error": error_msg,
+                    "stdout": result.stdout[:MAX_STDOUT],
+                    "exit_code": result.returncode,
+                    "time_ms": ms,
+                })
+
             return self._json(200, {
-                "success": result.returncode == 0,
+                "success": True,
                 "stdout": result.stdout[:MAX_STDOUT],
-                "stderr": result.stderr[:MAX_STDERR] or None,
                 "exit_code": result.returncode,
                 "time_ms": ms,
             })
         except subprocess.TimeoutExpired:
             ms = round((time.perf_counter() - start) * 1000, 2)
             return self._json(200, {
-                "success": False, "stdout": "", "stderr": f"Timed out after {timeout}s",
-                "exit_code": -1, "time_ms": ms,
+                "success": False,
+                "error": f"Timed out after {timeout}s",
+                "stdout": "",
+                "exit_code": -1,
+                "time_ms": ms,
             })
         except Exception as e:
-            return self._json(500, {"success": False, "error": str(e)})
+            return self._json(200, {
+                "success": False,
+                "error": "Code execution error: " + str(e),
+            })
         finally:
-            try: os.unlink(tmp)
-            except: pass
+            if tmp:
+                try:
+                    os.unlink(tmp)
+                except:
+                    pass
 
     def _json(self, status, data):
         body = json.dumps(data, ensure_ascii=False, default=str).encode()
