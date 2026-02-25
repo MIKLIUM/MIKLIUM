@@ -7,13 +7,13 @@ import re
 import time
 from http.server import BaseHTTPRequestHandler
 
-MAX_CODE_LENGTH = 25_000
-MAX_STDOUT = 50_000
-MAX_STDERR = 25_000
-MAX_TIMEOUT = 50
+MAX_CODE_LENGTH = 10_000
+MAX_STDOUT = 10_000
+MAX_STDERR = 10_000
+MAX_TIMEOUT = 40
 DEFAULT_TIMEOUT = 20
 MAX_MEMORY_MB = 128
-MAX_RECURSION = 150
+MAX_RECURSION = 200
 
 BLOCKED_MODULES = [
     "os", "subprocess", "shutil", "pathlib", "glob", "tempfile",
@@ -46,36 +46,7 @@ ALL_BLOCKED = (
 COMPILED = [(re.compile(p), name) for p, name in ALL_BLOCKED]
 
 TMP_FILE_RE = re.compile(r'File "/tmp/[^"]+", ')
-
-WRAPPER_PREFIX_LINES = 28
-
 LINE_RE = re.compile(r'(?<=line )\d+')
-
-
-def strip_strings(code):
-    r = re.sub(r'"""[\s\S]*?"""', '""', code)
-    r = re.sub(r"'''[\s\S]*?'''", "''", r)
-    r = re.sub(r'"[^"\n]*"', '""', r)
-    r = re.sub(r"'[^'\n]*'", "''", r)
-    r = re.sub(r"#.*$", "", r, flags=re.MULTILINE)
-    return r
-
-
-def check(code):
-    return [name for pat, name in COMPILED if pat.search(strip_strings(code))]
-
-
-def clean_stderr(text):
-    text = TMP_FILE_RE.sub("", text)
-
-    def adjust_line(m):
-        n = int(m.group(0))
-        adjusted = n - WRAPPER_PREFIX_LINES
-        return str(max(adjusted, 1))
-
-    text = LINE_RE.sub(adjust_line, text)
-    return text
-
 
 WRAPPER = '''
 import sys, builtins
@@ -105,6 +76,37 @@ builtins.compile = None
 builtins.breakpoint = None
 {code}
 '''
+
+WRAPPER_PREFIX_LINES = WRAPPER.split("{code}")[0].format(
+    blocked_set=repr(BLOCKED_MODULES),
+    max_memory=MAX_MEMORY_MB,
+    max_recursion=MAX_RECURSION,
+).count("\n")
+
+
+def strip_strings(code):
+    r = re.sub(r'"""[\s\S]*?"""', '""', code)
+    r = re.sub(r"'''[\s\S]*?'''", "''", r)
+    r = re.sub(r'"[^"\n]*"', '""', r)
+    r = re.sub(r"'[^'\n]*'", "''", r)
+    r = re.sub(r"#.*$", "", r, flags=re.MULTILINE)
+    return r
+
+
+def check(code):
+    return [name for pat, name in COMPILED if pat.search(strip_strings(code))]
+
+
+def clean_stderr(text):
+    text = TMP_FILE_RE.sub("", text)
+
+    def adjust_line(m):
+        n = int(m.group(0))
+        adjusted = n - WRAPPER_PREFIX_LINES
+        return str(max(adjusted, 1))
+
+    text = LINE_RE.sub(adjust_line, text)
+    return text
 
 
 class handler(BaseHTTPRequestHandler):
@@ -173,7 +175,7 @@ class handler(BaseHTTPRequestHandler):
                 cwd="/tmp",
                 env={"PATH": "/usr/bin:/bin", "HOME": "/tmp", "PYTHONDONTWRITEBYTECODE": "1"},
             )
-            ms = round((time.perf_counter() - start) * 1000, 2)
+            ms = float(f"{(time.perf_counter() - start) * 1000:.2f}")
 
             stdout = result.stdout[:MAX_STDOUT].rstrip("\n")
             stderr_clean = clean_stderr(result.stderr[:MAX_STDERR]).rstrip("\n") if result.stderr else None
@@ -197,7 +199,7 @@ class handler(BaseHTTPRequestHandler):
                 "time_ms": ms,
             })
         except subprocess.TimeoutExpired:
-            ms = round((time.perf_counter() - start) * 1000, 2)
+            ms = float(f"{(time.perf_counter() - start) * 1000:.2f}")
             return self._json(200, {
                 "success": False,
                 "error": f"Timed out after {timeout}s",
