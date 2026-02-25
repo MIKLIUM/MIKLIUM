@@ -175,7 +175,7 @@ class handler(BaseHTTPRequestHandler):
                 cwd="/tmp",
                 env={"PATH": "/usr/bin:/bin", "HOME": "/tmp", "PYTHONDONTWRITEBYTECODE": "1"},
             )
-            ms = float(f"{(time.perf_counter() - start) * 1000:.2f}")
+            ms = round((time.perf_counter() - start) * 1000, 2)
 
             stdout = result.stdout[:MAX_STDOUT].rstrip("\n")
             stderr_clean = clean_stderr(result.stderr[:MAX_STDERR]).rstrip("\n") if result.stderr else None
@@ -199,7 +199,7 @@ class handler(BaseHTTPRequestHandler):
                 "time_ms": ms,
             })
         except subprocess.TimeoutExpired:
-            ms = float(f"{(time.perf_counter() - start) * 1000:.2f}")
+            ms = round((time.perf_counter() - start) * 1000, 2)
             return self._json(200, {
                 "success": False,
                 "error": f"Timed out after {timeout}s",
