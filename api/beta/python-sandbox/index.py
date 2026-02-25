@@ -47,6 +47,10 @@ COMPILED = [(re.compile(p), name) for p, name in ALL_BLOCKED]
 
 TMP_FILE_RE = re.compile(r'File "/tmp/[^"]+", ')
 
+WRAPPER_PREFIX_LINES = 28
+
+LINE_RE = re.compile(r'(?<=line )\d+')
+
 
 def strip_strings(code):
     r = re.sub(r'"""[\s\S]*?"""', '""', code)
@@ -58,12 +62,19 @@ def strip_strings(code):
 
 
 def check(code):
-    clean = strip_strings(code)
-    return [name for pat, name in COMPILED if pat.search(clean)]
+    return [name for pat, name in COMPILED if pat.search(strip_strings(code))]
 
 
 def clean_stderr(text):
-    return TMP_FILE_RE.sub("", text)
+    text = TMP_FILE_RE.sub("", text)
+
+    def adjust_line(m):
+        n = int(m.group(0))
+        adjusted = n - WRAPPER_PREFIX_LINES
+        return str(max(adjusted, 1))
+
+    text = LINE_RE.sub(adjust_line, text)
+    return text
 
 
 WRAPPER = '''
@@ -164,7 +175,8 @@ class handler(BaseHTTPRequestHandler):
             )
             ms = round((time.perf_counter() - start) * 1000, 2)
 
-            stderr_clean = clean_stderr(result.stderr[:MAX_STDERR]) if result.stderr else None
+            stdout = result.stdout[:MAX_STDOUT].rstrip("\n")
+            stderr_clean = clean_stderr(result.stderr[:MAX_STDERR]).rstrip("\n") if result.stderr else None
 
             if result.returncode != 0:
                 error_msg = "Runtime error"
@@ -173,14 +185,14 @@ class handler(BaseHTTPRequestHandler):
                 return self._json(200, {
                     "success": False,
                     "error": error_msg,
-                    "stdout": result.stdout[:MAX_STDOUT],
+                    "stdout": stdout,
                     "exit_code": result.returncode,
                     "time_ms": ms,
                 })
 
             return self._json(200, {
                 "success": True,
-                "stdout": result.stdout[:MAX_STDOUT],
+                "stdout": stdout,
                 "exit_code": result.returncode,
                 "time_ms": ms,
             })
