@@ -16,7 +16,6 @@
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
 
 ---
-
 # Python Sandbox API Documentation
 
 ## Navigation
@@ -38,6 +37,8 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 ## About MIKLIUM Python Sandbox API
 
 **Easily and quickly launch Python code.** Using this API, you can run Python code, configuring timeouts and inputs as needed for your code execution. Everything works without external dependencies.
+
+_Python Sandbox was suggested for creation by [Elc29](https://github.com/TheCodeWan)._
 
 ## Request Body
 
