@@ -1,4 +1,3 @@
-
 # Python Sandbox API Documentation
 
 ## Navigation
@@ -18,6 +17,8 @@
 ## About MIKLIUM Python Sandbox API
 
 **Easily and quickly launch Python code.** Using this API, you can run Python code, configuring timeouts and inputs as needed for your code execution. Everything works without external dependencies.
+
+_Python Sandbox was suggested for creation by [Elc29](https://github.com/TheCodeWan)._
 
 ## Request Body
 
