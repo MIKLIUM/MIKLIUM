@@ -15,7 +15,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 * **[Our Website](https://miklium.github.io/MIKLIUM/)**
 * **[Our Discord server](https://discord.gg/d3txS4q8)**
 
-## Currently Available Projects:
+## Currently Available APIs:
 
 * **APIs:**
   - [Python Sandbox](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/python-sandbox/README.md)
@@ -24,6 +24,14 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
   - [YouTube Transcript](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/youtube-transcript/README.md)
 
 [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
+
+## Featured Projects Powered with MIKLIUM 
+> <!-- FEATURED_COUNT_START -->0<!-- FEATURED_COUNT_END --> community projects are featured
+
+<!-- README_FEATURED_COUNT_START -->0<!-- README_FEATURED_COUNT_END -->
+
+<!-- FEATURED_PROJECTS_START -->
+<!-- FEATURED_PROJECTS_END -->
 
 ## Stats
 
