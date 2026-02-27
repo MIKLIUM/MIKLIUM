@@ -136,7 +136,7 @@ jobs:
           lines = [l.strip() for l in middle.strip().split('\n') if l.strip()]
           header_lines = [l for l in lines if l.startswith('| Name') or l.startswith('|---')]
           data_lines = [l for l in lines if l not in header_lines]
-          data_lines.append(new_row)
+          data_lines.insert(0, new_row)
 
           total = len(data_lines)
 
