@@ -26,7 +26,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
 ## Featured Projects Powered with MIKLIUM 
-> <!-- README_FEATURED_COUNT_START -->1<!-- README_FEATURED_COUNT_END --> community projects are featured
+> <!-- README_FEATURED_COUNT_START -->1<!-- README_FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured
 
 <!-- FEATURED_PROJECTS_START -->
 | Name | Description | URL | Creator |
