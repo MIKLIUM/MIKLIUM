@@ -6,8 +6,8 @@
 ### Full list of community projects:
 
 <!-- FEATURED_PROJECTS_TABLE_START -->
-| Name | Description | URL | Creator |
-|------|-------------|-----|---------|
-| Nuvole AI | The most convenient and incredibly powerful AI shortcut without API keys or Apps, powered with MIKLIUM Search and YouTube Transcript. | [Link](https://routinehub.co/shortcut/18431/) | [@mikl-shortcuts](https://github.com/mikl-shortcuts) |
-| Nuvole AI Lite | The most convenient AI Shortcut without API keys or Apps, powered with GPT-5.2 and MIKLIUM Internet Search API. | [Link](https://routinehub.co/shortcut/18428/) | [@mikl-shortcuts](https://github.com/mikl-shortcuts) |
+| Name | Description | Creator |
+|------|-------------|---------|
+| [Nuvole AI](https://routinehub.co/shortcut/18431/) | The most convenient and incredibly powerful AI shortcut without API keys or Apps, powered with MIKLIUM Search and YouTube Transcript. | [@mikl-shortcuts](https://github.com/mikl-shortcuts) |
+| [Nuvole AI Lite](https://routinehub.co/shortcut/18428/) | The most convenient AI Shortcut without API keys or Apps, powered with GPT-5.2 and MIKLIUM Internet Search API. | [@mikl-shortcuts](https://github.com/mikl-shortcuts) |
 <!-- FEATURED_PROJECTS_TABLE_END -->
