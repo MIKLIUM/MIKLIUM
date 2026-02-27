@@ -104,44 +104,18 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH_NAME"
 
-          URL_DISPLAY=""
-          if [ -n "$PROJECT_URL" ]; then
-            URL_DISPLAY=$(python3 << URLEOF
-          import re
-          
-          url = """$PROJECT_URL"""
-          
-          match = re.search(r'https?://(?:www\.)?([^/]+)', url)
-          if match:
-              domain = match.group(1).lower()
-              parts = domain.split('.')
-              
-              parts = [p for p in parts if p != 'www']
-              
-              if len(parts) >= 2:
-                  
-                  first = parts[0].capitalize()
-                  second = parts[1].capitalize()
-                  
-                  if second in ['Com', 'Org', 'Io', 'Net', 'Dev', 'App', 'Co', 'Me', 'Sh']:
-                      display_name = first
-                  else:
-                      display_name = f"{first} ({second})"
-              else:
-                  display_name = parts[0].capitalize()
-              
-              print(f"[{display_name}]({url})")
-          else:
-              print(f"[Link]({url})")
-          URLEOF
-          )
-          fi
-
           ESCAPED_NAME=$(echo "$PROJECT_NAME" | sed 's/|/\\|/g')
           ESCAPED_DESC=$(echo "$PROJECT_DESCRIPTION" | sed 's/|/\\|/g')
           CREATOR_LINK="[@${CREATOR}](https://github.com/${CREATOR})"
           
-          NEW_ROW="| ${ESCAPED_NAME} | ${ESCAPED_DESC} | ${URL_DISPLAY} | ${CREATOR_LINK} |"
+          if [ -n "$PROJECT_URL" ]; then
+            NAME_DISPLAY="[${ESCAPED_NAME}](${PROJECT_URL})"
+          else
+            NAME_DISPLAY="${ESCAPED_NAME}"
+          fi
+          
+          NEW_ROW="| ${NAME_DISPLAY} | ${ESCAPED_DESC} | ${CREATOR_LINK} |"
+
           export NEW_ROW
 
           python3 << 'PYEOF'
@@ -162,7 +136,7 @@ jobs:
           middle = content[start_idx:end_idx]
 
           lines = [l.strip() for l in middle.strip().split('\n') if l.strip()]
-          header_lines = [l for l in lines if l.startswith('| Name') or l.startswith('|---')]
+          header_lines = [l for l in lines if l.startswith('| Name') or l.startswith('| ---') or l.startswith('|---') or l.startswith('| -')]
           data_lines = [l for l in lines if l not in header_lines]
           data_lines.insert(0, new_row)
 
@@ -184,7 +158,7 @@ jobs:
 
           display = data_lines[:3]
 
-          table = "| Name | Description | URL | Creator |\n|------|-------------|-----|---------|"
+          table = "| Name | Description | Creator |\n|------|-------------|---------|"
           for row in display:
               table += "\n" + row
 
