@@ -1,7 +1,9 @@
-## 🌟 Featured Projects Powered with MIKLIUM
-> <!-- FEATURED_COUNT_START -->1<!-- FEATURED_COUNT_END --> community projects are featured
+## Featured Projects Powered with MIKLIUM
+> <!-- FEATURED_COUNT_START -->1<!-- FEATURED_COUNT_END --> community projects powered with [MIKLIUM](https://github.com/MIKLIUM/MIKLIUM) are featured
 
-A curated list of amazing community projects.
+**[Submit your amazing project](https://github.com/MIKLIUM/MIKLIUM/issues/new?template=project-submission.yml)**
+
+### Full list of community projects:
 
 <!-- FEATURED_PROJECTS_TABLE_START -->
 | Name | Description | URL | Creator |
