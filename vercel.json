@@ -1,1 +1,11 @@
-{ "rewrites": [{ "source": "/api/(.*)", "destination": "/api/404.js" }] }
+{
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "*": false
+    }
+  },
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/404.js" }
+  ]
+}
