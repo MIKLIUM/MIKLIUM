@@ -28,9 +28,14 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 ## Featured Projects Powered with MIKLIUM 
 > <!-- FEATURED_COUNT_START -->0<!-- FEATURED_COUNT_END --> community projects are featured
 
-<!-- README_FEATURED_COUNT_START -->0<!-- README_FEATURED_COUNT_END -->
+<!-- README_FEATURED_COUNT_START -->1<!-- README_FEATURED_COUNT_END -->
 
 <!-- FEATURED_PROJECTS_START -->
+| Name | Description | URL | Creator |
+|------|-------------|-----|---------|
+| Nuvole AI | The most convenient and incredibly powerful AI shortcut without API keys or Apps, powered with MIKLIUM Search and YouTube Transcript. | [Link](https://routinehub.co/shortcut/18431/) | [@mikl-shortcuts](https://github.com/mikl-shortcuts) |
+
+[See all projects →](FEATURED_PROJECTS.md)
 <!-- FEATURED_PROJECTS_END -->
 
 ## Stats
