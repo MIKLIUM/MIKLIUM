@@ -112,7 +112,10 @@ jobs:
           ESCAPED_NAME=$(echo "$PROJECT_NAME" | sed 's/|/\\|/g')
           ESCAPED_DESC=$(echo "$PROJECT_DESCRIPTION" | sed 's/|/\\|/g')
           CREATOR_LINK="[@${CREATOR}](https://github.com/${CREATOR})"
+          
+          # Defined and EXPORTED so Python can see it
           NEW_ROW="| ${ESCAPED_NAME} | ${ESCAPED_DESC} | ${URL_DISPLAY} | ${CREATOR_LINK} |"
+          export NEW_ROW
 
           python3 << 'PYEOF'
           import re, os
@@ -218,7 +221,7 @@ jobs:
               issue_number: pr.data.number,
               labels: ['project submission']
             });
-
+            
             await github.rest.issues.addAssignees({
               owner: context.repo.owner,
               repo: context.repo.repo,
