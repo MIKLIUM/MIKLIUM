@@ -246,6 +246,6 @@ jobs:
                 `Your project **${projectName}** has been submitted for review.`,
                 `A pull request has been created on branch [\`${branchName}\`](https://github.com/MIKLIUM/MIKLIUM/tree/${branchName}).`,
                 ``,
-                `Once reviewed and merged, it will appear in our [Featured Projects](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)!
+                `Once reviewed and merged, it will appear in our [Featured Projects](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)!`
               ].join('\n')
             });
