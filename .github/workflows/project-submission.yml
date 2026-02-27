@@ -113,7 +113,6 @@ jobs:
           ESCAPED_DESC=$(echo "$PROJECT_DESCRIPTION" | sed 's/|/\\|/g')
           CREATOR_LINK="[@${CREATOR}](https://github.com/${CREATOR})"
           
-          # Defined and EXPORTED so Python can see it
           NEW_ROW="| ${ESCAPED_NAME} | ${ESCAPED_DESC} | ${URL_DISPLAY} | ${CREATOR_LINK} |"
           export NEW_ROW
 
@@ -247,6 +246,6 @@ jobs:
                 `Your project **${projectName}** has been submitted for review.`,
                 `A pull request has been created on branch \`${branchName}\`.`,
                 ``,
-                `Once reviewed and merged, it will appear in our [Featured Projects](FEATURED_PROJECTS.md)! 🚀`
+                `Once reviewed and merged, it will appear in our [Featured Projects](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)! 🚀`
               ].join('\n')
             });
