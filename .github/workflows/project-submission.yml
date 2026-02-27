@@ -1,0 +1,249 @@
+name: Process Project Submission
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  process-submission:
+    if: contains(github.event.label.name, 'project submission')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: project-submission
+      cancel-in-progress: false
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Add eyes reaction
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              content: 'eyes'
+            });
+
+      - name: Parse issue
+        uses: actions/github-script@v7
+        id: parse
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+
+            function extractField(body, fieldName) {
+              const lines = body.split('\n');
+              for (let i = 0; i < lines.length; i++) {
+                if (lines[i].includes(fieldName)) {
+                  for (let j = i + 1; j < lines.length; j++) {
+                    const val = lines[j].trim();
+                    if (val && !val.startsWith('###') && !val.startsWith('_') && val !== 'No response') {
+                      return val;
+                    }
+                  }
+                }
+              }
+              return '';
+            }
+
+            const projectName = extractField(body, 'Project Name');
+            const projectDescription = extractField(body, 'Project Description') || extractField(body, 'Description');
+            const projectUrl = extractField(body, 'Project URL') || extractField(body, 'Repository URL') || extractField(body, 'URL');
+            const creator = issue.user.login;
+
+            if (!projectName) {
+              core.setFailed('Could not extract project name from issue body');
+              return;
+            }
+
+            const slug = projectName
+              .toLowerCase()
+              .replace(/[^a-z0-9\s-]/g, '')
+              .replace(/\s+/g, '-')
+              .replace(/-+/g, '-')
+              .replace(/^-|-$/g, '');
+
+            const branchName = `${issue.number}-${creator.toLowerCase()}-${slug}`;
+
+            core.setOutput('project_name', projectName);
+            core.setOutput('project_description', projectDescription);
+            core.setOutput('project_url', projectUrl);
+            core.setOutput('creator', creator);
+            core.setOutput('issue_number', String(issue.number));
+            core.setOutput('branch_name', branchName);
+
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              title: `[Project Submission] ${projectName}`
+            });
+
+      - name: Create branch and update files
+        env:
+          PROJECT_NAME: ${{ steps.parse.outputs.project_name }}
+          PROJECT_DESCRIPTION: ${{ steps.parse.outputs.project_description }}
+          PROJECT_URL: ${{ steps.parse.outputs.project_url }}
+          CREATOR: ${{ steps.parse.outputs.creator }}
+          BRANCH_NAME: ${{ steps.parse.outputs.branch_name }}
+          ISSUE_NUMBER: ${{ steps.parse.outputs.issue_number }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH_NAME"
+
+          URL_DISPLAY=""
+          if [ -n "$PROJECT_URL" ]; then
+            URL_DISPLAY="[Link](${PROJECT_URL})"
+          fi
+
+          ESCAPED_NAME=$(echo "$PROJECT_NAME" | sed 's/|/\\|/g')
+          ESCAPED_DESC=$(echo "$PROJECT_DESCRIPTION" | sed 's/|/\\|/g')
+          CREATOR_LINK="[@${CREATOR}](https://github.com/${CREATOR})"
+          NEW_ROW="| ${ESCAPED_NAME} | ${ESCAPED_DESC} | ${URL_DISPLAY} | ${CREATOR_LINK} |"
+
+          python3 << 'PYEOF'
+          import re, os
+
+          new_row = os.environ['NEW_ROW']
+
+          with open("FEATURED_PROJECTS.md", "r") as f:
+              content = f.read()
+
+          table_start = "<!-- FEATURED_PROJECTS_TABLE_START -->"
+          table_end = "<!-- FEATURED_PROJECTS_TABLE_END -->"
+          count_start = "<!-- FEATURED_COUNT_START -->"
+          count_end = "<!-- FEATURED_COUNT_END -->"
+
+          start_idx = content.index(table_start) + len(table_start)
+          end_idx = content.index(table_end)
+          middle = content[start_idx:end_idx]
+
+          lines = [l.strip() for l in middle.strip().split('\n') if l.strip()]
+          header_lines = [l for l in lines if l.startswith('| Name') or l.startswith('|---')]
+          data_lines = [l for l in lines if l not in header_lines]
+          data_lines.append(new_row)
+
+          total = len(data_lines)
+
+          new_middle = '\n'.join(header_lines + data_lines)
+          new_content = content[:content.index(table_start) + len(table_start)] + '\n' + new_middle + '\n' + content[end_idx:]
+
+          count_pattern = re.escape(count_start) + r'.*?' + re.escape(count_end)
+          new_content = re.sub(count_pattern, count_start + str(total) + count_end, new_content)
+
+          with open("FEATURED_PROJECTS.md", "w") as f:
+              f.write(new_content)
+
+          readme_start = "<!-- FEATURED_PROJECTS_START -->"
+          readme_end = "<!-- FEATURED_PROJECTS_END -->"
+          readme_count_start = "<!-- README_FEATURED_COUNT_START -->"
+          readme_count_end = "<!-- README_FEATURED_COUNT_END -->"
+
+          display = data_lines[:3]
+
+          table = "| Name | Description | URL | Creator |\n|------|-------------|-----|---------|"
+          for row in display:
+              table += "\n" + row
+
+          if total > 3:
+              table += f"\n\n> **{total} projects total!** [See all projects →](FEATURED_PROJECTS.md)"
+          else:
+              table += "\n\n[See all projects →](FEATURED_PROJECTS.md)"
+
+          with open("README.md", "r") as f:
+              readme = f.read()
+
+          pattern = re.escape(readme_start) + r'.*?' + re.escape(readme_end)
+          replacement = readme_start + '\n' + table + '\n' + readme_end
+          readme = re.sub(pattern, replacement, readme, flags=re.DOTALL)
+
+          readme_count_pattern = re.escape(readme_count_start) + r'.*?' + re.escape(readme_count_end)
+          readme = re.sub(readme_count_pattern, readme_count_start + str(total) + readme_count_end, readme)
+
+          with open("README.md", "w") as f:
+              f.write(readme)
+          PYEOF
+
+          git add FEATURED_PROJECTS.md README.md
+          git commit -m "feat: add project '${PROJECT_NAME}' from issue #${ISSUE_NUMBER}"
+          git push origin "$BRANCH_NAME"
+
+      - name: Create Pull Request
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const branchName = '${{ steps.parse.outputs.branch_name }}';
+            const projectName = '${{ steps.parse.outputs.project_name }}';
+            const creator = '${{ steps.parse.outputs.creator }}';
+            const issueNumber = parseInt('${{ steps.parse.outputs.issue_number }}');
+            const projectUrl = '${{ steps.parse.outputs.project_url }}';
+            const projectDescription = '${{ steps.parse.outputs.project_description }}';
+
+            const pr = await github.rest.pulls.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `[Project Submission] ${projectName}`,
+              head: branchName,
+              base: 'main',
+              body: [
+                `## New Project Submission`,
+                ``,
+                `| Field | Value |`,
+                `|-------|-------|`,
+                `| **Project** | ${projectName} |`,
+                `| **Description** | ${projectDescription} |`,
+                `| **URL** | ${projectUrl} |`,
+                `| **Creator** | @${creator} |`,
+                ``,
+                `Closes #${issueNumber}`,
+              ].join('\n')
+            });
+
+            await github.rest.issues.addLabels({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.data.number,
+              labels: ['project submission']
+            });
+
+            await github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.data.number,
+              assignees: [creator]
+            });
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const creator = '${{ steps.parse.outputs.creator }}';
+            const projectName = '${{ steps.parse.outputs.project_name }}';
+            const branchName = '${{ steps.parse.outputs.branch_name }}';
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                `🎉 Thanks for sharing your project, @${creator}!`,
+                ``,
+                `Your project **${projectName}** has been submitted for review.`,
+                `A pull request has been created on branch \`${branchName}\`.`,
+                ``,
+                `Once reviewed and merged, it will appear in our [Featured Projects](FEATURED_PROJECTS.md)! 🚀`
+              ].join('\n')
+            });
