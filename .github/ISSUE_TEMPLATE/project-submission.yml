@@ -1,0 +1,59 @@
+name: Project Submission
+description: Get your project featured on MIKLIUM
+title: "[Project Submission]"
+labels: ["project submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Submit your project to get featured
+        > Thanks for submitting your project! Fill out the form below and we'll review it for the [Featured Projects Powered with MIKLIUM](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md).
+        ---
+        ### Requirements
+        - Your project must be public and use the MIKLIUM API
+        - Credit MIKLIUM *(optional but appreciated)*
+          + [`Link to MIKLIUM`](https://github.com/MIKLIUM/MIKLIUM/tree/main)
+          + [`Directory with official graphics`](https://github.com/MIKLIUM/MIKLIUM/tree/main/webpage/assets)
+        ---
+        **Your GitHub account will be automatically credited as the project `Creator`.**
+
+  - type: input
+    id: project-name
+    attributes:
+      label: Project Name
+      description: What is the name of your project?
+      placeholder: "e.g., Web Search AI"
+    validations:
+      required: true
+
+  - type: textarea
+    id: project-description
+    attributes:
+      label: Project Description
+      description: Please provide a brief description of your project and how it uses MIKLIUM API
+      placeholder: "e.g., My project can…"
+    validations:
+      required: true
+
+  - type: input
+    id: project-url
+    attributes:
+      label: Project URL
+      description: Link to your project
+      placeholder: "e.g., https://example.com"
+    validations:
+      required: true
+
+  - type: input
+    id: discord-contact
+    attributes:
+      label: Discord Contact
+      description: Your Discord username so we can reach you (optional)
+      placeholder: "e.g., @username"
+ 
+  - type: input
+    id: email-contact
+    attributes:
+      label: Email Contact
+      description: Your Email so we can reach you (optional)
+      placeholder: "e.g., example@inbox.com"
