@@ -106,7 +106,35 @@ jobs:
 
           URL_DISPLAY=""
           if [ -n "$PROJECT_URL" ]; then
-            URL_DISPLAY="[Link](${PROJECT_URL})"
+            URL_DISPLAY=$(python3 << URLEOF
+          import re
+          
+          url = """$PROJECT_URL"""
+          
+          match = re.search(r'https?://(?:www\.)?([^/]+)', url)
+          if match:
+              domain = match.group(1).lower()
+              parts = domain.split('.')
+              
+              parts = [p for p in parts if p != 'www']
+              
+              if len(parts) >= 2:
+                  
+                  first = parts[0].capitalize()
+                  second = parts[1].capitalize()
+                  
+                  if second in ['Com', 'Org', 'Io', 'Net', 'Dev', 'App', 'Co', 'Me', 'Sh']:
+                      display_name = first
+                  else:
+                      display_name = f"{first} ({second})"
+              else:
+                  display_name = parts[0].capitalize()
+              
+              print(f"[{display_name}]({url})")
+          else:
+              print(f"[Link]({url})")
+          URLEOF
+          )
           fi
 
           ESCAPED_NAME=$(echo "$PROJECT_NAME" | sed 's/|/\\|/g')
