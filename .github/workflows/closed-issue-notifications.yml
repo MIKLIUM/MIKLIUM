@@ -1,0 +1,27 @@
+name: Closed Issue Notifications
+
+on:
+  issues:
+    types: [closed]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: contains(github.event.issue.labels.*.name, 'project submission')
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const accepted = issue.state_reason === 'completed';
+            
+            const body = accepted
+              ? `## ✅ Your project is now [featured](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)!\n@${issue.user.login}, congratulations!`
+              : `## ❌ @${issue.user.login}, unfortunately, the project has not been accepted.\nPlease see the comments above for details.`;
+            
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issue.number,
+              body
+            });
