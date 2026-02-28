@@ -243,7 +243,7 @@ jobs:
               repo: context.repo.repo,
               issue_number: context.issue.number,
               body: [
-                `🎉 Thanks for sharing your project, @${creator}!`,
+                `## 🎉 Thanks for sharing your project, @${creator}!`,
                 ``,
                 `Your project **${projectName}** has been submitted for review.`,
                 `A pull request has been created on branch [\`${branchName}\`](https://github.com/MIKLIUM/MIKLIUM/tree/${branchName}).`,
