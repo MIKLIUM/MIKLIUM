@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en" data-page="chat">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miklium LM Chat</title>
+    <meta name="description" content="Chat with Miklium LM - A blazing fast, free AI model for everyone.">
+    <meta property="og:title" content="Miklium LM Chat">
+    <meta property="og:description" content="Chat with Miklium LM - A blazing fast, free AI model for everyone.">
+    <meta name="theme-color" content="#0155A1">
+    <link rel="icon" type="image/png" href="images/Logo_Transparent_White.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        :root {
+            --accent: #0155A1;
+            --accent-hover: #1e70c1;
+            --accent-dark: #004382;
+            --accent-glow: rgba(1, 85, 161, 0.35);
+            --accent-border: rgba(1, 85, 161, 0.4);
+            --bg: #000;
+            --surface: rgba(255, 255, 255, 0.035);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.25);
+            --text-primary: #fff;
+            --text-secondary: #a1a1a6;
+            --text-tertiary: #6e6e73;
+            --glass-bg: rgba(20, 20, 22, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.18);
+            --glass-shadow: rgba(0, 0, 0, 0.5);
+            --radius-pill: 100px;
+            --radius-card: 24px;
+            --radius-sm: 14px;
+            --radius-xs: 12px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000 0%, #0a0a0a 50%, #000814 100%);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Chat Layout */
+        .chat-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .chat-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: fit-content;
+            animation: slideDown 0.8s var(--transition-smooth);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-logo {
+            width: 28px;
+            height: 28px;
+            filter: brightness(0) invert(1);
+        }
+
+        .header-brand h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+
+        /* Messages Area */
+        .messages-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 7rem 1.5rem 10rem 1.5rem;
+            gap: 1.2rem;
+            scroll-behavior: smooth;
+        }
+
+        .messages-wrapper::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+
+        .messages-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            animation: fadeIn 0.8s var(--transition-smooth);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            text-shadow: 0 0 30px rgba(1, 85, 161, 0.3);
+        }
+
+        .empty-state h2 {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        .empty-state-suggestions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.8rem;
+            max-width: 600px;
+        }
+
+        .suggestion-chip {
+            padding: 0.8rem 1.2rem;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            font-size: 0.9rem;
+            text-align: center;
+        }
+
+        .suggestion-chip:hover {
+            background: var(--surface-hover);
+            border-color: var(--accent-border);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Messages */
+        .message {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 850px;
+            animation: fadeIn 0.4s var(--transition-smooth);
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .message.user .message-content {
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 1rem 1.3rem;
+            border-radius: var(--radius-card);
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: slideUp 0.4s var(--transition-smooth);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.assistant .message-bubble {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .message.user .message-bubble {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(1, 85, 161, 0.4);
+        }
+
+        .message-time {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            padding: 0 0.8rem;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 1rem 1.3rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            padding: 0.8rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 800px;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            animation: inputSlideUp 0.8s var(--transition-smooth);
+        }
+
+        @keyframes inputSlideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.95rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            resize: none;
+            font-family: 'Inter', sans-serif;
+            max-height: 120px;
+            transition: all 0.3s var(--transition-smooth);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-border);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow:
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(1, 85, 161, 0.2);
+        }
+
+        .input-field::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .send-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--transition-smooth);
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(1, 85, 161, 0.4);
+            position: relative;
+        }
+
+        .send-icon {
+            width: 20px;
+            height: 20px;
+            display: block;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(1, 85, 161, 0.4);
+        }
+
+        .send-btn:hover:not(:disabled) .send-icon {
+            transform: translateY(-2px);
+        }
+
+        .send-btn:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            padding: 0 0.2rem;
+        }
+
+        .model-info {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .model-badge {
+            background: rgba(1, 85, 161, 0.15);
+            color: var(--accent);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 0.3px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .message-content {
+                max-width: 85%;
+            }
+
+            .empty-state-suggestions {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-header {
+                padding: 0.8rem 1rem;
+            }
+
+            .messages-wrapper {
+                padding: 1.5rem 1rem;
+            }
+
+            .input-area {
+                padding: 1rem;
+            }
+
+            .input-wrapper {
+                gap: 0.6rem;
+            }
+        }
+
+        /* Code highlighting in messages */
+        .message-code {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #e6edf3;
+        }
+
+        /* Think block styling */
+        .think-block {
+            display: block;
+            font-size: 0.88rem;
+            color: var(--text-tertiary);
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+            font-style: italic;
+        }
+
+        /* Loading state */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-brand">
+                <img src="images/Logo_Transparent_White.png" alt="Miklium" class="header-logo">
+                <h1>Miklium LM</h1>
+            </div>
+        </div>
+
+        <!-- Messages Area -->
+        <div class="messages-wrapper" id="messagesContainer">
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-wand-magic-sparkles"></i>
+                </div>
+                <h2>Hey, What's up?</h2>
+                <p>Start a conversation with our blazing-fast AI model. No sign-ups, no limits, just pure innovation.
+                </p>
+                <div class="empty-state-suggestions">
+                    <div class="suggestion-chip" onclick="setSuggestion('what can you do?')">What can you do?</div>
+                    <div class="suggestion-chip" onclick="setSuggestion('hello!')">Hello!</div>
+                    <div class="suggestion-chip" onclick="setSuggestion('where are you from?')">Where are you from?
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <textarea id="messageInput" class="input-field" placeholder="Ask anything... (Shift+Enter for new line)"
+                    rows="1"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()" title="Send (Enter)">
+                    <svg class="send-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="19" x2="12" y2="5"></line>
+                        <polyline points="5 12 12 5 19 12"></polyline>
+                    </svg>
+                </button>
+            </div>
+            <div class="input-info">
+                <div class="model-info">
+                    <span>Powered by</span>
+                    <span class="model-badge">miklium-lm-nano</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="inference.js"></script>
+    <script>
+        const lm = new MikliumModel();
+        lm.load("miklium-lm-nano_502.7K.miklium_model").catch(e => console.error("Model load error:", e));
+
+        const messagesContainer = document.getElementById('messagesContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        let isLoading = false;
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function () {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send on Enter (Shift+Enter for newline)
+        messageInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message || isLoading) return;
+
+            // Remove empty state if present
+            const emptyState = messagesContainer.querySelector('.empty-state');
+            if (emptyState) emptyState.remove();
+
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            // Simulate AI response
+            isLoading = true;
+            sendBtn.disabled = true;
+            messagesContainer.classList.add('loading');
+
+            // Add typing indicator
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.innerHTML = `
+        <div class="message-content">
+          <div class="typing-indicator">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      `;
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+
+            // Generate AI response
+            setTimeout(async () => {
+                if (!lm.modelData) {
+                    typingDiv.remove();
+                    addMessage("Model is still loading... please wait a few seconds.", 'assistant');
+                    isLoading = false;
+                    sendBtn.disabled = false;
+                    messagesContainer.classList.remove('loading');
+                    return;
+                }
+
+                const prompt = "<user> " + message + " <eos> ";
+
+                typingDiv.remove();
+                const assistantDiv = document.createElement('div');
+                assistantDiv.className = 'message assistant';
+                const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+                assistantDiv.innerHTML = `
+        <div class="message-content">
+          <div class="message-bubble"></div>
+          <div class="message-time">${time}</div>
+        </div>
+      `;
+                messagesContainer.appendChild(assistantDiv);
+                scrollToBottom();
+
+                const bubble = assistantDiv.querySelector('.message-bubble');
+                let fullResponse = "";
+
+                try {
+                    await lm.generate(prompt, 300, 0.4, async (chunk) => {
+                        fullResponse += chunk;
+                        bubble.innerHTML = formatMessage(fullResponse);
+                        scrollToBottom();
+                        // Yield to UI thread to allow rendering
+                        await new Promise(r => setTimeout(r, 0));
+                    });
+                } catch (e) {
+                    console.error("Generation error:", e);
+                    fullResponse += "\n[Error generating response]";
+                    bubble.innerHTML = formatMessage(fullResponse);
+                }
+
+                isLoading = false;
+                sendBtn.disabled = false;
+                messagesContainer.classList.remove('loading');
+            }, 50);
+        }
+
+        function addMessage(content, role) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+
+            const time = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+
+            messageDiv.innerHTML = `
+        <div class="message-content">
+          <div class="message-bubble">${role === 'assistant' ? formatMessage(content) : escapeHtml(content)}</div>
+          <div class="message-time">${time}</div>
+        </div>
+      `;
+
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 0);
+        }
+
+        function setSuggestion(text) {
+            messageInput.value = text;
+            messageInput.style.height = 'auto';
+            messageInput.style.height = messageInput.scrollHeight + 'px';
+            messageInput.focus();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatMessage(text) {
+            // First escape to prevent XSS
+            let formatted = escapeHtml(text);
+
+            // Handle hiding everything before <ai>
+            // We also check for <think> in case thinking starts before <ai>
+            const aiTag = "&lt;ai&gt;";
+            const thinkTag = "&lt;think&gt;";
+            const aiIndex = formatted.toLowerCase().indexOf(aiTag.toLowerCase());
+            const thinkIndex = formatted.toLowerCase().indexOf(thinkTag.toLowerCase());
+
+            if (aiIndex !== -1) {
+                // If <think> exists and is before <ai>, include it
+                if (thinkIndex !== -1 && thinkIndex < aiIndex) {
+                    formatted = formatted.substring(thinkIndex);
+                } else {
+                    formatted = formatted.substring(aiIndex + aiTag.length);
+                }
+            } else if (thinkIndex !== -1) {
+                // If only <think> is found, start from it (hides earlier prompt echo)
+                formatted = formatted.substring(thinkIndex);
+            } else if (formatted.toLowerCase().includes("&lt;user&gt;")) {
+                // If it looks like we're still echoing the prompt, show nothing yet
+                return "";
+            }
+
+            // Handle <think> tags
+            // Use regex that handles the escaped version since we escaped above
+            formatted = formatted.replace(/&lt;think&gt;/gi, '<span class="think-block">');
+            formatted = formatted.replace(/&lt;\/think&gt;/gi, '</span>');
+
+            // Hide special tags
+            const specialTags = [
+                /&lt;ai&gt;/gi, /&lt;\/ai&gt;/gi,
+                /&lt;user&gt;/gi, /&lt;\/user&gt;/gi,
+                /&lt;bot&gt;/gi, /&lt;\/bot&gt;/gi,
+                /&lt;eos&gt;/gi, /&lt;bos&gt;/gi,
+                /&lt;assistant&gt;/gi, /&lt;\/assistant&gt;/gi,
+                /&lt;system&gt;/gi, /&lt;\/system&gt;/gi,
+                /&lt;\|endoftext\|&gt;/gi,
+                /&lt;\|im_start\|&gt;/gi, /&lt;\|im_end\|&gt;/gi,
+                /&lt;\|thought\|&gt;/gi
+            ];
+
+            specialTags.forEach(tag => {
+                formatted = formatted.replace(tag, '');
+            });
+
+            return formatted;
+        }
+
+        // Focus input on load
+        messageInput.focus();
+    </script>
+</body>
+
+</html>
