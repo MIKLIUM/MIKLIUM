@@ -19,7 +19,7 @@ jobs:
             const accepted = issue.state_reason === 'completed';
             
             const body = accepted
-              ? `## ✅ Your project is now [featured](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)!\n@${issue.user.login}, congratulations!`
+              ? `## ✅ Your project is now [featured](https://github.com/MIKLIUM/MIKLIUM/blob/main/FEATURED_PROJECTS.md)!\n@${issue.user.login}, congratulations and thank you for using MIKLIUM!`
               : `## ❌ @${issue.user.login}, unfortunately, the project has not been accepted.\nPlease see the comments above for details.`;
             
             await github.rest.issues.createComment({
