@@ -1,4 +1,4 @@
-name: Process Project Submission
+name: Issues Helper
 
 on:
   issues:
@@ -10,6 +10,82 @@ permissions:
   pull-requests: write
 
 jobs:
+  process-question:
+    if: contains(github.event.label.name, 'question')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Parse support title
+        uses: actions/github-script@v7
+        id: parse-question
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const body = issue.body || '';
+            const lines = body.split('\n');
+            let supportTitle = '';
+            for (let i = 0; i < lines.length; i++) {
+              if (lines[i].includes('Question Title')) {
+                for (let j = i + 1; j < lines.length; j++) {
+                  const val = lines[j].trim();
+                  if (val && !val.startsWith('###') && !val.startsWith('_') && val !== 'No response') {
+                    supportTitle = val;
+                    break;
+                  }
+                }
+                break;
+              }
+            }
+            if (!supportTitle) {
+              supportTitle = 'General Question';
+            }
+            core.setOutput('support_title', supportTitle);
+
+      - name: Rename issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const supportTitle = '${{ steps.parse-question.outputs.support_title }}';
+            await github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              title: `[Support] ${supportTitle}`
+            });
+
+      - name: Add thinking reaction
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.reactions.createForIssue({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              content: 'confused'
+            });
+
+      - name: Comment on issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const creator = context.payload.issue.user.login;
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: [
+                `## 💬 Hello @${creator}, your question has been received!`,
+                ``,
+                `Our team will get back to you shortly (within 48 hours). Hang tight!`,
+                ``,
+                `In the meantime:`,
+                `-  You can check our [API Docs](https://github.com/MIKLIUM/MIKLIUM/blob/main/APIDOCS.md), maybe you’ll find the answer to your question here.`,
+                `-  If you changed your mind, feel free to close this issue at any time.`,
+                ``,
+                `Thanks for reaching out!`
+              ].join('\n')
+            });
+
   process-submission:
     if: contains(github.event.label.name, 'project submission')
     runs-on: ubuntu-latest
@@ -203,7 +279,7 @@ jobs:
               head: branchName,
               base: 'main',
               body: [
-                `## New Project Submission`,
+                `## 🎉 New Project Submission`,
                 ``,
                 `| Field | Value |`,
                 `|-------|-------|`,
