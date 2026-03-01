@@ -25,6 +25,11 @@ BLOCKED_MODULES = [
     "importlib", "code", "codeop",
     "webbrowser", "antigravity", "turtle",
     "gc", "resource", "atexit", "io",
+    # FIX: Low-level OS modules that bypass the "os" block via sys.modules
+    "posix", "nt", "posixpath", "ntpath", "genericpath",
+    "_io", "_posixsubprocess", "_signal",
+    "pwd", "grp", "fcntl", "termios", "tty", "pty",
+    "_frozen_importlib", "_frozen_importlib_external",
 ]
 
 BLOCKED_BUILTINS = [
@@ -36,6 +41,14 @@ BLOCKED_DUNDERS = [
     "__subclasses__", "__globals__", "__builtins__",
     "__code__", "__bases__", "__mro__",
 ]
+
+# FIX: Also block direct sys.modules access to retrieve pre-loaded dangerous modules
+BLOCKED_SYSMODULES_KEYS = {
+    "posix", "nt", "_io", "_posixsubprocess", "_signal",
+    "pwd", "grp", "fcntl", "posixpath", "ntpath", "genericpath",
+    "_frozen_importlib", "_frozen_importlib_external",
+    "zipimport", "_imp",
+}
 
 ALL_BLOCKED = (
     [(rf"\b{re.escape(m)}\b", m) for m in BLOCKED_MODULES]
@@ -50,6 +63,28 @@ LINE_RE = re.compile(r'(?<=line )\d+')
 
 WRAPPER = '''
 import sys, builtins
+
+# FIX: Purge ALL dangerous low-level modules from sys.modules before user code runs,
+# including posix, nt, _io, _signal and other C-level modules that wrap OS access.
+_BLOCKED_SYS_MODULES = {blocked_sysmodules}
+for _mk in list(sys.modules.keys()):
+    if _mk in _BLOCKED_SYS_MODULES or _mk.split(".")[0] in {blocked_set}:
+        del sys.modules[_mk]
+
+# FIX: Patch sys.modules.__getitem__ to prevent access to blocked modules
+# even if they get re-loaded by the interpreter internals.
+class _SafeModules(dict):
+    def __getitem__(self, key):
+        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in {blocked_set}:
+            raise KeyError(f"Access to '{{key}}' is blocked")
+        return super().__getitem__(key)
+    def get(self, key, default=None):
+        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in {blocked_set}:
+            return default
+        return super().get(key, default)
+
+sys.modules = _SafeModules(sys.modules)
+
 try:
     import resource
     _mem = {max_memory} * 1024 * 1024
@@ -61,11 +96,12 @@ try:
     except: pass
 except:
     pass
+
 sys.setrecursionlimit({max_recursion})
 _blocked = set({blocked_set})
 _orig = __import__
 def _si(n, *a, **k):
-    if n.split(".")[0] in _blocked:
+    if n.split(".")[0] in _blocked or n in _BLOCKED_SYS_MODULES:
         raise ImportError(f"'{{n}}' is blocked")
     return _orig(n, *a, **k)
 builtins.__import__ = _si
@@ -74,14 +110,13 @@ builtins.exec = None
 builtins.eval = None
 builtins.compile = None
 builtins.breakpoint = None
-for _m in list(sys.modules.keys()):
-    if _m.split(".")[0] in _blocked:
-        del sys.modules[_m]
+
 {code}
 '''
 
 WRAPPER_PREFIX_LINES = WRAPPER.split("{code}")[0].format(
-    blocked_set=repr(BLOCKED_MODULES),
+    blocked_set=repr(set(BLOCKED_MODULES)),
+    blocked_sysmodules=repr(BLOCKED_SYSMODULES_KEYS),
     max_memory=MAX_MEMORY_MB,
     max_recursion=MAX_RECURSION,
 ).count("\n")
@@ -157,7 +192,8 @@ class handler(BaseHTTPRequestHandler):
 
         script = WRAPPER.format(
             code=code,
-            blocked_set=repr(BLOCKED_MODULES),
+            blocked_set=repr(set(BLOCKED_MODULES)),
+            blocked_sysmodules=repr(BLOCKED_SYSMODULES_KEYS),
             max_memory=MAX_MEMORY_MB,
             max_recursion=MAX_RECURSION,
         )
