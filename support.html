@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" data-page="support">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Support - MIKLIUM</title>
   <meta name="description" content="Ask any questions you’re interested in about MIKLIUM - we’ll be happy to help.">
   <meta property="og:title" content="Support - MIKLIUM">
-  <meta property="og:description" content="Ask any questions you’re interested in about MIKLIUM - we’ll be happy to help.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <meta property="og:description"
+    content="Ask any questions you’re interested in about MIKLIUM - we’ll be happy to help.">
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#0155A1">
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" type="image/png"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="apple-touch-icon"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="css/style.css">
   <style>
     main {
@@ -23,20 +29,32 @@
       width: 100%;
       padding-top: calc(var(--nav-height) + 48px);
     }
+
     .support-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.2rem;
     }
+
     .support-card {
       text-decoration: none;
       display: block;
       animation: fadeInUp 0.8s var(--transition-smooth) both;
       cursor: pointer;
     }
-    .support-card:nth-child(1) { animation-delay: 0.1s; }
-    .support-card:nth-child(2) { animation-delay: 0.2s; }
-    .support-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .support-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .support-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .support-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
     .card-icon {
       width: 52px;
       height: 52px;
@@ -49,9 +67,22 @@
       position: relative;
       z-index: 1;
     }
-    .card-icon.discord { background: rgba(88, 101, 242, 0.12); color: #5865F2; }
-    .card-icon.chat { background: var(--accent-glow); color: var(--accent); }
-    .card-icon.github { background: rgba(255, 255, 255, 0.06); color: var(--text-primary); }
+
+    .card-icon.discord {
+      background: rgba(88, 101, 242, 0.12);
+      color: #5865F2;
+    }
+
+    .card-icon.chat {
+      background: var(--accent-glow);
+      color: var(--accent);
+    }
+
+    .card-icon.github {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+    }
+
     .support-card h3 {
       font-size: 1.15rem;
       color: var(--text-primary);
@@ -60,6 +91,7 @@
       position: relative;
       z-index: 1;
     }
+
     .support-card p {
       font-size: 0.92rem;
       color: var(--text-secondary);
@@ -68,6 +100,7 @@
       position: relative;
       z-index: 1;
     }
+
     .card-link {
       font-size: 0.88rem;
       color: var(--accent);
@@ -76,12 +109,19 @@
       z-index: 1;
       transition: opacity 0.3s;
     }
-    .support-card:hover .card-link { opacity: 0.8; }
+
+    .support-card:hover .card-link {
+      opacity: 0.8;
+    }
+
     @media (max-width: 768px) {
-      .support-grid { grid-template-columns: 1fr; }
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="nav-top">
@@ -125,7 +165,8 @@
         <h3>Discord Community</h3>
         <p>Chat with other developers, ask questions, and get real-time help from the community.</p>
         <div class="step-buttons">
-          <a href="https://discord.gg/6HUJTXh45t" target="_blank" class="btn btn-primary"><i class="fab fa-discord"></i> Join Discord</a>
+          <a href="https://discord.gg/6HUJTXh45t" target="_blank" class="btn btn-primary"><i class="fab fa-discord"></i>
+            Join Discord</a>
         </div>
       </div>
 
@@ -134,16 +175,28 @@
         <h3>GitHub Issues</h3>
         <p>Ask questions or browse existing issues on our GitHub repository.</p>
         <div class="step-buttons">
-          <a href="https://github.com/MIKLIUM/MIKLIUM/issues" target="_blank" class="btn btn-primary"><i class="fab fa-github"></i> View Issues</a>
+          <a href="https://github.com/MIKLIUM/MIKLIUM/issues" target="_blank" class="btn btn-primary"><i
+              class="fab fa-github"></i> View Issues</a>
         </div>
       </div>
-    
+
+      <div class="glass-card support-card">
+        <div class="card-icon chat"><i class="fas fa-robot"></i></div>
+        <h3>AI Assistant</h3>
+        <p>Get instant help from our AI about MIKLIUM APIs and tools directly in your browser.</p>
+        <div class="step-buttons">
+          <a href="ai-assistant.html" target="_blank" class="btn btn-primary"><i class="fas fa-external-link-alt"></i>
+            Open AI Assistant</a>
+        </div>
+      </div>
+
       <div class="glass-card support-card">
         <div class="card-icon chat"><i class="fas fa-envelope"></i></div>
         <h3>Email</h3>
         <p>Ask private questions and get help from the MIKLIUM Team via Email.</p>
         <div class="step-buttons">
-          <a href="mailto:miklium@outlook.com" class="btn btn-primary"><i class="fas fa-envelope"></i> Write an Email</a>
+          <a href="mailto:miklium@outlook.com" class="btn btn-primary"><i class="fas fa-envelope"></i> Write an
+            Email</a>
         </div>
       </div>
     </div>
@@ -166,4 +219,5 @@
     });
   </script>
 </body>
+
 </html>

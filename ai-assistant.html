@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIKLIUM AI Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        :root {
+            --accent: #0155A1;
+            --accent-glow: rgba(1, 85, 161, 0.3);
+            --bg: #000;
+            --surface: rgba(255, 255, 255, 0.05);
+            --surface-hover: rgba(255, 255, 255, 0.1);
+            --text-primary: #fff;
+            --text-secondary: #a1a1a6;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body,
+        html {
+            height: 100%;
+            background: var(--bg);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            padding: 1.2rem;
+            background: rgba(20, 20, 22, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 10;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        #close-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        #close-btn:hover {
+            color: #fff;
+        }
+
+        .header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            letter-spacing: -0.2px;
+        }
+
+        .header h1 i {
+            color: var(--accent);
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
+
+        .status-pill {
+            font-size: 0.7rem;
+            padding: 0.3rem 0.7rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .status-pill .indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #ffcc00;
+        }
+
+        .status-pill.ready .indicator {
+            background: #34c759;
+            box-shadow: 0 0 8px rgba(52, 199, 89, 0.5);
+        }
+
+        #chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            scroll-behavior: smooth;
+        }
+
+        #chat-container::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        #chat-container::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 0.9rem 1.1rem;
+            border-radius: 20px;
+            line-height: 1.55;
+            font-size: 0.95rem;
+            animation: messageSlideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+        }
+
+        @keyframes messageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: var(--accent);
+            color: white;
+            border-bottom-right-radius: 5px;
+            box-shadow: 0 4px 15px rgba(1, 85, 161, 0.2);
+        }
+
+        .ai-message {
+            align-self: flex-start;
+            background: var(--surface);
+            color: var(--text-primary);
+            border-bottom-left-radius: 5px;
+            border: 1px solid var(--border);
+        }
+
+        .ai-message small {
+            display: block;
+            margin-top: 0.4rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        /* Link Card Styles */
+        .link-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-top: 0.8rem;
+        }
+
+        .link-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .link-card:hover {
+            background: var(--surface-hover);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-card i {
+            color: var(--accent);
+            font-size: 1.1rem;
+        }
+
+        .link-card span {
+            font-size: 0.85rem;
+            font-weight: 600;
+            flex: 1;
+            margin-left: 0.8rem;
+        }
+
+        .link-card .arrow {
+            font-size: 0.7rem;
+            opacity: 0.5;
+            color: var(--text-secondary);
+        }
+
+        /* Basic Markdown Rendering Styles */
+        .text-content ul {
+            margin: 0.8rem 0;
+            padding-left: 1.2rem;
+        }
+
+        .text-content li {
+            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+        }
+
+        .text-content strong {
+            color: var(--text-primary);
+        }
+
+        .text-link {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .input-wrapper {
+            padding: 1.2rem;
+            background: rgba(20, 20, 22, 0.8);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border);
+        }
+
+        .input-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            padding: 0.4rem 0.4rem 0.4rem 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-box:focus-within {
+            border-color: var(--accent);
+            background: var(--surface-hover);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        #user-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            color: white;
+            font-size: 0.95rem;
+            padding: 0.4rem 0;
+        }
+
+        .send-btn {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            background: #1e70c1;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            padding: 4px 0;
+        }
+
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: var(--text-secondary);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
+        }
+
+        .intro-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-align: center;
+            padding: 2rem;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .intro-logo {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 10px 30px var(--accent-glow);
+        }
+
+        .intro-screen h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .intro-screen p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            max-width: 280px;
+            line-height: 1.5;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1><i class="fas fa-robot"></i> MIKLIUM Assistant</h1>
+        <div class="header-actions">
+            <div id="status-pill" class="status-pill">
+                <span class="indicator"></span>
+                <span id="status-text">Loading Model...</span>
+            </div>
+            <button id="close-btn" title="Close Assistant"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <div id="chat-container">
+        <div class="intro-screen" id="intro-screen">
+            <div class="intro-logo"><i class="fas fa-brain"></i></div>
+            <h2>AI Helper</h2>
+            <p>I can help you with questions about MIKLIUM APIs, documentation, and tools.</p>
+        </div>
+    </div>
+
+    <div class="input-wrapper">
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Ask anything about MIKLIUM..." autocomplete="off">
+            <button class="send-btn" id="send-btn" disabled><i class="fas fa-arrow-up"></i></button>
+        </div>
+    </div>
+
+    <script type="module">
+        import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+
+        const chatContainer = document.getElementById('chat-container');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const statusText = document.getElementById('status-text');
+        const statusPill = document.getElementById('status-pill');
+        const introScreen = document.getElementById('intro-screen');
+        const closeBtn = document.getElementById('close-btn');
+
+        // Show close button only if we are inside an iframe
+        if (window.self !== window.top) {
+            closeBtn.style.display = 'block';
+            closeBtn.addEventListener('click', () => {
+                if (window.parent && window.parent.closeAIAssistant) {
+                    window.parent.closeAIAssistant();
+                }
+            });
+        }
+
+        const modelId = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
+
+        let engine;
+
+        const SITE_LINKS = {
+            "index.html": { name: "Home", icon: "fas fa-house" },
+            "APIDOCS.html": { name: "API Documentation", icon: "fas fa-book" },
+            "GetStarted.html": { name: "Get Started Guide", icon: "fas fa-play" },
+            "projects.html": { name: "Featured Projects", icon: "fas fa-cube" },
+            "support.html": { name: "Help & Support", icon: "fas fa-headset" },
+            "https://github.com/MIKLIUM": { name: "GitHub Organization", icon: "fab fa-github" },
+            "https://discord.gg/6HUJTXh45t": { name: "Discord Community", icon: "fab fa-discord" }
+        };
+
+        const SYSTEM_PROMPT = `You are the MIKLIUM AI Assistant. 
+
+CRITICAL GROUNDING:
+- MIKLIUM is FREE, NO-KEY, and requires NO-SIGNUP.
+- There is NO "miklium-api" or similar package on pip.
+- There are NO user accounts or authentication tokens.
+- All APIs are accessed via standard HTTP requests (fetch, requests, etc).
+
+AVAILABLE APIS (ONLY THESE):
+1. Python Sandbox: Run Python code safely. (Docs: APIDOCS.html)
+2. Search: Web search via Yahoo/Scraping. (Docs: APIDOCS.html)
+3. Apple Shortcuts Data: Get info from shortcut links. (Docs: APIDOCS.html)
+4. YouTube Transcription: Get video text. (Docs: APIDOCS.html)
+
+STRICT RULES - AVOID HALLUCINATION:
+1. NEVER explain how to "install" MIKLIUM or any hallucinations, you must only answer the user and give them the correct links, you know NOTHING about MIKLIUM besides how it is an open source project.
+2. If asked "how to use" an API, always say: "You can find full usage details and endpoints in our official documentation here: [API Documentation](APIDOCS.html)".
+3. For specific technical help, provide a link to [Support](support.html) or [Discord](https://discord.gg/6HUJTXh45t).
+4. Be EXTREAMLY CONCISE. Responses must be under 3 sentences.
+5. NEVER mention internal auth.js, db.js, or any backend files.
+6. If a user asks about something NOT listed above (like "Python Docs" or "Auth"), say: "I can only assist with MIKLIUM's specific APIs. Check our tutorials here: [Get Started](GetStarted.html)".`;
+
+        async function init() {
+            if (!("gpu" in navigator)) {
+                statusText.innerText = "WebGPU not supported";
+                statusPill.style.background = "rgba(255, 69, 58, 0.1)";
+                statusPill.querySelector('.indicator').style.background = "#ff453a";
+                appendMessage('ai', "I'm sorry, but your browser doesn't seem to support WebGPU, which I need to run locally. Please try a modern browser like Chrome, Edge, or Arc.");
+                return;
+            }
+            try {
+                engine = await webllm.CreateMLCEngine(modelId, {
+                    initProgressCallback: (report) => {
+                        statusText.innerText = Math.round(report.progress * 100) + "% Loaded";
+                        if (report.progress === 1) {
+                            statusPill.classList.add('ready');
+                            statusText.innerText = "Online";
+                            sendBtn.disabled = false;
+                        }
+                    }
+                });
+            } catch (err) {
+                console.error(err);
+                statusText.innerText = "Offline (Error)";
+            }
+        }
+
+        function appendMessage(role, text) {
+            if (introScreen) introScreen.style.display = 'none';
+
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `message ${role}-message`;
+
+            if (role === 'ai') {
+                msgDiv.innerHTML = `<div class="text-content"></div><div class="link-container"></div><small>MIKLIUM AI • Private & Secure</small>`;
+                chatContainer.appendChild(msgDiv);
+                return {
+                    text: msgDiv.querySelector('.text-content'),
+                    links: msgDiv.querySelector('.link-container')
+                };
+            } else {
+                msgDiv.innerText = text;
+                chatContainer.appendChild(msgDiv);
+            }
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        function parseAndRenderLinks(fullText, containers) {
+            // Regex for: Markdown links, Bare HTML files, and Full URLs
+            const markdownRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+            const bareHtmlRegex = /(?:\s|^)([\w-]+\.html)(?:\b)/gi;
+            const fullUrlRegex = /(https?:\/\/[^\s)\]<]+)/gi;
+
+            // Helper to normalize URL for matching (trims, removes trailing slash, lowercase for files)
+            const normalize = (u) => {
+                let url = u.trim().replace(/\/$/, "");
+                if (url.toLowerCase().endsWith('.html')) return url.toLowerCase();
+                return url;
+            };
+
+            containers.links.innerHTML = '';
+            const foundLinks = new Map(); // Use Map to ensure 'one button per link'
+
+            let match;
+            // 1. Extract Markdown Links (High priority for labels)
+            while ((match = markdownRegex.exec(fullText)) !== null) {
+                const url = normalize(match[2]);
+                const label = match[1].trim();
+                foundLinks.set(url, label);
+            }
+
+            // 2. Extract Bare HTML files (e.g. index.html)
+            while ((match = bareHtmlRegex.exec(fullText)) !== null) {
+                const url = normalize(match[1]);
+                if (!foundLinks.has(url)) foundLinks.set(url, null);
+            }
+
+            // 3. Extract Full URLs
+            while ((match = fullUrlRegex.exec(fullText)) !== null) {
+                const url = normalize(match[1]);
+                // Filter out infrastructure URLs and already found links
+                if (!url.includes('cdnjs') && !url.includes('esm.run') && !foundLinks.has(url)) {
+                    foundLinks.set(url, null);
+                }
+            }
+
+            // Render unique buttons
+            foundLinks.forEach((label, url) => {
+                // Find matching site link info (case-insensitive key check)
+                const siteKey = Object.keys(SITE_LINKS).find(k => normalize(k) === url) || url;
+                const info = SITE_LINKS[siteKey] || {
+                    name: label || (url.includes('.html') ? url.replace('.html', '').replace('-', ' ') : "Learn More"),
+                    icon: "fas fa-external-link-alt"
+                };
+
+                const card = document.createElement('a');
+                card.className = 'link-card';
+                card.href = siteKey; // Reuse original key for the href
+
+                // If it's an external link, open in new tab
+                if (siteKey.startsWith('http')) {
+                    card.target = '_blank';
+                } else {
+                    // Internal link: open in top window to escape the small assistant iframe
+                    card.target = '_top';
+                }
+
+                card.innerHTML = `
+                    <i class="${info.icon}"></i>
+                    <span>${info.name}</span>
+                    <i class="fas fa-chevron-right arrow"></i>
+                `;
+                containers.links.appendChild(card);
+            });
+
+            // Convert Basic Markdown to HTML
+            let html = fullText
+                .replace(markdownRegex, '<span class="text-link">$1</span>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^\* (.*$)/gm, '<li>$1</li>')
+                .replace(/<li>(.*)<\/li>/gs, '<ul>$&</ul>')
+                .replace(/<\/ul><ul>/g, '')
+                .replace(/\n/g, '<br>');
+
+            containers.text.innerHTML = html;
+        }
+
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text || !engine) return;
+
+            userInput.value = '';
+            appendMessage('user', text);
+
+            const aiElements = appendMessage('ai', '');
+            const typing = document.createElement('div');
+            typing.className = 'typing-dots';
+            typing.innerHTML = '<span></span><span></span><span></span>';
+            aiElements.text.appendChild(typing);
+
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            try {
+                const messages = [
+                    { role: "system", content: SYSTEM_PROMPT },
+                    { role: "user", content: text }
+                ];
+
+                const chunks = await engine.chat.completions.create({
+                    messages: messages,
+                    stream: true,
+                    temperature: 0.0, // Force deterministic output to reduce creativity/hallucination
+                    max_gen_len: 256  // Keep it concise
+                });
+
+                let fullText = "";
+
+                for await (const chunk of chunks) {
+                    const content = chunk.choices[0]?.delta?.content || "";
+                    fullText += content;
+
+                    if (typing.parentNode) {
+                        aiElements.text.removeChild(typing);
+                    }
+
+                    parseAndRenderLinks(fullText, aiElements);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }
+            } catch (err) {
+                if (typing.parentNode) aiElements.text.removeChild(typing);
+                aiElements.text.innerText = "Sorry, I ran into an issue processing that. Please try again.";
+                console.error(err);
+            }
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+
+        init();
+    </script>
+</body>
+
+</html>
