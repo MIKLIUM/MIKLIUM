@@ -5,45 +5,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MIKLIUM AI Assistant</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <style>
-        :root {
-            --accent: #0155A1;
-            --accent-glow: rgba(1, 85, 161, 0.3);
-            --bg: #000;
-            --surface: rgba(255, 255, 255, 0.05);
-            --surface-hover: rgba(255, 255, 255, 0.1);
-            --text-primary: #fff;
-            --text-secondary: #a1a1a6;
-            --border: rgba(255, 255, 255, 0.1);
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
 
+    <style>
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         }
 
-        body,
-        html {
-            height: 100%;
-            background: var(--bg);
+        :root {
+            --accent: #0155A1;
+            --accent-hover: #1e70c1;
+            --accent-dark: #004382;
+            --accent-glow: rgba(1, 85, 161, 0.35);
+            --accent-border: rgba(1, 85, 161, 0.4);
+            --bg: #000;
+            --surface: rgba(255, 255, 255, 0.035);
+            --surface-hover: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.25);
+            --text-primary: #fff;
+            --text-secondary: #a1a1a6;
+            --text-tertiary: #6e6e73;
+            --glass-bg: rgba(20, 20, 22, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-highlight: rgba(255, 255, 255, 0.18);
+            --glass-shadow: rgba(0, 0, 0, 0.5);
+            --radius-pill: 100px;
+            --radius-card: 24px;
+            --radius-sm: 14px;
+            --radius-xs: 12px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --font-mono: 'JetBrains Mono', monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, #000 0%, #0a0a0a 50%, #000814 100%);
+            background-attachment: fixed;
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
             display: flex;
-            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .header {
-            padding: 1.2rem;
-            background: rgba(20, 20, 22, 0.8);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
+        .chat-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .chat-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            z-index: 10;
+            padding: 0.6rem 1.2rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-pill);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            position: fixed;
+            top: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            animation: slideDown 0.8s var(--transition-smooth);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .header-logo {
+            width: 24px;
+            height: 24px;
+        }
+
+        .header-brand h1 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
         }
 
         .header-actions {
@@ -58,7 +130,7 @@
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             padding: 4px;
             transition: color 0.2s;
         }
@@ -67,77 +139,117 @@
             color: #fff;
         }
 
-        .header h1 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            letter-spacing: -0.2px;
-        }
-
-        .header h1 i {
-            color: var(--accent);
-            filter: drop-shadow(0 0 8px var(--accent-glow));
-        }
-
-        .status-pill {
-            font-size: 0.7rem;
-            padding: 0.3rem 0.7rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 100px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-        }
-
-        .status-pill .indicator {
-            width: 6px;
-            height: 6px;
+        .status-indicator {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            background: #ffcc00;
-        }
-
-        .status-pill.ready .indicator {
             background: #34c759;
             box-shadow: 0 0 8px rgba(52, 199, 89, 0.5);
         }
 
-        #chat-container {
+        /* Messages Area */
+        .messages-wrapper {
             flex: 1;
             overflow-y: auto;
-            padding: 1.5rem;
+            overflow-x: hidden;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            padding: 7rem 1rem 10rem 1rem;
             gap: 1.2rem;
             scroll-behavior: smooth;
         }
 
-        #chat-container::-webkit-scrollbar {
-            width: 5px;
+        .messages-wrapper::-webkit-scrollbar {
+            width: 6px;
         }
 
-        #chat-container::-webkit-scrollbar-thumb {
-            background: var(--border);
+        .messages-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
         }
 
-        .message {
-            max-width: 85%;
-            padding: 0.9rem 1.1rem;
-            border-radius: 20px;
-            line-height: 1.55;
-            font-size: 0.95rem;
-            animation: messageSlideIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            position: relative;
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            animation: fadeIn 0.8s var(--transition-smooth);
         }
 
-        @keyframes messageSlideIn {
+        @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .empty-state-icon {
+            font-size: 3.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0.8;
+            text-shadow: 0 0 30px rgba(1, 85, 161, 0.3);
+        }
+
+        .empty-state h2 {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .empty-state p {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 320px;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Messages */
+        .message {
+            display: flex;
+            gap: 0.8rem;
+            width: 100%;
+            max-width: 800px;
+            animation: fadeIn 0.4s var(--transition-smooth);
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 85%;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .message.user .message-content {
+            align-items: flex-end;
+        }
+
+        .message-bubble {
+            padding: 0.9rem 1.2rem;
+            border-radius: var(--radius-card);
+            line-height: 1.6;
+            word-wrap: break-word;
+            font-size: 0.95rem;
+            animation: slideUp 0.4s var(--transition-smooth);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
             }
 
             to {
@@ -146,61 +258,61 @@
             }
         }
 
-        .user-message {
-            align-self: flex-end;
-            background: var(--accent);
-            color: white;
-            border-bottom-right-radius: 5px;
-            box-shadow: 0 4px 15px rgba(1, 85, 161, 0.2);
-        }
-
-        .ai-message {
-            align-self: flex-start;
+        .message.ai .message-bubble {
             background: var(--surface);
-            color: var(--text-primary);
-            border-bottom-left-radius: 5px;
             border: 1px solid var(--border);
+            color: var(--text-primary);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border-bottom-left-radius: 4px;
         }
 
-        .ai-message small {
-            display: block;
-            margin-top: 0.4rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            opacity: 0.7;
+        .message.user .message-bubble {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(1, 85, 161, 0.4);
+            border-bottom-right-radius: 4px;
         }
 
-        /* Link Card Styles */
+        .message-meta {
+            font-size: 0.7rem;
+            color: var(--text-tertiary);
+            padding: 0 0.5rem;
+            opacity: 0.8;
+        }
+
+        /* Link Cards */
         .link-container {
             display: flex;
             flex-direction: column;
             gap: 0.6rem;
             margin-top: 0.8rem;
+            width: 100%;
         }
 
         .link-card {
             background: rgba(255, 255, 255, 0.03);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: var(--radius-sm);
             padding: 0.8rem 1rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
             color: var(--text-primary);
-            transition: all 0.2s ease;
+            transition: all 0.2s var(--transition-smooth);
         }
 
         .link-card:hover {
             background: var(--surface-hover);
-            border-color: var(--accent);
+            border-color: var(--accent-border);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-        .link-card i {
+        .link-card i:first-child {
             color: var(--accent);
-            font-size: 1.1rem;
+            font-size: 1rem;
+            width: 20px;
+            text-align: center;
         }
 
         .link-card span {
@@ -213,18 +325,140 @@
         .link-card .arrow {
             font-size: 0.7rem;
             opacity: 0.5;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
         }
 
-        /* Basic Markdown Rendering Styles */
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 0.8rem 1.2rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            width: fit-content;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            animation: typingBounce 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typingBounce {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-6px);
+            }
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            flex-direction: column;
+            padding: 0.8rem 1rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 35px;
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.3), 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 100;
+            animation: inputSlideUp 0.8s var(--transition-smooth);
+        }
+
+        @keyframes inputSlideUp {
+            from {
+                opacity: 0;
+                transform: translate(-50%, 20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, 0);
+            }
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .input-field {
+            flex: 1;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.8rem 1.2rem;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .input-field:focus {
+            border-color: var(--accent-border);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(1, 85, 161, 0.15);
+        }
+
+        .send-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s var(--transition-smooth);
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(1, 85, 161, 0.3);
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: var(--accent-hover);
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Basic Markdown Styling */
         .text-content ul {
-            margin: 0.8rem 0;
+            margin: 0.5rem 0;
             padding-left: 1.2rem;
         }
 
         .text-content li {
-            margin-bottom: 0.4rem;
-            color: var(--text-secondary);
+            margin-bottom: 0.3rem;
         }
 
         .text-content strong {
@@ -236,171 +470,59 @@
             font-weight: 600;
         }
 
-        .input-wrapper {
-            padding: 1.2rem;
-            background: rgba(20, 20, 22, 0.8);
-            backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-        }
-
-        .input-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            display: flex;
-            align-items: center;
-            padding: 0.4rem 0.4rem 0.4rem 1.1rem;
-            transition: all 0.3s ease;
-        }
-
-        .input-box:focus-within {
-            border-color: var(--accent);
-            background: var(--surface-hover);
-            box-shadow: 0 0 0 3px var(--accent-glow);
-        }
-
-        #user-input {
-            flex: 1;
-            background: none;
-            border: none;
-            outline: none;
-            color: white;
-            font-size: 0.95rem;
-            padding: 0.4rem 0;
-        }
-
-        .send-btn {
-            width: 36px;
-            height: 36px;
-            background: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .send-btn:hover {
-            transform: scale(1.05);
-            background: #1e70c1;
-        }
-
-        .send-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-            padding: 4px 0;
-        }
-
-        .typing-dots span {
-            width: 6px;
-            height: 6px;
-            background: var(--text-secondary);
-            border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out both;
-        }
-
-        .typing-dots span:nth-child(1) {
-            animation-delay: -0.32s;
-        }
-
-        .typing-dots span:nth-child(2) {
-            animation-delay: -0.16s;
-        }
-
-        @keyframes bounce {
-
-            0%,
-            80%,
-            100% {
-                transform: scale(0);
+        @media (max-width: 480px) {
+            .chat-header {
+                width: 95%;
+                top: 1rem;
             }
 
-            40% {
-                transform: scale(1);
-            }
-        }
-
-        .intro-screen {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            flex: 1;
-            text-align: center;
-            padding: 2rem;
-            animation: fadeIn 0.8s ease;
-        }
-
-        .intro-logo {
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.8rem;
-            margin-bottom: 1.2rem;
-            box-shadow: 0 10px 30px var(--accent-glow);
-        }
-
-        .intro-screen h2 {
-            font-size: 1.4rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .intro-screen p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            max-width: 280px;
-            line-height: 1.5;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+            .input-area {
+                width: 95%;
+                bottom: 1rem;
             }
 
-            to {
-                opacity: 1;
+            .messages-wrapper {
+                padding-top: 6rem;
+                padding-bottom: 8rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
-        <h1><i class="fas fa-robot"></i> MIKLIUM Assistant</h1>
-        <div class="header-actions">
-            <div id="status-pill" class="status-pill">
-                <span class="indicator"></span>
-                <span id="status-text">Loading Model...</span>
+    <div class="chat-container">
+        <!-- Header -->
+        <div class="chat-header">
+            <div class="header-brand">
+                <img src="assets/Logo_Transparent_White.png" alt="MIKLIUM" class="header-logo">
+                <h1>MIKLIUM Assistant</h1>
             </div>
-            <button id="close-btn" title="Close Assistant"><i class="fas fa-times"></i></button>
+            <div class="header-actions">
+                <div class="status-indicator" title="Online"></div>
+                <button id="close-btn" title="Close Assistant"><i class="fas fa-times"></i></button>
+            </div>
         </div>
-    </div>
 
-    <div id="chat-container">
-        <div class="intro-screen" id="intro-screen">
-            <div class="intro-logo"><i class="fas fa-brain"></i></div>
-            <h2>AI Helper</h2>
-            <p>I can help you with questions about MIKLIUM APIs, documentation, and tools.</p>
+        <!-- Messages Area -->
+        <div class="messages-wrapper" id="chat-container">
+            <div class="empty-state" id="intro-screen">
+                <div class="empty-state-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h2>AI Helper</h2>
+                <p>I can help you with questions about MIKLIUM APIs, documentation, and tools.</p>
+            </div>
         </div>
-    </div>
 
-    <div class="input-wrapper">
-        <div class="input-box">
-            <input type="text" id="user-input" placeholder="Ask anything about MIKLIUM..." autocomplete="off">
-            <button class="send-btn" id="send-btn" disabled><i class="fas fa-arrow-up"></i></button>
+        <!-- Input Area -->
+        <div class="input-area">
+            <div class="input-wrapper">
+                <input type="text" id="user-input" class="input-field" placeholder="Ask anything about MIKLIUM..."
+                    autocomplete="off">
+                <button class="send-btn" id="send-btn" disabled title="Send">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -408,8 +530,6 @@
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
-        const statusText = document.getElementById('status-text');
-        const statusPill = document.getElementById('status-pill');
         const introScreen = document.getElementById('intro-screen');
         const closeBtn = document.getElementById('close-btn');
 
@@ -433,10 +553,7 @@
             "https://discord.gg/6HUJTXh45t": { name: "Discord Community", icon: "fab fa-discord" }
         };
 
-        async function init() {
-            // No longer need WebGPU checks for the lightweight chatbot
-            statusPill.classList.add('ready');
-            statusText.innerText = "Online";
+        function init() {
             sendBtn.disabled = false;
         }
 
@@ -444,30 +561,56 @@
             if (introScreen) introScreen.style.display = 'none';
 
             const msgDiv = document.createElement('div');
-            msgDiv.className = `message ${role}-message`;
+            msgDiv.className = `message ${role}`;
+
+            const time = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
             if (role === 'ai') {
-                msgDiv.innerHTML = `<div class="text-content"></div><div class="link-container"></div><small>MIKLIUM AI • Private & Secure</small>`;
+                msgDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <div class="text-content"></div>
+                            <div class="link-container"></div>
+                        </div>
+                        <div class="message-meta">MIKLIUM AI • ${time}</div>
+                    </div>
+                `;
                 chatContainer.appendChild(msgDiv);
+                scrollToBottom();
                 return {
                     text: msgDiv.querySelector('.text-content'),
                     links: msgDiv.querySelector('.link-container')
                 };
             } else {
-                msgDiv.innerText = text;
+                msgDiv.innerHTML = `
+                    <div class="message-content">
+                        <div class="message-bubble">${escapeHtml(text)}</div>
+                        <div class="message-meta">${time}</div>
+                    </div>
+                `;
                 chatContainer.appendChild(msgDiv);
             }
 
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            scrollToBottom();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function scrollToBottom() {
+            setTimeout(() => {
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 50);
         }
 
         function parseAndRenderLinks(fullText, containers) {
-            // Regex for: Markdown links, Bare HTML files, and Full URLs
             const markdownRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
             const bareHtmlRegex = /(?:\s|^)([\w-]+\.html)(?:\b)/gi;
             const fullUrlRegex = /(https?:\/\/[^\s)\]<]+)/gi;
 
-            // Helper to normalize URL for matching (trims, removes trailing slash, lowercase for files)
             const normalize = (u) => {
                 let url = u.trim().replace(/\/$/, "");
                 if (url.toLowerCase().endsWith('.html')) return url.toLowerCase();
@@ -475,32 +618,27 @@
             };
 
             containers.links.innerHTML = '';
-            const foundLinks = new Map(); // Use Map to ensure 'one button per link'
+            const foundLinks = new Map();
 
             let match;
-            // 1. Extract Markdown Links (High priority for labels)
             while ((match = markdownRegex.exec(fullText)) !== null) {
                 const url = normalize(match[2]);
                 const label = match[1].trim();
                 foundLinks.set(url, label);
             }
 
-            // 2. Extract Bare HTML files (e.g. index.html)
             while ((match = bareHtmlRegex.exec(fullText)) !== null) {
                 const url = normalize(match[1]);
                 if (!foundLinks.has(url)) foundLinks.set(url, null);
             }
 
-            // 3. Extract Full URLs
             while ((match = fullUrlRegex.exec(fullText)) !== null) {
                 const url = normalize(match[1]);
-                // Filter out infrastructure URLs and already found links
                 if (!url.includes('cdnjs') && !url.includes('esm.run') && !foundLinks.has(url)) {
                     foundLinks.set(url, null);
                 }
             }
 
-            // 4. AUTOMATIC KEYWORD DETECTION (as requested by user)
             const lowText = fullText.toLowerCase();
             if (lowText.includes('git') || lowText.includes('github') || lowText.includes('source code')) {
                 const url = "https://github.com/MIKLIUM";
@@ -515,9 +653,7 @@
                 if (!foundLinks.has(normalize(url))) foundLinks.set(normalize(url), "API Documentation");
             }
 
-            // Render unique buttons
             foundLinks.forEach((label, url) => {
-                // Find matching site link info (case-insensitive key check)
                 const siteKey = Object.keys(SITE_LINKS).find(k => normalize(k) === url) || url;
                 const info = SITE_LINKS[siteKey] || {
                     name: label || (url.includes('.html') ? url.replace('.html', '').replace('-', ' ') : "Learn More"),
@@ -526,15 +662,9 @@
 
                 const card = document.createElement('a');
                 card.className = 'link-card';
-                card.href = siteKey; // Reuse original key for the href
-
-                // If it's an external link, open in new tab
-                if (siteKey.startsWith('http')) {
-                    card.target = '_blank';
-                } else {
-                    // Internal link: open in top window to escape the small assistant iframe
-                    card.target = '_top';
-                }
+                card.href = siteKey;
+                if (siteKey.startsWith('http')) card.target = '_blank';
+                else card.target = '_top';
 
                 card.innerHTML = `
                     <i class="${info.icon}"></i>
@@ -544,7 +674,6 @@
                 containers.links.appendChild(card);
             });
 
-            // Convert Basic Markdown to HTML
             let html = fullText
                 .replace(markdownRegex, '<span class="text-link">$1</span>')
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
@@ -566,18 +695,16 @@
 
             const aiElements = appendMessage('ai', '');
             const typing = document.createElement('div');
-            typing.className = 'typing-dots';
-            typing.innerHTML = '<span></span><span></span><span></span>';
+            typing.className = 'typing-indicator';
+            typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
             aiElements.text.appendChild(typing);
 
-            chatContainer.scrollTop = chatContainer.scrollHeight;
+            scrollToBottom();
 
             try {
                 const response = await fetch('https://miklium.vercel.app/api/chatbot', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: text })
                 });
 
@@ -586,15 +713,11 @@
                 const data = await response.json();
                 const responseText = data.response;
 
-                if (typing.parentNode) {
-                    aiElements.text.removeChild(typing);
-                }
+                if (typing.parentNode) aiElements.text.removeChild(typing);
 
-                // Simulate "thinking" but much faster than an LLM
-                await new Promise(resolve => setTimeout(resolve, 60));
-
+                await new Promise(resolve => setTimeout(resolve, 100));
                 parseAndRenderLinks(responseText, aiElements);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                scrollToBottom();
 
             } catch (err) {
                 if (typing.parentNode) aiElements.text.removeChild(typing);
