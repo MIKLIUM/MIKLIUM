@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" data-page="home">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIKLIUM</title>
-  <meta name="description" content="At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.">
+  <meta name="description"
+    content="At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.">
   <meta property="og:title" content="MIKLIUM">
-  <meta property="og:description" content="At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <meta property="og:description"
+    content="At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.">
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#0155A1">
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" type="image/png"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="apple-touch-icon"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="css/style.css">
   <style>
     main {
@@ -26,6 +33,7 @@
       padding-top: 140px;
       min-height: 100vh;
     }
+
     .hero-logo {
       width: min(70%, 200px);
       margin-bottom: 1rem;
@@ -33,6 +41,7 @@
       filter: drop-shadow(0 0 40px rgba(0, 170, 255, 0.08));
       border-radius: 24%;
     }
+
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -51,6 +60,7 @@
       letter-spacing: 0.3px;
       animation: fadeInUp 0.9s var(--transition-smooth) 0.1s both;
     }
+
     main h2 {
       font-size: clamp(2rem, 5.5vw, 3.6rem);
       margin-bottom: 0.8rem;
@@ -60,7 +70,8 @@
       line-height: 1.15;
       animation: fadeInUp 0.9s var(--transition-smooth) 0.2s both;
     }
-    main > p {
+
+    main>p {
       font-size: 1.1rem;
       max-width: 560px;
       line-height: 1.6;
@@ -68,6 +79,7 @@
       color: var(--text-secondary);
       animation: fadeInUp 0.9s var(--transition-smooth) 0.3s both;
     }
+
     .cta-buttons {
       display: flex;
       gap: 0.8rem;
@@ -76,10 +88,12 @@
       animation: fadeInUp 0.9s var(--transition-smooth) 0.4s both;
       margin-bottom: 2rem;
     }
+
     .features-strip {
       width: 100%;
       padding: 2rem 2rem 4rem;
     }
+
     .features-strip h3 {
       text-align: center;
       font-size: 1.5rem;
@@ -88,6 +102,7 @@
       font-weight: 600;
       letter-spacing: -0.3px;
     }
+
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -95,10 +110,23 @@
       max-width: 900px;
       margin: 0 auto;
     }
-    .feature-card { animation: fadeInUp 0.8s var(--transition-smooth) both; }
-    .feature-card:nth-child(1) { animation-delay: 0.1s; }
-    .feature-card:nth-child(2) { animation-delay: 0.2s; }
-    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+    .feature-card {
+      animation: fadeInUp 0.8s var(--transition-smooth) both;
+    }
+
+    .feature-card:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .feature-card:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .feature-card:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
     .feature-card i {
       font-size: 1.8rem;
       color: var(--accent);
@@ -106,6 +134,7 @@
       position: relative;
       z-index: 1;
     }
+
     .feature-card h4 {
       font-size: 1.05rem;
       color: var(--text-primary);
@@ -114,6 +143,7 @@
       position: relative;
       z-index: 1;
     }
+
     .feature-card p {
       font-size: 0.9rem;
       color: var(--text-secondary);
@@ -121,16 +151,166 @@
       position: relative;
       z-index: 1;
     }
+
     @media (max-width: 768px) {
-      main { padding-top: 110px; }
-      main h2 { font-size: 1.9rem; }
-      main > p { font-size: 1rem; }
+      main {
+        padding-top: 110px;
+      }
+
+      main h2 {
+        font-size: 1.9rem;
+      }
+
+      main>p {
+        font-size: 1rem;
+      }
+
       .features-grid {
         grid-template-columns: 1fr;
       }
     }
+
+    /* AI Assistant Styles */
+    #ai-assistant-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: 0 4px 24px rgba(1, 85, 161, 0.4);
+      z-index: 1000;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    #ai-assistant-btn:hover {
+      transform: scale(1.1) rotate(5deg);
+      box-shadow: 0 8px 32px rgba(1, 85, 161, 0.5);
+    }
+
+    #ai-assistant-btn::after {
+      content: 'Need help?';
+      position: absolute;
+      right: 75px;
+      bottom: 12px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: white;
+      white-space: nowrap;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      animation: bubbleFloat 3s ease-in-out infinite;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    @keyframes bubbleFloat {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      50% {
+        transform: translateX(-5px);
+      }
+    }
+
+    #ai-assistant-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 380px;
+      height: 560px;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 24px;
+      display: none;
+      flex-direction: column;
+      z-index: 1001;
+      overflow: hidden;
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6);
+      transform-origin: bottom right;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #ai-assistant-container.active {
+      display: flex;
+      animation: aiAppear 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes aiAppear {
+      from {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+    }
+
+    #ai-assistant-container iframe {
+      flex: 1;
+      border: none;
+      background: #000;
+    }
+
+    .ai-header-bar {
+      padding: 0.8rem 1.2rem;
+      background: rgba(20, 20, 22, 0.95);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    .ai-header-bar span {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    #close-ai-btn {
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      cursor: pointer;
+      font-size: 1.1rem;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    #close-ai-btn:hover {
+      color: #fff;
+    }
+
+    @media (max-width: 480px) {
+      #ai-assistant-container {
+        width: 100%;
+        height: 100%;
+        bottom: 0;
+        right: 0;
+        border-radius: 0;
+      }
+    }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="nav-top">
@@ -142,7 +322,7 @@
       <ul class="nav-links">
         <li><a href="index.html" data-nav="home">Home</a></li>
         <li><a href="projects.html" data-nav="projects">Featured Projects</a></li>
-         <li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
+        <li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
         <li><a href="APIDOCS.html" data-nav="apidocs">API Docs</a></li>
         <li><a href="support.html" data-nav="support">Support</a></li>
         <li class="nav-icons">
@@ -164,11 +344,13 @@
     </div>
   </nav>
   <main>
-      <img src="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png" alt="MIKLIUM" class="hero-logo">
-    
+    <img src="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png"
+      alt="MIKLIUM" class="hero-logo">
+
     <span class="hero-badge"><i class="fas fa-bolt"></i> Open Source & Free Forever</span>
     <h2>Free APIs & Software<br><span class="gradient-text">for Everyone</span></h2>
-    <p>We empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.</p>
+    <p>We empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and
+      explore without limits.</p>
     <div class="cta-buttons">
       <a href="GetStarted.html" class="btn btn-primary">Get Started</a>
       <a href="APIDOCS.html" class="btn btn-ghost">Explore APIs</a>
@@ -185,15 +367,26 @@
       <div class="glass-card feature-card">
         <i class="fas fa-code"></i>
         <h4>Developer First</h4>
-        <p>Open-source, clean documentation, predictable responses, and simple integration, opportunity to have your project featured on MIKLIUM.</p>
+        <p>Open-source, clean documentation, predictable responses, and simple integration, opportunity to have your
+          project featured on MIKLIUM.</p>
       </div>
       <div class="glass-card feature-card">
         <i class="fas fa-users"></i>
         <h4>Community & Support</h4>
-        <p>A Discord server is available for project discussions, along with support via GitHub Issues, a support channel on Discord, and our email.</p>
+        <p>A Discord server is available for project discussions, along with support via GitHub Issues, a support
+          channel on Discord, and our email.</p>
       </div>
     </div>
   </section>
+
+  <!-- AI Assistant Elements -->
+  <div id="ai-assistant-btn" title="Open AI Assistant">
+    <i class="fas fa-robot"></i>
+  </div>
+
+  <div id="ai-assistant-container">
+    <iframe src="ai-assistant.html"></iframe>
+  </div>
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var page = document.documentElement.getAttribute("data-page");
@@ -209,7 +402,27 @@
         navEl.classList.toggle("nav-expanded", open);
         toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
       });
+
+      // AI Assistant Toggle Logic
+      const aiBtn = document.getElementById('ai-assistant-btn');
+      const aiContainer = document.getElementById('ai-assistant-container');
+
+      if (aiBtn && aiContainer) {
+        aiBtn.addEventListener('click', () => {
+          aiContainer.classList.add('active');
+          aiBtn.style.opacity = '0';
+          aiBtn.style.pointerEvents = 'none';
+        });
+
+        // Expose a global function for the iframe to call
+        window.closeAIAssistant = function () {
+          aiContainer.classList.remove('active');
+          aiBtn.style.opacity = '1';
+          aiBtn.style.pointerEvents = 'auto';
+        };
+      }
     });
   </script>
 </body>
+
 </html>
