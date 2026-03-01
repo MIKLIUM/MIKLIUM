@@ -8,6 +8,7 @@
     - [Request Body](#request-body)
         - [GET Method](#get-method)
         - [POST Method](#post-method)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -57,6 +58,53 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
 {
   "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/shortcut-info';
+const data = {
+  url: "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/shortcut-info"
+data = {
+    "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/shortcut-info \
+     -H "Content-Type: application/json" \
+     -d '{
+           "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+         }'
 ```
 
 ## API Responses

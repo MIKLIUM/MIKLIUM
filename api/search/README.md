@@ -8,6 +8,7 @@
     - [Request Body](#request-body)
         - [GET Method](#get-method)
         - [POST Method](#post-method)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -69,6 +70,59 @@ If you want to write several requests at once (maximum 3), connect them with `~`
   "maxSmallSnippets": 3,
   "maxLargeSnippets": 0
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/search';
+const data = {
+  search: ["iPhone 17 Pro"],
+  maxSmallSnippets: 3,
+  maxLargeSnippets: 1
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/search"
+data = {
+    "search": ["iPhone 17 Pro"],
+    "maxSmallSnippets": 3,
+    "maxLargeSnippets": 1
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/search \
+     -H "Content-Type: application/json" \
+     -d '{
+           "search": ["iPhone 17 Pro"],
+           "maxSmallSnippets": 3,
+           "maxLargeSnippets": 1
+         }'
 ```
 
 ## API Responses

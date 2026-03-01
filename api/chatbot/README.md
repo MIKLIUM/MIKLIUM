@@ -11,6 +11,7 @@
     - [Response Stacking](#response-stacking)
     - [Bot Personalities](#bot-personalities)
     - [Supported Topics](#supported-topics)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -129,6 +130,59 @@ The chatbot recognises a wide range of topics out of the box:
 | Jokes | joke, funny, lol, humor |
 | Time / Date | time, date, today, clock |
 | Weather | weather, temperature, forecast |
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/chatbot';
+const data = {
+  message: "Hello, how do I use the Python Sandbox?",
+  response_stacking: 4,
+  personality: "miklium"
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/chatbot"
+data = {
+    "message": "Hello, how do I use the Python Sandbox?",
+    "response_stacking": 4,
+    "personality": "miklium"
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/chatbot \
+     -H "Content-Type: application/json" \
+     -d '{
+           "message": "Hello, how do I use the Python Sandbox?",
+           "response_stacking": 4,
+           "personality": "miklium"
+         }'
+```
 
 ## API Responses
 

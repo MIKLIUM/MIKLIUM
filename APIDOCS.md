@@ -32,6 +32,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
     - [Response Stacking](#response-stacking)
     - [Bot Personalities](#bot-personalities)
     - [Supported Topics](#supported-topics)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -151,6 +152,59 @@ The chatbot recognises a wide range of topics out of the box:
 | Time / Date | time, date, today, clock |
 | Weather | weather, temperature, forecast |
 
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/chatbot';
+const data = {
+  message: "Hello, how do I use the Python Sandbox?",
+  response_stacking: 4,
+  personality: "miklium"
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/chatbot"
+data = {
+    "message": "Hello, how do I use the Python Sandbox?",
+    "response_stacking": 4,
+    "personality": "miklium"
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/chatbot \
+     -H "Content-Type: application/json" \
+     -d '{
+           "message": "Hello, how do I use the Python Sandbox?",
+           "response_stacking": 4,
+           "personality": "miklium"
+         }'
+```
+
 ## API Responses
 
 ### Success
@@ -200,6 +254,7 @@ The chatbot recognises a wide range of topics out of the box:
     - [About MIKLIUM Python Sandbox API](#about-miklium-python-sandbox-api)
     - [Request Body](#request-body-1)
         - [POST Method](#post-method-1)
+    - [Code Examples](#code-examples-1)
     - [API Responses](#api-responses-1)
         - [Success](#success-1)
         - [Error](#error-1)
@@ -260,6 +315,56 @@ Link: `https://miklium.vercel.app/api/python-sandbox`
     "stdin": [ 2, 6 ]
   }
   ```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/python-sandbox';
+const data = {
+  code: "print('Hello from MIKLIUM!')\n",
+  timeout: 10
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/python-sandbox"
+data = {
+    "code": "print('Hello from MIKLIUM!')\n",
+    "timeout": 10
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/python-sandbox \
+     -H "Content-Type: application/json" \
+     -d '{
+           "code": "print('\''Hello from MIKLIUM!'\'')\n",
+           "timeout": 10
+         }'
+```
 
 ## API Responses
 
@@ -395,6 +500,7 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
     - [Request Body](#request-body-2)
         - [GET Method](#get-method-1)
         - [POST Method](#post-method-2)
+    - [Code Examples](#code-examples-2)
     - [API Responses](#api-responses-2)
         - [Success](#success-2)
         - [Error](#error-2)
@@ -456,6 +562,59 @@ If you want to write several requests at once (maximum 3), connect them with `~`
   "maxSmallSnippets": 3,
   "maxLargeSnippets": 0
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/search';
+const data = {
+  search: ["iPhone 17 Pro"],
+  maxSmallSnippets: 3,
+  maxLargeSnippets: 1
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/search"
+data = {
+    "search": ["iPhone 17 Pro"],
+    "maxSmallSnippets": 3,
+    "maxLargeSnippets": 1
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/search \
+     -H "Content-Type: application/json" \
+     -d '{
+           "search": ["iPhone 17 Pro"],
+           "maxSmallSnippets": 3,
+           "maxLargeSnippets": 1
+         }'
 ```
 
 ## API Responses
@@ -549,6 +708,7 @@ As you have already noticed, the API returns two types of information: `short` a
     - [Request Body](#request-body-3)
         - [GET Method](#get-method-2)
         - [POST Method](#post-method-3)
+    - [Code Examples](#code-examples-3)
     - [API Responses](#api-responses-3)
         - [Success](#success-3)
         - [Error](#error-3)
@@ -598,6 +758,53 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
 {
   "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/shortcut-info';
+const data = {
+  url: "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/shortcut-info"
+data = {
+    "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/shortcut-info \
+     -H "Content-Type: application/json" \
+     -d '{
+           "url": "https://www.icloud.com/shortcuts/dbd68fde729740b2a7218a177808655f"
+         }'
 ```
 
 ## API Responses
@@ -740,6 +947,7 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
     - [Request Body](#request-body-4)
         - [GET Method](#get-method-3)
         - [POST Method](#post-method-4)
+    - [Code Examples](#code-examples-4)
     - [API Responses](#api-responses-4)
         - [Success](#success-4)
         - [Error](#error-4)
@@ -799,6 +1007,59 @@ If you want to add additional parameters, write them through `&`.
   "removeTimestamps": true,
   "includeInfo": true
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/youtube-transcript';
+const data = {
+  url: "https://youtu.be/Qz8u00pX738",
+  removeTimestamps: true,
+  includeInfo: true
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/youtube-transcript"
+data = {
+    "url": "https://youtu.be/Qz8u00pX738",
+    "removeTimestamps": True,
+    "includeInfo": True
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/youtube-transcript \
+     -H "Content-Type: application/json" \
+     -d '{
+           "url": "https://youtu.be/Qz8u00pX738",
+           "removeTimestamps": true,
+           "includeInfo": true
+         }'
 ```
 
 ## API Responses

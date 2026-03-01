@@ -8,6 +8,7 @@
     - [Request Body](#request-body)
         - [GET Method](#get-method)
         - [POST Method](#post-method)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -67,6 +68,59 @@ If you want to add additional parameters, write them through `&`.
   "removeTimestamps": true,
   "includeInfo": true
 }
+```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/youtube-transcript';
+const data = {
+  url: "https://youtu.be/Qz8u00pX738",
+  removeTimestamps: true,
+  includeInfo: true
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/youtube-transcript"
+data = {
+    "url": "https://youtu.be/Qz8u00pX738",
+    "removeTimestamps": True,
+    "includeInfo": True
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/youtube-transcript \
+     -H "Content-Type: application/json" \
+     -d '{
+           "url": "https://youtu.be/Qz8u00pX738",
+           "removeTimestamps": true,
+           "includeInfo": true
+         }'
 ```
 
 ## API Responses

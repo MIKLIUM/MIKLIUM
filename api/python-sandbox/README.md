@@ -7,6 +7,7 @@
     - [About MIKLIUM Python Sandbox API](#about-miklium-python-sandbox-api)
     - [Request Body](#request-body)
         - [POST Method](#post-method)
+    - [Code Examples](#code-examples)
     - [API Responses](#api-responses)
         - [Success](#success)
         - [Error](#error)
@@ -67,6 +68,56 @@ Link: `https://miklium.vercel.app/api/python-sandbox`
     "stdin": [ 2, 6 ]
   }
   ```
+
+## Code Examples
+
+### JavaScript (Fetch)
+```javascript
+const url = 'https://miklium.vercel.app/api/python-sandbox';
+const data = {
+  code: "print('Hello from MIKLIUM!')\n",
+  timeout: 10
+};
+
+fetch(url, {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(data)
+})
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+```
+
+### Python (Requests)
+```python
+import requests
+
+url = "https://miklium.vercel.app/api/python-sandbox"
+data = {
+    "code": "print('Hello from MIKLIUM!')\n",
+    "timeout": 10
+}
+
+try:
+    response = requests.post(url, json=data)
+    response.raise_for_status()
+    print(response.json())
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
+```
+
+### cURL
+```bash
+curl -X POST https://miklium.vercel.app/api/python-sandbox \
+     -H "Content-Type: application/json" \
+     -d '{
+           "code": "print('\''Hello from MIKLIUM!'\'')\n",
+           "timeout": 10
+         }'
+```
 
 ## API Responses
 
