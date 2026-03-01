@@ -169,8 +169,8 @@
         grid-template-columns: 1fr;
       }
     }
-
-    /* AI Assistant Styles */
+    
+/*
     #ai-assistant-btn {
       position: fixed;
       bottom: 2rem;
@@ -308,6 +308,8 @@
         border-radius: 0;
       }
     }
+*/
+
   </style>
 </head>
 
@@ -378,8 +380,8 @@
       </div>
     </div>
   </section>
-
-  <!-- AI Assistant Elements -->
+  
+<!--
   <div id="ai-assistant-btn" title="Open AI Assistant">
     <i class="fas fa-robot"></i>
   </div>
@@ -387,6 +389,7 @@
   <div id="ai-assistant-container">
     <iframe src="ai-assistant.html"></iframe>
   </div>
+-->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       var page = document.documentElement.getAttribute("data-page");
@@ -402,8 +405,7 @@
         navEl.classList.toggle("nav-expanded", open);
         toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
       });
-
-      // AI Assistant Toggle Logic
+/*
       const aiBtn = document.getElementById('ai-assistant-btn');
       const aiContainer = document.getElementById('ai-assistant-container');
 
@@ -421,6 +423,7 @@
           aiBtn.style.pointerEvents = 'auto';
         };
       }
+*/
     });
   </script>
 </body>
