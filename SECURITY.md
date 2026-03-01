@@ -8,6 +8,7 @@ If you discover a security issue in MIKLIUM, please report it responsibly. You c
 * In a private message on Discord to _owners_ of MIKLIUM ([they can be found on our server](https://discord.gg/6HUJTXh45t))
 
 Include in your report:
+
 * What the problem is
 * Steps to reproduce it
 * Any potential impact or risks
@@ -17,10 +18,11 @@ Include in your report:
 ## Our Response
 
 Once a report is received:
-	1.	We’ll acknowledge it within 48 hours.
-	2.	Investigate and verify the issue.
-	3.	Fix it as quickly as possible.
-	4.	Notify you when it’s resolved.
+
+1.  We’ll acknowledge it within 48 hours.
+2.	Investigate and verify the issue.
+3.	Fix it as quickly as possible.
+4.	Notify you when it’s resolved.
 
 ## Recognition & Thanks
 
