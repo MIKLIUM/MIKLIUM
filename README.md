@@ -22,6 +22,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
   - [Search](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/search/README.md)
   - [Shortcut Info](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/shortcut-info/README.md)
   - [YouTube Transcript](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/youtube-transcript/README.md)
+  - [Chatbot](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/chatbot/README.md)
 
 [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
