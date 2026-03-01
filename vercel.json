@@ -6,6 +6,29 @@
     }
   },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/404.js" }
+    {
+      "source": "/api/chatbot",
+      "destination": "/api/chatbot/index.py"
+    },
+    {
+      "source": "/api/python-sandbox",
+      "destination": "/api/python-sandbox/index.py"
+    },
+    {
+      "source": "/api/search",
+      "destination": "/api/search/index.js"
+    },
+    {
+      "source": "/api/shortcut-info",
+      "destination": "/api/shortcut-info/index.js"
+    },
+    {
+      "source": "/api/youtube-transcript",
+      "destination": "/api/youtube-transcript/index.js"
+    },
+    {
+      "source": "/api/((?!chatbot|python-sandbox|search|shortcut-info|youtube-transcript).*)",
+      "destination": "/api/404.js"
+    }
   ]
 }

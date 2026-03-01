@@ -2,6 +2,7 @@ import json
 import re
 import random
 from http.server import BaseHTTPRequestHandler
+from urllib.parse import urlparse, parse_qs
 
 RESPONSES = [
     (r"hello|hi|hey", [
@@ -80,7 +81,6 @@ def get_response(user_input):
 
 class handler(BaseHTTPRequestHandler):
     def do_GET(self):
-        from urllib.parse import urlparse, parse_qs
         parsed_path = urlparse(self.path)
         params = parse_qs(parsed_path.query)
         message = params.get('message', [None])[0]
@@ -99,7 +99,8 @@ class handler(BaseHTTPRequestHandler):
             return
 
         try:
-            body = json.loads(self.rfile.read(content_length))
+            body_bytes = self.rfile.read(content_length)
+            body = json.loads(body_bytes)
             message = body.get('message', '').strip()
         except Exception:
             self._send_json(400, {"error": "Invalid JSON"})
@@ -122,9 +123,12 @@ class handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type', 'application/json')
         self._cors()
         self.end_headers()
-        self.wfile.write(json.dumps(data).encode())
+        self.wfile.write(json.dumps(data).encode('utf-8'))
 
     def _cors(self):
         self.send_header('Access-Control-Allow-Origin', '*')
         self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+
+    def log_message(self, *a):
+        pass

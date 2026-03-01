@@ -6,94 +6,15 @@
  - [Navigation](#navigation)
  - [About MIKLIUM APIs](#about-miklium-apis)
 ### APIs Documentations
- - [Chatbot API Documentation](#chatbot-api-documentation)
  - [Python Sandbox API Documentation](#python-sandbox-api-documentation)
  - [Search API Documentation](#search-api-documentation)
  - [Apple Shortcuts Data API Documentation](#apple-shortcuts-data-api-documentation)
  - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
+ - [Chatbot API Documentation](#chatbot-api-documentation)
 
 # About MIKLIUM APIs
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
-
----
-# Chatbot API Documentation
-
-## Navigation
-**[Back to MIKLIUM APIs navigation](#navigation)**
-
-
-- [Chatbot API Documentation](#chatbot-api-documentation)
-    - [Navigation](#navigation-1)
-    - [About MIKLIUM Chatbot API](#about-miklium-chatbot-api)
-    - [Request Body](#request-body)
-        - [GET Method](#get-method)
-        - [POST Method](#post-method)
-    - [API Responses](#api-responses)
-        - [Success](#success)
-        - [Error](#error)
-
-## About MIKLIUM Chatbot API
-
-**A lightweight, rule-based chatbot.** This API provides a 1990s-style conversational interface that can answer questions about MIKLIUM, its APIs, and documentation. It is designed to work on low-compute devices and provides quick, deterministic responses.
-
-## Request Body
-
-Link: `https://miklium.vercel.app/api/chatbot`
-
-| Parameter | Required | Type | Description |
-| :--- | :--- | :--- | :--- |
-| `message` | Yes | String | The user's message to the chatbot |
-
-### GET Method
-
-`https://miklium.vercel.app/api/chatbot?message=Paste Your message here`
-
-> [!IMPORTANT]
-> For GET Method the message should be URL-encoded!
-
-**Request Link Example:**
-* `https://miklium.vercel.app/api/chatbot?message=Hello%2C%20how%20do%20I%20use%20the%20Python%20Sandbox%3F`
-
-### POST Method
-
-`https://miklium.vercel.app/api/chatbot`
-
-```javascript
-{
-  "message": "Hello, how do I use the Python Sandbox?"
-}
-```
-
-## API Responses
-
-### Success
-
-**Response structure:**
-| Parameter | Value |
-| :--- | :--- |
-| `response` | `String`, The chatbot's response text |
-
-**Success response example:**
-```javascript
-{
-  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples."
-}
-```
-
-### Error
-
-| Parameter | Value |
-| :--- | :--- |
-| `error` | `String`, Error message |
-
-**Error response example:**
-```javascript
-{
-  "error": "Missing 'message' field"
-}
-```
-
 
 ---
 # Python Sandbox API Documentation
@@ -103,13 +24,13 @@ Link: `https://miklium.vercel.app/api/chatbot`
 
 
 - [Python Sandbox API Documentation](#python-sandbox-api-documentation)
-    - [Navigation](#navigation-2)
+    - [Navigation](#navigation-1)
     - [About MIKLIUM Python Sandbox API](#about-miklium-python-sandbox-api)
-    - [Request Body](#request-body-1)
-        - [POST Method](#post-method-1)
-    - [API Responses](#api-responses-1)
-        - [Success](#success-1)
-        - [Error](#error-1)
+    - [Request Body](#request-body)
+        - [POST Method](#post-method)
+    - [API Responses](#api-responses)
+        - [Success](#success)
+        - [Error](#error)
     - [Limitations](#limitations)
         - [Code Limitations](#code-limitations)
         - [Code Running and Output Limits:](#code-running-and-output-limits)
@@ -297,14 +218,14 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
 
 
 - [Search API Documentation](#search-api-documentation)
-    - [Navigation](#navigation-3)
+    - [Navigation](#navigation-2)
     - [About MIKLIUM Search API](#about-miklium-search-api)
-    - [Request Body](#request-body-2)
-        - [GET Method](#get-method-1)
-        - [POST Method](#post-method-2)
-    - [API Responses](#api-responses-2)
-        - [Success](#success-2)
-        - [Error](#error-2)
+    - [Request Body](#request-body-1)
+        - [GET Method](#get-method)
+        - [POST Method](#post-method-1)
+    - [API Responses](#api-responses-1)
+        - [Success](#success-1)
+        - [Error](#error-1)
     - [Additional Information](#additional-information)
         - [Types of the Information](#types-of-the-information)
         - [Choosing the Right Information Format](#choosing-the-right-information-format)
@@ -451,14 +372,14 @@ As you have already noticed, the API returns two types of information: `short` a
 
 
 - [Apple Shortcuts Data API Documentation](#apple-shortcuts-data-api-documentation)
-    - [Navigation](#navigation-4)
+    - [Navigation](#navigation-3)
     - [About MIKLIUM Apple Shortcuts Data API](#about-miklium-apple-shortcuts-data-api)
-    - [Request Body](#request-body-3)
-        - [GET Method](#get-method-2)
-        - [POST Method](#post-method-3)
-    - [API Responses](#api-responses-3)
-        - [Success](#success-3)
-        - [Error](#error-3)
+    - [Request Body](#request-body-2)
+        - [GET Method](#get-method-1)
+        - [POST Method](#post-method-2)
+    - [API Responses](#api-responses-2)
+        - [Success](#success-2)
+        - [Error](#error-2)
     - [What Services Does This API Use?](#what-services-does-this-api-use-1)
 
 ## About MIKLIUM Apple Shortcuts Data API
@@ -642,14 +563,14 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
 
 
 - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
-    - [Navigation](#navigation-5)
+    - [Navigation](#navigation-4)
     - [About MIKLIUM YouTube Transcription API](#about-miklium-youtube-transcription-api)
-    - [Request Body](#request-body-4)
-        - [GET Method](#get-method-3)
-        - [POST Method](#post-method-4)
-    - [API Responses](#api-responses-4)
-        - [Success](#success-4)
-        - [Error](#error-4)
+    - [Request Body](#request-body-3)
+        - [GET Method](#get-method-2)
+        - [POST Method](#post-method-3)
+    - [API Responses](#api-responses-3)
+        - [Success](#success-3)
+        - [Error](#error-3)
     - [What Services Does This API Use?](#what-services-does-this-api-use-2)
 
 ## About MIKLIUM YouTube Transcription API
@@ -796,3 +717,81 @@ If you want to add additional parameters, write them through `&`.
 ## What Services Does This API Use?
 
 - [YouTube Scraper (Created by @Streamers at Apify)](https://apify.com/streamers/youtube-scraper)
+
+---
+# Chatbot API Documentation
+
+## Navigation
+**[Back to MIKLIUM APIs navigation](#navigation)**
+
+
+- [Chatbot API Documentation](#chatbot-api-documentation)
+    - [Navigation](#navigation-5)
+    - [About MIKLIUM Chatbot API](#about-miklium-chatbot-api)
+    - [Request Body](#request-body-4)
+        - [GET Method](#get-method-3)
+        - [POST Method](#post-method-4)
+    - [API Responses](#api-responses-4)
+        - [Success](#success-4)
+        - [Error](#error-4)
+
+## About MIKLIUM Chatbot API
+
+**A lightweight, rule-based chatbot.** This API provides a 1990s-style conversational interface that can answer questions about MIKLIUM, its APIs, and documentation. It is designed to work on low-compute devices and provides quick, deterministic responses.
+
+## Request Body
+
+Link: `https://miklium.vercel.app/api/chatbot`
+
+| Parameter | Required | Type | Description |
+| :--- | :--- | :--- | :--- |
+| `message` | Yes | String | The user's message to the chatbot |
+
+### GET Method
+
+`https://miklium.vercel.app/api/chatbot?message=Paste Your message here`
+
+> [!IMPORTANT]
+> For GET Method the message should be URL-encoded!
+
+**Request Link Example:**
+* `https://miklium.vercel.app/api/chatbot?message=Hello%2C%20how%20do%20I%20use%20the%20Python%20Sandbox%3F`
+
+### POST Method
+
+`https://miklium.vercel.app/api/chatbot`
+
+```javascript
+{
+  "message": "Hello, how do I use the Python Sandbox?"
+}
+```
+
+## API Responses
+
+### Success
+
+**Response structure:**
+| Parameter | Value |
+| :--- | :--- |
+| `response` | `String`, The chatbot's response text |
+
+**Success response example:**
+```javascript
+{
+  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples."
+}
+```
+
+### Error
+
+| Parameter | Value |
+| :--- | :--- |
+| `error` | `String`, Error message |
+
+**Error response example:**
+```javascript
+{
+  "error": "Missing 'message' field"
+}
+```
