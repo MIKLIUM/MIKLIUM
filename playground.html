@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en" data-page="playground">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Playground - MIKLIUM</title>
+    <meta name="description" content="Test MIKLIUM APIs in real-time with our interactive playground.">
+    <link rel="icon" type="image/png" href="assets/Logo_Transparent_White.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        main {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            padding-top: calc(var(--nav-height) + 40px);
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .playground-container {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 1.5rem;
+            flex: 1;
+            min-height: 0;
+            /* Critical for nested scroll */
+        }
+
+        .config-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            text-align: left;
+            align-items: flex-start;
+            overflow-y: auto;
+            padding: 1.8rem;
+            /* Even, balanced padding */
+        }
+
+        /* Remove hover effects for the side panel */
+        .config-panel:hover {
+            transform: none !important;
+            border-color: var(--glass-border) !important;
+            background: var(--glass-bg) !important;
+            box-shadow:
+                inset 1.5px 1.5px 0 0 rgba(255, 255, 255, 0.15),
+                inset -1px -1px 0 0 rgba(255, 255, 255, 0.05),
+                0 4px 24px rgba(0, 0, 0, 0.3) !important;
+        }
+
+        .config-panel .section {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .response-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            text-align: left;
+            min-height: 0;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.5rem;
+        }
+
+        .api-selector {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.7rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            text-align: left;
+        }
+
+        .api-selector:focus {
+            border-color: var(--accent);
+            background: var(--surface-hover);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            width: 100%;
+            align-items: flex-start;
+        }
+
+        .form-field label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .form-field input,
+        .form-field textarea,
+        .form-field select {
+            width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.65rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            outline: none;
+            transition: all 0.3s var(--transition-smooth);
+            text-align: left;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus,
+        .form-field select:focus {
+            border-color: var(--accent);
+            background: var(--surface-hover);
+        }
+
+        .run-btn {
+            margin-top: 0.5rem;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .output-area {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-card);
+            padding: 1.2rem;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            overflow: auto;
+            position: relative;
+        }
+
+        .output-area pre {
+            margin: 0;
+            color: #e6edf3;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .status-bar {
+            padding: 0.4rem 0.9rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+        }
+
+        @keyframes pulseLoading {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .placeholder-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-tertiary);
+            text-align: center;
+            pointer-events: none;
+            width: 80%;
+        }
+
+        .loading-spinner {
+            display: none;
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                overflow-y: auto;
+                height: auto;
+            }
+
+            main {
+                height: auto;
+            }
+
+            .playground-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-top">
+            <a href="index.html" class="nav-brand">
+                <img src="assets/Logo.svg" alt="" class="nav-logo">
+                MIKLIUM
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="btn btn-ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem;"><i
+                            class="fas fa-house"></i> Home</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        <div class="playground-container">
+            <!-- Left Panel: Configuration -->
+            <div class="glass-card config-panel">
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-plug"></i> Select API</div>
+                    <select id="apiSelector" class="api-selector">
+                        <option value="chatbot">Chatbot API</option>
+                        <option value="python-sandbox">Python Sandbox</option>
+                        <option value="search">Search API</option>
+                        <option value="shortcut-info">Shortcut Info</option>
+                        <option value="youtube-transcript">YouTube Transcript</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <div class="section-title"><i class="fas fa-sliders"></i> Parameters</div>
+                    <div id="dynamicInputs" class="input-group">
+                        <!-- Dynamic inputs will be injected here -->
+                    </div>
+                </div>
+
+                <button id="runBtn" class="btn btn-primary run-btn">
+                    <i class="fas fa-spinner fa-spin loading-spinner" id="spinner"></i>
+                    <i class="fas fa-play" id="playIcon"></i>
+                    <span>Execute Request</span>
+                </button>
+            </div>
+
+            <!-- Right Panel: Output -->
+            <div class="response-panel">
+                <div class="status-bar">
+                    <span id="statusText">Ready</span>
+                    <span style="margin-left: auto;" id="executionTime"></span>
+                </div>
+                <div class="output-area">
+                    <div id="placeholder" class="placeholder-text">
+                        <i class="fas fa-terminal"
+                            style="font-size: 1.5rem; margin-bottom: 0.8rem; display: block; opacity: 0.3;"></i>
+                        Select an API and click execute to see the response
+                    </div>
+                    <pre id="outputPre"></pre>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_CONFIGS = {
+            'chatbot': {
+                endpoint: 'https://miklium.vercel.app/api/chatbot',
+                method: 'POST',
+                inputs: [
+                    { id: 'message', label: 'Message', type: 'text', placeholder: 'Hello, how are you?', required: true },
+                    { id: 'personality', label: 'Personality', type: 'select', options: ['miklium', 'personalityless', 'male', 'female', 'all'], default: 'miklium' },
+                    { id: 'response_stacking', label: 'Response Stacking', type: 'number', min: 0, max: 100, default: 4 }
+                ]
+            },
+            'python-sandbox': {
+                endpoint: 'https://miklium.vercel.app/api/python-sandbox',
+                method: 'POST',
+                inputs: [
+                    { id: 'code', label: 'Python Code', type: 'textarea', placeholder: "print('Hello MIKLIUM!')", required: true },
+                    { id: 'stdin', label: 'Stdin (Comma separated)', type: 'text', placeholder: 'input1, input2' },
+                    { id: 'timeout', label: 'Timeout (Seconds)', type: 'number', min: 0.5, max: 40, default: 20 }
+                ]
+            },
+            'search': {
+                endpoint: 'https://miklium.vercel.app/api/search',
+                method: 'POST',
+                inputs: [
+                    { id: 'search', label: 'Queries (Comma separated, max 3)', type: 'text', placeholder: 'iPhone 17, Apple Vision', required: true },
+                    { id: 'maxSmallSnippets', label: 'Max Small Snippets', type: 'number', default: 5 },
+                    { id: 'maxLargeSnippets', label: 'Max Large Snippets', type: 'number', default: 2 },
+                    { id: 'maxLargeSnippetSymbols', label: 'Max Characters per Snippet', type: 'number', default: 4500 }
+                ]
+            },
+            'shortcut-info': {
+                endpoint: 'https://miklium.vercel.app/api/shortcut-info',
+                method: 'POST',
+                inputs: [
+                    { id: 'url', label: 'Shortcuts Link', type: 'text', placeholder: 'https://www.icloud.com/shortcuts/...', required: true }
+                ]
+            },
+            'youtube-transcript': {
+                endpoint: 'https://miklium.vercel.app/api/youtube-transcript',
+                method: 'POST',
+                inputs: [
+                    { id: 'url', label: 'YouTube URL', type: 'text', placeholder: 'https://youtu.be/...', required: true },
+                    { id: 'removeTimestamps', label: 'Remove Timestamps', type: 'checkbox', default: false },
+                    { id: 'includeInfo', label: 'Include Video Info', type: 'checkbox', default: false }
+                ]
+            }
+        };
+
+        const apiSelector = document.getElementById('apiSelector');
+        const dynamicInputs = document.getElementById('dynamicInputs');
+        const runBtn = document.getElementById('runBtn');
+        const outputPre = document.getElementById('outputPre');
+        const placeholder = document.getElementById('placeholder');
+        const statusText = document.getElementById('statusText');
+        const executionTime = document.getElementById('executionTime');
+        const spinner = document.getElementById('spinner');
+        const playIcon = document.getElementById('playIcon');
+
+        function updateInputs() {
+            const api = apiSelector.value;
+            const config = API_CONFIGS[api];
+            dynamicInputs.innerHTML = '';
+
+            config.inputs.forEach(input => {
+                const field = document.createElement('div');
+                field.className = 'form-field';
+
+                const label = document.createElement('label');
+                label.innerText = input.label;
+                field.appendChild(label);
+
+                if (input.type === 'textarea') {
+                    const el = document.createElement('textarea');
+                    el.id = input.id;
+                    el.placeholder = input.placeholder || '';
+                    el.rows = 5;
+                    if (input.required) el.required = true;
+                    field.appendChild(el);
+                } else if (input.type === 'select') {
+                    const el = document.createElement('select');
+                    el.id = input.id;
+                    input.options.forEach(opt => {
+                        const o = document.createElement('option');
+                        o.value = opt;
+                        o.innerText = opt.charAt(0).toUpperCase() + opt.slice(1);
+                        el.appendChild(o);
+                    });
+                    if (input.default) el.value = input.default;
+                    field.appendChild(el);
+                } else if (input.type === 'checkbox') {
+                    const container = document.createElement('label');
+                    container.style.display = 'flex';
+                    container.style.alignItems = 'center';
+                    container.style.gap = '10px';
+                    container.style.cursor = 'pointer';
+
+                    const el = document.createElement('input');
+                    el.type = 'checkbox';
+                    el.id = input.id;
+                    el.checked = input.default || false;
+
+                    container.prepend(el);
+                    field.replaceChild(container, label);
+                    container.appendChild(document.createTextNode(input.label));
+                } else {
+                    const el = document.createElement('input');
+                    el.type = input.type;
+                    el.id = input.id;
+                    el.placeholder = input.placeholder || '';
+                    if (input.min !== undefined) el.min = input.min;
+                    if (input.max !== undefined) el.max = input.max;
+                    if (input.default !== undefined) el.value = input.default;
+                    if (input.required) el.required = true;
+                    field.appendChild(el);
+                }
+                dynamicInputs.appendChild(field);
+            });
+        }
+
+        async function runAPI() {
+            const api = apiSelector.value;
+            const config = API_CONFIGS[api];
+            const data = {};
+
+            // Collect data
+            let valid = true;
+            config.inputs.forEach(input => {
+                const el = document.getElementById(input.id);
+                if (input.required && !el.value) {
+                    el.style.borderColor = '#ff453a';
+                    valid = false;
+                } else {
+                    el.style.borderColor = 'var(--border)';
+                }
+
+                if (input.type === 'checkbox') {
+                    data[input.id] = el.checked;
+                } else if (input.type === 'number') {
+                    data[input.id] = parseFloat(el.value);
+                } else if (input.id === 'search' || input.id === 'stdin') {
+                    data[input.id] = el.value.split(',').map(s => s.trim()).filter(s => s);
+                } else {
+                    data[input.id] = el.value;
+                }
+            });
+
+            if (!valid) return;
+
+            // UI State
+            runBtn.disabled = true;
+            spinner.style.display = 'inline-block';
+            playIcon.style.display = 'none';
+            statusText.innerText = 'Executing...';
+            placeholder.style.display = 'none';
+            outputPre.innerText = '// Authenticating and making request...';
+            const startTime = performance.now();
+
+            try {
+                const response = await fetch(config.endpoint, {
+                    method: config.method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(0);
+                executionTime.innerText = `${duration}ms`;
+
+                const result = await response.json();
+                outputPre.innerText = JSON.stringify(result, null, 2);
+
+                if (response.ok) {
+                    statusText.innerText = `Success (${response.status})`;
+                } else {
+                    statusText.innerText = `Error (${response.status})`;
+                }
+            } catch (err) {
+                statusText.innerText = 'Network Error';
+                outputPre.innerText = `Error: ${err.message}`;
+            } finally {
+                runBtn.disabled = false;
+                spinner.style.display = 'none';
+                playIcon.style.display = 'inline-block';
+            }
+        }
+
+        apiSelector.addEventListener('change', updateInputs);
+        runBtn.addEventListener('click', runAPI);
+
+        // Initialize
+        updateInputs();
+
+        // Mobile Nav Toggle
+        document.addEventListener("DOMContentLoaded", function () {
+            var toggle = document.querySelector(".nav-toggle");
+            var mobileLinks = document.querySelector(".nav-mobile-links");
+            var navEl = document.querySelector("nav");
+            if (!toggle || !mobileLinks || !navEl) return;
+            toggle.addEventListener("click", function () {
+                var open = mobileLinks.classList.toggle("open");
+                navEl.classList.toggle("nav-expanded", open);
+                toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+            });
+        });
+    </script>
+</body>
+
+</html>

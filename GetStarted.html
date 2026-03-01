@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" data-page="getstarted">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Get Started - MIKLIUM</title>
-  <meta name="description" content="Whether you're building a hobby project or the next big thing, MIKLIUM is here to support you.">
+  <meta name="description"
+    content="Whether you're building a hobby project or the next big thing, MIKLIUM is here to support you.">
   <meta property="og:title" content="Get Started - MIKLIUM">
-  <meta property="og:description" content="Whether you're building a hobby project or the next big thing, MIKLIUM is here to support you.">
-  <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <meta property="og:description"
+    content="Whether you're building a hobby project or the next big thing, MIKLIUM is here to support you.">
+  <meta property="og:image"
+    content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#0155A1">
-  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="icon" type="image/png"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="apple-touch-icon"
+    href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="stylesheet" href="css/style.css">
   <style>
     main {
@@ -23,16 +30,30 @@
       width: 100%;
       padding-top: calc(var(--nav-height) + 48px);
     }
+
     .steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1.2rem;
       margin-top: 1rem;
     }
-    .step { animation: fadeInUp 0.8s var(--transition-smooth) both; }
-    .step:nth-child(1) { animation-delay: 0.1s; }
-    .step:nth-child(2) { animation-delay: 0.2s; }
-    .step:nth-child(3) { animation-delay: 0.3s; }
+
+    .step {
+      animation: fadeInUp 0.8s var(--transition-smooth) both;
+    }
+
+    .step:nth-child(1) {
+      animation-delay: 0.1s;
+    }
+
+    .step:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .step:nth-child(3) {
+      animation-delay: 0.3s;
+    }
+
     .step .step-number {
       display: inline-flex;
       align-items: center;
@@ -49,6 +70,7 @@
       z-index: 1;
       box-shadow: 0 2px 12px rgba(1, 85, 161, 0.3);
     }
+
     .step h3 {
       font-size: 1.15rem;
       margin-bottom: 0.5rem;
@@ -57,6 +79,7 @@
       position: relative;
       z-index: 1;
     }
+
     .step p {
       font-size: 0.92rem;
       color: var(--text-secondary);
@@ -65,6 +88,7 @@
       position: relative;
       z-index: 1;
     }
+
     .step-buttons {
       display: flex;
       flex-direction: column;
@@ -73,13 +97,47 @@
       position: relative;
       z-index: 1;
     }
-    .step-buttons .btn { padding: 0.65rem 1.5rem; font-size: 0.88rem; }
-    .cta { animation: fadeInUp 0.8s var(--transition-smooth) 0.5s both; }
+
+    .step-buttons .btn {
+      padding: 0.65rem 1.5rem;
+      font-size: 0.88rem;
+    }
+
+    .cta {
+      animation: fadeInUp 0.8s var(--transition-smooth) 0.5s both;
+    }
+
     @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr; }
+      .steps {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .playground-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 1.5rem;
+      padding: 0.6rem 1.2rem;
+      background: var(--accent-glow);
+      border: 1px solid var(--accent-border);
+      color: var(--text-primary);
+      text-decoration: none;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s var(--transition-smooth);
+      animation: fadeInUp 0.9s var(--transition-smooth) 0.1s both;
+    }
+
+    .playground-link:hover {
+      background: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px var(--accent-glow);
     }
   </style>
 </head>
+
 <body>
   <nav>
     <div class="nav-top">
@@ -116,6 +174,7 @@
     <div class="page-header">
       <h2>Getting Started</h2>
       <p>Whether you're building a hobby project or the next big thing, MIKLIUM is here to support you.</p>
+      <a href="playground.html" class="playground-link"><i class="fas fa-flask"></i> Try our API playground</a>
     </div>
     <div class="steps">
       <div class="glass-card step">
@@ -139,12 +198,14 @@
         <h3>Join the Community</h3>
         <p>Collaborate, share ideas, and get support from other developers.</p>
         <div class="step-buttons">
-          <a href="https://discord.gg/6HUJTXh45t" class="btn btn-primary" target="_blank"><i class="fab fa-discord"></i> Join Discord</a>
-          <a href="https://github.com/MIKLIUM" class="btn btn-ghost" target="_blank"><i class="fab fa-github"></i> Visit GitHub</a>
+          <a href="https://discord.gg/6HUJTXh45t" class="btn btn-primary" target="_blank"><i class="fab fa-discord"></i>
+            Join Discord</a>
+          <a href="https://github.com/MIKLIUM" class="btn btn-ghost" target="_blank"><i class="fab fa-github"></i> Visit
+            GitHub</a>
         </div>
       </div>
     </div>
-<!--
+    <!--
     <div class="cta">
       <a href="APIDOCS.html" class="btn btn-primary"><i class="fas fa-rocket"></i> Start Exploring APIs</a>
 -->
@@ -168,4 +229,5 @@
     });
   </script>
 </body>
+
 </html>
