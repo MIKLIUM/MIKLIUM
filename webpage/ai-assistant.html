@@ -436,7 +436,7 @@
         async function init() {
             // No longer need WebGPU checks for the lightweight chatbot
             statusPill.classList.add('ready');
-            statusText.innerText = "Online (Low Compute)";
+            statusText.innerText = "Online";
             sendBtn.disabled = false;
         }
 
@@ -502,7 +502,7 @@
 
             // 4. AUTOMATIC KEYWORD DETECTION (as requested by user)
             const lowText = fullText.toLowerCase();
-            if (lowText.includes('git') || lowText.includes('github') || lowText.includes('code')) {
+            if (lowText.includes('git') || lowText.includes('github') || lowText.includes('source code')) {
                 const url = "https://github.com/MIKLIUM";
                 if (!foundLinks.has(normalize(url))) foundLinks.set(normalize(url), "GitHub Repository");
             }
@@ -573,7 +573,7 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const response = await fetch('/api/chatbot', {
+                const response = await fetch('https://miklium.vercel.app/api/chatbot', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
