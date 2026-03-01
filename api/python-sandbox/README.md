@@ -143,6 +143,10 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
   "importlib", "code", "codeop" # Dynamic imports
   "webbrowser", "antigravity", "turtle" # GUI and browser
   "gc", "resource", "atexit", "io" # System resources
+  "posix", "nt", "posixpath", "ntpath", "genericpath", "pwd", "grp", "fcntl", "termios", "tty", "pty" # Low-level system
+  "_posixsubprocess", "_signal" # Low-level process
+  "_io" # Low-level backend
+  "_frozen_importlib", "_frozen_importlib_external", "zipimport", "_imp" # Import system internals
   ```
 * Third-party modules cannot be imported
 * Blocked build-in functions:
