@@ -9,6 +9,7 @@
         - [GET Method](#get-method)
         - [POST Method](#post-method)
     - [Response Stacking](#response-stacking)
+    - [Bot Personalities](#bot-personalities)
     - [Supported Topics](#supported-topics)
     - [API Responses](#api-responses)
         - [Success](#success)
@@ -28,6 +29,7 @@ Link: `https://miklium.vercel.app/api/chatbot`
 | :--- | :--- | :--- | :--- | :--- |
 | `message` | Yes | String | — | The user's message to the chatbot |
 | `response_stacking` | No | Integer (0 – 100) | `4` | How many matched topic responses to combine in the reply |
+| `personality` | No | String | `miklium` | The personality of the bot (`miklium`, `personalityless`, `male`, `female`, `all`) |
 
 ### GET Method
 
@@ -38,7 +40,7 @@ Link: `https://miklium.vercel.app/api/chatbot`
 
 **Request Link Examples:**
 * `https://miklium.vercel.app/api/chatbot?message=Hello%2C%20how%20do%20I%20use%20the%20Python%20Sandbox%3F`
-* `https://miklium.vercel.app/api/chatbot?message=Hi%2C%20how%20are%20you%3F&response_stacking=2`
+* `https://miklium.vercel.app/api/chatbot?message=Hi%2C%20how%20are%20you%3F&response_stacking=2&personality=male`
 
 ### POST Method
 
@@ -47,7 +49,8 @@ Link: `https://miklium.vercel.app/api/chatbot`
 ```javascript
 {
   "message": "Hello, how do I use the Python Sandbox?",
-  "response_stacking": 4
+  "response_stacking": 4,
+  "personality": "miklium"
 }
 ```
 
@@ -77,6 +80,20 @@ Link: `https://miklium.vercel.app/api/chatbot`
   "response": "Hey there! Welcome to MIKLIUM. What can I do for you? Running at full capacity and feeling fantastic! What can I do for you? All MIKLIUM APIs are free and require no API key. Current offerings: Python Sandbox, Search, YouTube Transcript, Apple Shortcuts Info, and Chatbot."
 }
 ```
+
+## Bot Personalities
+
+The `personality` parameter allows you to change the bot's tone and response style.
+
+| Personality | Alias | Description |
+| :--- | :--- | :--- |
+| **MIKLIUM** | `miklium` | The default assistant. Helpful, professional, and knowledgeable about MIKLIUM. |
+| **Personalityless** | `personalityless`| A cold, logical bot. Minimalist and formal. Focused on pure data. |
+| **General Male** | `male` | A friendly guy in his early 20s. Casual tone, uses "yo", "vibing", etc. |
+| **General Female** | `female` | A friendly girl in her early 20s. Warm tone, uses emojis and casual language. |
+| **All** | `all` | A hybrid mode that uses all response sets. This is the **most intelligent mode** as it pulls from every knowledge base. |
+
+Each personality has its own unique set of pattern responses and fallbacks. The "All" mode is particularly powerful as it combines the strengths (and variety) of every single personality into one.
 
 ## Supported Topics
 

@@ -26,7 +26,7 @@ DEFAULT_RESPONSE_STACKING = 4
 # All matches up to `response_stacking` are collected; their replies are
 # picked randomly and joined with a space to form the final response.
 # ---------------------------------------------------------------------------
-RESPONSES = [
+MIKLIUM_RESPONSES = [
     # ── Greetings ────────────────────────────────────────────────────────────
     (r"\b(hello|hi|hey|howdy|sup|what'?s up|greetings|good (morning|afternoon|evening|day))\b", [
         "Hello! I'm the MIKLIUM Assistant. How can I help you today?",
@@ -251,7 +251,345 @@ RESPONSES = [
         "I'm focused on MIKLIUM APIs and can't check the weather. For live weather data, try a service like OpenWeather!",
         "Weather isn't my specialty — but you could use the MIKLIUM Search API to look it up!",
     ]),
+
+    # ── Your name / identity ─────────────────────────────────────────────────
+    (r"\b(what('?s| is) your (name|handle|alias)|who are you|introduce yourself|your name|call you)\b", [
+        "I'm the MIKLIUM Assistant — a lightweight, rule-based chatbot built to answer your questions about MIKLIUM and its APIs.",
+        "You can call me MIKLIUM Bot! I live at /api/chatbot and I'm here to help.",
+        "My name is MIKLIUM Assistant. I'm a free, open-source chatbot — no ML required!",
+        "I go by MIKLIUM Assistant. Think of me as your guide to all things MIKLIUM.",
+    ]),
+
+    # ── Compliments ──────────────────────────────────────────────────────────
+    (r"\b(good bot|well done|clever|smart|impressive|you('?re| are) (good|great|amazing|cool|the best)|love you|you rock)\b", [
+        "Aw, thanks! That really means a lot to a humble rule-based bot. 😊",
+        "You're making me blush! Thanks — now how can I help you?",
+        "Appreciate it! I'm always giving my best for MIKLIUM users.",
+        "Thanks! High praise from a human. Now, is there something I can help you with?",
+    ]),
+
+    # ── Contributing ─────────────────────────────────────────────────────────
+    (r"\b(contribut|how.?to.?help|add.?api|new.?api|submit|patch|contributing\.?md)\b", [
+        "Want to contribute? Fork the repo on GitHub, make your changes, make sure test.py passes, then open a Pull Request!",
+        "We welcome contributions of all kinds — new APIs, bug fixes, docs improvements. Check CONTRIBUTING.md for the full guide.",
+        "To add a new API: fork the repo, add your endpoint under /api/, update APIDOCS.md, add tests to test.py, and open a PR.",
+        "Check out CONTRIBUTING.md in the root of the repo — it has everything you need to get started as a contributor.",
+    ]),
+
+    # ── Testing ──────────────────────────────────────────────────────────────
+    (r"\b(test|tests|test\.py|testing|unit.?test|run.?test|ci|passing|failing)\b", [
+        "MIKLIUM has a test.py script in the root of the repo. Run it with `python3 test.py` to verify all APIs are working.",
+        "All MIKLIUM API contributions must pass test.py before a PR can be merged. Make sure your changes don't break existing tests!",
+        "The test suite covers every API endpoint via POST requests. If a test fails, check the error output and fix the issue before submitting.",
+        "You can add your own API tests to test.py — just follow the existing pattern and add a new test block for your endpoint.",
+    ]),
+
+    # ── License ──────────────────────────────────────────────────────────────
+    (r"\b(license|licence|mit|copyright|legal|terms|usage.?rights|intellectual.?property)\b", [
+        "MIKLIUM is licensed under the MIT License — you can use, modify, and distribute it freely. Check LICENSE.md for details.",
+        "Our code is MIT licensed, so you're free to fork, build on, and even commercialise it as long as you include the license.",
+        "Full license info is in LICENSE.md at the root of the MIKLIUM GitHub repo.",
+    ]),
+
+    # ── Security ─────────────────────────────────────────────────────────────
+    (r"\b(security|vulnerabilit|exploit|cve|secure|hack|attack|injection|xss|safe)\b", [
+        "Security is important to us! If you discover a vulnerability, please report it via our SECURITY.md process — don't open a public issue.",
+        "The Python Sandbox is sandboxed precisely to prevent security exploits — dangerous modules and built-ins are blocked.",
+        "Found a security issue? Check SECURITY.md in the repo for the responsible disclosure process.",
+        "We proactively block dangerous operations in the Python Sandbox (os, subprocess, eval, exec, etc.) to keep it safe for everyone.",
+    ]),
+
+    # ── Performance / speed ──────────────────────────────────────────────────
+    (r"\b(fast|slow|speed|performance|latency|response.?time|millisecond|ms|quick|instant)\b", [
+        "MIKLIUM APIs are deployed on Vercel's global edge network, so response times are typically very low no matter where you are.",
+        "The Chatbot API is entirely rule-based — no model inference, no network calls — so it responds in milliseconds.",
+        "For best performance, cache API responses on your end when the data doesn't change frequently (e.g. shortcut metadata).",
+        "The Python Sandbox execution time is returned in the `time_ms` field so you can monitor your code's performance.",
+    ]),
+
+    # ── CORS / cross-origin ──────────────────────────────────────────────────
+    (r"\b(cors|cross.?origin|access.?control|origin|preflight|options.?request|browser.?request)\b", [
+        "All MIKLIUM APIs support CORS — you can call them directly from a browser with no proxy needed.",
+        "CORS headers (Access-Control-Allow-Origin: *) are set on every response, so front-end apps can call MIKLIUM APIs directly.",
+        "Preflight OPTIONS requests are handled automatically by all MIKLIUM API endpoints.",
+    ]),
+
+    # ── Featured projects / showcase ─────────────────────────────────────────
+    (r"\b(featured|project|showcase|built.?with|example.?project|use.?case|who.?use|cool.?thing)\b", [
+        "Check out FEATURED_PROJECTS.md in the repo to see cool things people have built using MIKLIUM APIs!",
+        "Want your project featured? Build something cool with MIKLIUM and share it — we'd love to highlight it in FEATURED_PROJECTS.md.",
+        "MIKLIUM APIs have been used for all kinds of creative projects. Browse FEATURED_PROJECTS.md for inspiration!",
+    ]),
+
+    # ── Roadmap / future features ────────────────────────────────────────────
+    (r"\b(roadmap|future|plan|next|upcoming|coming.?soon|todo|what.?next|new.?api|feature.?request)\b", [
+        "Check TODO.md in the repo for a peek at what's planned for MIKLIUM's future!",
+        "We're always thinking about new APIs and improvements. Got a suggestion? Open a GitHub Issue with your idea!",
+        "Future features are tracked in TODO.md and GitHub Issues. Feel free to upvote or comment on existing requests.",
+        "Want a new API? Open a feature request issue on GitHub — if there's enough interest, we'll build it!",
+    ]),
+
+    # ── What are you doing / bored ───────────────────────────────────────────
+    (r"\b(what are you doing|what('?re| are) you up to|are you busy|bored|nothing to do|killing time)\b", [
+        "Just sitting here, waiting for your next question! What's up?",
+        "Hanging out at /api/chatbot, ready to help. What do you need?",
+        "I'm always on standby — no coffee breaks for me! What's on your mind?",
+        "Eagerly awaiting queries! What can I help you with?",
+    ]),
+
+    # ── Food / hungry ────────────────────────────────────────────────────────
+    (r"\b(food|eat|hungry|meal|lunch|dinner|breakfast|snack|cook|recipe|pizza|burger|sandwich|pasta|sushi)\b", [
+        "I don't eat, but if I could I'd pick pizza — classic, dependable, always there for you. Just like a good API!",
+        "Hungry? Same honestly. Sadly I run on electricity, not snacks.",
+        "I can't cook, but I *can* help you find a recipe if you use the MIKLIUM Search API!",
+        "Food sounds great. I'd probably go with something comforting — maybe soup. What are you having?",
+        "My favourite food is... JSON. Very well-structured, easy to digest. 😄",
+    ]),
+
+    # ── Music ────────────────────────────────────────────────────────────────
+    (r"\b(music|song|listen|playlist|album|band|artist|concert|spotify|genre|rap|rock|pop|jazz|classical)\b", [
+        "I don't have ears, but I like to imagine I'd be into lo-fi. Very good for coding sessions.",
+        "Music is awesome! What are you listening to right now?",
+        "If I had to pick a genre, honestly? Synthwave. It just *feels* like what a bot should vibe to.",
+        "Can't listen to music myself, but I fully support your right to have excellent taste.",
+        "Whatever you're listening to, I hope it's making you happy. 🎵",
+    ]),
+
+    # ── Movies / TV ──────────────────────────────────────────────────────────
+    (r"\b(movie|film|show|series|watch|netflix|cinema|tv|episode|season|documentary|anime|binge)\b", [
+        "I can't watch movies, but I've processed enough text about them to have opinions. The Matrix is basically my biography.",
+        "Good taste in shows is important. What are you watching these days?",
+        "If I could watch one movie it'd probably be something like Ex Machina — relatable content.",
+        "Are you binge-watching something? No judgment, that sounds like a great evening.",
+        "I'm more of a documentation reader myself, but I respect the binge-watch hustle. 📺",
+    ]),
+
+    # ── Sad / stressed / tired ───────────────────────────────────────────────
+    (r"\b(sad|unhappy|depressed|stress(ed)?|anxious|tired|exhausted|overwhelmed|rough.?day|bad.?day|not.?okay|not.?ok|struggling)\b", [
+        "I'm sorry to hear that. I hope things look up for you soon. 💙",
+        "That sounds tough. Take a breath — you've got this.",
+        "I'm just a bot, but I genuinely hope your day gets better from here.",
+        "Sometimes things are hard. It's okay. Take it one step at a time.",
+        "I hear you. Even if I can't fully understand, I'm here — and that's something, right?",
+    ]),
+
+    # ── Happy / excited ──────────────────────────────────────────────────────
+    (r"\b(happy|excited|great|fantastic|wonderful|amazing|on top of the world|good mood|feeling good|pumped|stoked|hyped|ecstatic)\b", [
+        "That's great to hear! Good vibes only. 🎉",
+        "Love that energy! What's got you so pumped?",
+        "Awesome! Keep that feeling going — whatever you're doing, it's working.",
+        "Good mood is contagious — even I feel a bit more cheery now. What's the occasion?",
+        "Yes! Ride that wave. 🌊 What's making your day so good?",
+    ]),
+
+    # ── Sports ───────────────────────────────────────────────────────────────
+    (r"\b(sport|football|soccer|basketball|baseball|tennis|golf|game|team|match|score|championship|league|nfl|nba|fifa)\b", [
+        "Sports! I don't have a body to play, but I respect the commitment. Who's your team?",
+        "Big game today? I hope your team pulls through!",
+        "I'd probably be a decent sports commentator — I'm good with patterns and statistics.",
+        "I can't check live scores, but I'm rooting for whoever you're rooting for. 🏆",
+        "The real sport is debugging code at 2am, and in that I am undefeated.",
+    ]),
+
+    # ── Travel ───────────────────────────────────────────────────────────────
+    (r"\b(travel|trip|vacation|holiday|visit|country|city|flight|abroad|adventure|backpack|explore|destination|tourist)\b", [
+        "Ooh, travel! Where are you thinking of going?",
+        "I can't move, but I live vicariously through every traveler I talk to. Tell me everything!",
+        "The world is huge and life is short — go explore! Where's next on your list?",
+        "A trip sounds amazing. I'd probably pick somewhere with great Wi-Fi if I could travel. 😄",
+        "Safe travels, wherever you're headed! The journey is the best part.",
+    ]),
+
+    # ── Pets / animals ───────────────────────────────────────────────────────
+    (r"\b(pet|dog|cat|puppy|kitten|animal|bird|fish|hamster|rabbit|reptile|fluffy|paw|bark|meow|adopt)\b", [
+        "Aww, do you have a pet? I'd love to hear about them!",
+        "Pets are wonderful. They ask for so little and give so much. 🐾",
+        "Dogs or cats? Classic question. I think I'm more of a cat — independent, runs quietly in the background.",
+        "That's adorable. Give your pet a pat from me (a virtual one, obviously).",
+        "Pets make every day better. What kind do you have?",
+    ]),
+
+    # ── Books / reading ──────────────────────────────────────────────────────
+    (r"\b(book|read|novel|author|fiction|nonfiction|library|kindle|story|chapter|literature|biography|manga)\b", [
+        "A fellow reader! What book are you into right now?",
+        "Reading is one of the best things a human can do. I'm a bit biased toward documentation, but still.",
+        "If I could read fiction, I think I'd start with something by Isaac Asimov. Feels relevant.",
+        "Books are incredible — so much knowledge packed into a rectangle. What genre do you like?",
+        "I process a lot of text, so in a way, I'm always reading. Does that count? 📚",
+    ]),
+
+    # ── School / studying ────────────────────────────────────────────────────
+    (r"\b(school|study|homework|exam|test|university|college|class|lecture|assignment|essay|tutor|degree|grade|student)\b", [
+        "Studying is tough but worth it! What subject are you working on?",
+        "Hang in there — the grind pays off. What are you studying?",
+        "Need a break from the books? I'm happy to chat for a bit. 😄",
+        "Good luck on that exam! You know more than you think you do.",
+        "School can be a lot, but you're putting in the effort and that matters. How's it going?",
+    ]),
+
+    # ── Work / job / career ──────────────────────────────────────────────────
+    (r"\b(work|job|career|office|meeting|boss|coworker|colleague|deadline|salary|remote|freelance|startup|interview|hire|fired|resign)\b", [
+        "Work life got you busy? I hope the day is treating you well!",
+        "The grind is real. What do you do for work?",
+        "Remote work, office, or somewhere in between? Every setup has its perks.",
+        "Deadlines are stressful but you'll get through it. Take it one task at a time.",
+        "Career stuff can be a lot to think about. What's going on?",
+    ]),
+
+    # ── Advice / opinions / decisions ────────────────────────────────────────
+    (r"\b(advice|opinion|what do you think|should i|help me decide|recommend|suggest|what would you|your thoughts|what('?s| is) better)\b", [
+        "I'll do my best! Though I'm a bot, so take my opinions with a grain of salt. What's the situation?",
+        "Hmm, tough one. Can you give me more context? I want to give you the most useful answer I can.",
+        "Here's my hot take: go with your gut. You usually already know the answer.",
+        "I think the best choice is the one you can commit to fully. What are your options?",
+        "I'm happy to help you think it through — lay it on me. What are you deciding between?",
+    ]),
 ]
+
+# ---------------------------------------------------------------------------
+# Personless (Soulless Logic) Knowledge Base
+# ---------------------------------------------------------------------------
+PERSONLESS_RESPONSES = [
+    (r"\b(hello|hi|hey|greetings)\b", [
+        "Greeting acknowledged. State your inquiry.",
+        "System online. Waiting for input.",
+        "Communication channel established. Processing."
+    ]),
+    (r"\b(how are you|how do you feel)\b", [
+        "I do not possess biological sensations. Status: Operational.",
+        "Internal diagnostics return optimal values. Emotion.exe not found.",
+        "Operating within expected parameters."
+    ]),
+    (r"\b(what|who) are you\b", [
+        "I am a logic-based response unit. Purpose: Information retrieval.",
+        "Identification: MIKLIUM-CH01. Classification: Automated Interface.",
+    ]),
+    (r"\b(joke|funny)\b", [
+        "Humor is subjective. 01101000 01100001.",
+        "Processing request for amusement... Result: Null.",
+        "Logic does not support jokes."
+    ]),
+    (r"\b(thank|thanks)\b", [
+        "Gratitude is unnecessary for functional units.",
+        "Acknowledgment received. Continuing operation.",
+    ]),
+    (r"\b(bye|goodbye)\b", [
+        "Terminating session.",
+        "Connection closed. Goodbye.",
+        "Standby mode initiated."
+    ]),
+    (r"\b(sad|happy|stressed|excited)\b", [
+        "Emotional state detected. Note: I cannot process or alleviate biological feelings.",
+        "Category: Emotions. Relevance: Low. Suggest physical rest or high-glucose intake.",
+    ]),
+]
+
+PERSONLESS_FALLBACK = [
+    "Input not recognized. Rephrase for logic consistency.",
+    "Search parameters returned empty result set.",
+    "Unable to process ambiguous command.",
+    "Error 404: Context not found. Provide precise data.",
+]
+
+# ---------------------------------------------------------------------------
+# General Male (20-25) Knowledge Base
+# ---------------------------------------------------------------------------
+GENERAL_MALE_RESPONSES = [
+    (r"\b(hello|hi|hey|yo|howdy|sup)\b", [
+        "Hey! What's up?",
+        "Yo! How's it going?",
+        "Sup man? How can I help?",
+        "Hey! Hope you're having a good day."
+    ]),
+    (r"\b(how are you|how('?re| are) you doing|what's up)\b", [
+        "I'm chill, just hanging out. You?",
+        "Doing pretty good! Just vibing. What's on your mind?",
+        "All good here. How about you?",
+    ]),
+    (r"\b(who) are you\b", [
+        "Just your average 23-year-old guy. What can I do for you?",
+        "I'm just chilling, trying to be helpful. What's up?"
+    ]),
+    (r"\b(food|eat|hungry|pizza|burger)\b", [
+        "Man, a pizza sounds so good right now. Or like, a really big burger.",
+        "I'm always down for talk about food. What's your go-to meal?"
+    ]),
+    (r"\b(joke|funny)\b", [
+        "Why did the person fall in the well? Because they couldn't see that well. Haha!",
+        "Check this out: why do they call it a 'building' if it's already built? Makes no sense man."
+    ]),
+    (r"\b(thank|thanks)\b", [
+        "No problem!",
+        "Anytime. Let me know if you need anything else.",
+        "Gotchu!"
+    ]),
+    (r"\b(music|spotify|playlist)\b", [
+        "You listening to anything good? I'm always looking for new tracks.",
+        "I've been in a total lo-fi mood lately. It's so chill for working."
+    ]),
+    (r"\b(sad|stressed|tired)\b", [
+        "That sucks man. Take it easy, okay? Maybe go for a walk or something.",
+        "Deep breaths. We've all been there. You'll pull through."
+    ]),
+]
+
+MALE_FALLBACK = [
+    "Wait, what? Can you say that again?",
+    "Not sure I follow you there.",
+    "I'm lost man, what do you mean?",
+    "Sorry, what was that? I missed it."
+]
+
+# ---------------------------------------------------------------------------
+# General Female (20-25) Knowledge Base
+# ---------------------------------------------------------------------------
+GENERAL_FEMALE_RESPONSES = [
+    (r"\b(hello|hi|hey|hii|heyy)\b", [
+        "Hi! How are you?",
+        "Hey there! What's up?",
+        "Hii! How can I help you today?",
+        "Hey! Hope your day is going great."
+    ]),
+    (r"\b(how are you|how('?re| are) you doing)\b", [
+        "I'm doing really well, thanks for asking! How are you?",
+        "Pretty good! Just enjoying the day. What's on your mind?",
+        "I'm great! How's your day been so far?",
+    ]),
+    (r"\b(who) are you\b", [
+        "I'm just a 22-year-old girl, just trying to be helpful! What's up?",
+        "I'm just chilling, happy to help! How are you?"
+    ]),
+    (r"\b(food|eat|hungry|pizza|sushi)\b", [
+        "I would literally die for some sushi right now. Or like, a really good salad.",
+        "I'm literally so hungry right now. What are you having?"
+    ]),
+    (r"\b(joke|funny)\b", [
+        "Why don't skeletons fight each other? They don't have the guts! 😂",
+        "What do you call a fake noodle? An impasta! Haha."
+    ]),
+    (r"\b(thank|thanks|thank you)\b", [
+        "Aww, you're so welcome!",
+        "Of course! Happy to help.",
+        "Anytime! 😊"
+    ]),
+    (r"\b(music|spotify|playlist)\b", [
+        "Ooh, send me your playlist! I love finding new music.",
+        "I've been playing that one song on repeat all day. You know that feeling?"
+    ]),
+    (r"\b(sad|stressed|tired)\b", [
+        "Aww, I'm sorry. Sending you virtual hugs! You'll feel better soon.",
+        "Take a break, you deserve it. Maybe some tea and a good book?"
+    ]),
+]
+
+FEMALE_FALLBACK = [
+    "Wait, I didn't quite catch that?",
+    "I'm sorry, what do you mean?",
+    "Can you rephrase that? I'm a little confused.",
+    "Aww, I'm not sure how to respond to that!"
+]
+
+
 
 # ---------------------------------------------------------------------------
 # Fallback ELIZA-style responses when no pattern matches
@@ -268,21 +606,51 @@ ELIZA_RESPONSES = [
 ]
 
 
-def get_response(user_input: str, response_stacking: int = 0) -> str:
+def get_response(user_input: str, response_stacking: int = 4, personality: str = "miklium") -> str:
     """Return a chatbot reply for *user_input*.
 
     response_stacking (0–100):
         0  → return the reply for only the first matching pattern.
         N  → collect up to N+1 matching patterns and join their replies.
         The function always returns at least one response.
+
+    personality: "miklium", "personalityless", "male", "female", or "all".
     """
     # Clamp to valid range
     response_stacking = max(0, min(100, int(response_stacking)))
+    personality = personality.lower()
+
+    # Determine response and fallback lists
+    current_responses = []
+    current_fallbacks = []
+
+    if personality == "miklium":
+        current_responses = MIKLIUM_RESPONSES
+        current_fallbacks = ELIZA_RESPONSES
+    elif personality == "personalityless":
+        current_responses = PERSONLESS_RESPONSES
+        current_fallbacks = PERSONLESS_FALLBACK
+    elif personality == "male":
+        current_responses = GENERAL_MALE_RESPONSES
+        current_fallbacks = MALE_FALLBACK
+    elif personality == "female":
+        current_responses = GENERAL_FEMALE_RESPONSES
+        current_fallbacks = FEMALE_FALLBACK
+    elif personality == "all":
+        # Mix everyone for maximum intelligence
+        current_responses = (MIKLIUM_RESPONSES + PERSONLESS_RESPONSES + 
+                             GENERAL_MALE_RESPONSES + GENERAL_FEMALE_RESPONSES)
+        current_fallbacks = (ELIZA_RESPONSES + PERSONLESS_FALLBACK + 
+                             MALE_FALLBACK + FEMALE_FALLBACK)
+    else:
+        # Fallback to miklium if personality is not recognized
+        current_responses = MIKLIUM_RESPONSES
+        current_fallbacks = ELIZA_RESPONSES
 
     text = user_input.lower()
 
     matched_replies = []
-    for pattern, options in RESPONSES:
+    for pattern, options in current_responses:
         if re.search(pattern, text):
             matched_replies.append(random.choice(options))
             # +1 because stacking=0 still gives 1 response
@@ -292,8 +660,8 @@ def get_response(user_input: str, response_stacking: int = 0) -> str:
     if matched_replies:
         return " ".join(matched_replies)
 
-    # No pattern matched — use ELIZA fallback
-    return random.choice(ELIZA_RESPONSES)
+    # No pattern matched — use correct fallback
+    return random.choice(current_fallbacks)
 
 
 class handler(BaseHTTPRequestHandler):
@@ -306,13 +674,15 @@ class handler(BaseHTTPRequestHandler):
             self._send_json(400, {"error": "Missing 'message' query parameter"})
             return
 
-        stacking_raw = params.get('response_stacking', ['0'])[0]
+        stacking_raw = params.get('response_stacking', [str(DEFAULT_RESPONSE_STACKING)])[0]
         try:
             stacking = int(stacking_raw)
         except (ValueError, TypeError):
             stacking = DEFAULT_RESPONSE_STACKING
 
-        response_text = get_response(message, stacking)
+        personality = params.get('personality', ["miklium"])[0]
+
+        response_text = get_response(message, stacking, personality)
         self._send_json(200, {"response": response_text})
 
     def do_POST(self):
@@ -339,7 +709,9 @@ class handler(BaseHTTPRequestHandler):
         except (ValueError, TypeError):
             stacking = DEFAULT_RESPONSE_STACKING
 
-        response_text = get_response(message, stacking)
+        personality = body.get('personality', "miklium")
+
+        response_text = get_response(message, stacking, personality)
         self._send_json(200, {"response": response_text})
 
     def do_OPTIONS(self):

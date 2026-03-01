@@ -6,170 +6,15 @@
  - [Navigation](#navigation)
  - [About MIKLIUM APIs](#about-miklium-apis)
 ### APIs Documentations
- - [Chatbot API Documentation](#chatbot-api-documentation)
  - [Python Sandbox API Documentation](#python-sandbox-api-documentation)
  - [Search API Documentation](#search-api-documentation)
  - [Apple Shortcuts Data API Documentation](#apple-shortcuts-data-api-documentation)
  - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
+ - [Chatbot API Documentation](#chatbot-api-documentation)
 
 # About MIKLIUM APIs
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits. Here you will find detailed documentation for each of our APIs.
-
----
-# Chatbot API Documentation
-
-## Navigation
-**[Back to MIKLIUM APIs navigation](#navigation)**
-
-
-- [Chatbot API Documentation](#chatbot-api-documentation)
-    - [Navigation](#navigation-1)
-    - [About MIKLIUM Chatbot API](#about-miklium-chatbot-api)
-    - [Request Body](#request-body)
-        - [GET Method](#get-method)
-        - [POST Method](#post-method)
-    - [Response Stacking](#response-stacking)
-    - [Supported Topics](#supported-topics)
-    - [API Responses](#api-responses)
-        - [Success](#success)
-        - [Error](#error)
-
-## About MIKLIUM Chatbot API
-
-**A lightweight, rule-based chatbot.** This API provides a conversational interface that can answer questions about MIKLIUM, its APIs, documentation, community, and more. It is designed to work on low-compute devices and delivers quick, deterministic responses with no external dependencies.
-
-Unlike a single-match bot, MIKLIUM Chatbot supports **response stacking** — when your message touches multiple topics (e.g. a greeting *and* a question about the APIs), the chatbot can intelligently combine matching responses into one rich reply.
-
-## Request Body
-
-Link: `https://miklium.vercel.app/api/chatbot`
-
-| Parameter | Required | Type | Default | Description |
-| :--- | :--- | :--- | :--- | :--- |
-| `message` | Yes | String | — | The user's message to the chatbot |
-| `response_stacking` | No | Integer (0 – 100) | `4` | How many matched topic responses to combine in the reply |
-
-### GET Method
-
-`https://miklium.vercel.app/api/chatbot?message=Paste Your message here`
-
-> [!IMPORTANT]
-> For GET Method the message should be URL-encoded!
-
-**Request Link Examples:**
-* `https://miklium.vercel.app/api/chatbot?message=Hello%2C%20how%20do%20I%20use%20the%20Python%20Sandbox%3F`
-* `https://miklium.vercel.app/api/chatbot?message=Hi%2C%20how%20are%20you%3F&response_stacking=2`
-
-### POST Method
-
-`https://miklium.vercel.app/api/chatbot`
-
-```javascript
-{
-  "message": "Hello, how do I use the Python Sandbox?",
-  "response_stacking": 4
-}
-```
-
-## Response Stacking
-
-`response_stacking` is an optional integer parameter (**0 – 100**, default **`4`**) that controls how many pattern-matched responses are combined into the final reply.
-
-| Value | Behaviour |
-| :--- | :--- |
-| `0` | Only the **first** matching response is returned (classic single-match mode) |
-| `1` – `99` | Up to **N + 1** matched responses are joined into one reply |
-| `100` | All matching responses are combined (maximum verbosity) |
-
-**How it works:** The chatbot scans your message against every topic pattern in order. Each time a pattern matches, one randomly-chosen response for that topic is added to the list. When the list reaches `response_stacking + 1` entries (or all patterns have been checked), the collected responses are joined with a space and returned as a single string.
-
-**Example — `response_stacking: 2` with message `"Hey, how are you? Tell me about the APIs"`:**
-
-```javascript
-// Request
-{
-  "message": "Hey, how are you? Tell me about the APIs",
-  "response_stacking": 2
-}
-
-// Response (three matched topics combined)
-{
-  "response": "Hey there! Welcome to MIKLIUM. What can I do for you? Running at full capacity and feeling fantastic! What can I do for you? All MIKLIUM APIs are free and require no API key. Current offerings: Python Sandbox, Search, YouTube Transcript, Apple Shortcuts Info, and Chatbot."
-}
-```
-
-## Supported Topics
-
-The chatbot recognises a wide range of topics out of the box:
-
-| Topic | Example phrases |
-| :--- | :--- |
-| Greetings | hello, hi, hey, good morning, howdy |
-| How are you | how are you, you doing okay, are you well |
-| Capabilities | what can you do, how can you help |
-| APIs overview | apis, what do you offer, what is available |
-| Documentation | docs, documentation, how to use, guide |
-| Python Sandbox | python, sandbox, run code, code execution |
-| Search API | search, web search, find, queries |
-| YouTube Transcript | youtube, transcript, captions, subtitles |
-| Apple Shortcuts | shortcut, icloud, routinehub, automation |
-| Chatbot API | chatbot, chat api, this api, bot api |
-| Response Stacking | response stacking, stacking, stacked response |
-| GitHub / OSS | github, open source, contribute, pull request |
-| Community / Support | discord, help, support, bug, issue |
-| About MIKLIUM | what is miklium, who made you, about miklium |
-| Pricing | free, cost, price, subscription |
-| Rate Limits | rate limit, quota, throttle |
-| Error Handling | error, 500, 400, bad request, not working |
-| Authentication | auth, api key, token, bearer |
-| Request Format | json, body, content-type, endpoint |
-| Versioning | version, update, changelog, release |
-| Deployment | deploy, vercel, serverless, self-host |
-| Language / SDK | sdk, npm, curl, fetch, javascript, python |
-| Examples | example, sample, demo, getting started |
-| Thanks | thank you, appreciate, awesome, great |
-| Goodbye | bye, goodbye, see you, take care |
-| Jokes | joke, funny, lol, humor |
-| Time / Date | time, date, today, clock |
-| Weather | weather, temperature, forecast |
-
-## API Responses
-
-### Success
-
-**Response structure:**
-| Parameter | Value |
-| :--- | :--- |
-| `response` | `String`, The chatbot's response text (may be multiple sentences if stacking > 0) |
-
-**Success response example (no stacking):**
-```javascript
-{
-  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples."
-}
-```
-
-**Success response example (stacking = 2, greeting + how-are-you combined):**
-```javascript
-{
-  "response": "Hi! Great to see you here. Ask me anything about MIKLIUM! All systems green! I'm here and ready to assist."
-}
-```
-
-### Error
-
-| Parameter | Value |
-| :--- | :--- |
-| `error` | `String`, Error message |
-
-**Error response example:**
-```javascript
-{
-  "error": "Missing 'message' field"
-}
-```
-
 
 ---
 # Python Sandbox API Documentation
@@ -179,13 +24,13 @@ The chatbot recognises a wide range of topics out of the box:
 
 
 - [Python Sandbox API Documentation](#python-sandbox-api-documentation)
-    - [Navigation](#navigation-2)
+    - [Navigation](#navigation-1)
     - [About MIKLIUM Python Sandbox API](#about-miklium-python-sandbox-api)
-    - [Request Body](#request-body-1)
-        - [POST Method](#post-method-1)
-    - [API Responses](#api-responses-1)
-        - [Success](#success-1)
-        - [Error](#error-1)
+    - [Request Body](#request-body)
+        - [POST Method](#post-method)
+    - [API Responses](#api-responses)
+        - [Success](#success)
+        - [Error](#error)
     - [Limitations](#limitations)
         - [Code Limitations](#code-limitations)
         - [Code Running and Output Limits:](#code-running-and-output-limits)
@@ -373,14 +218,14 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
 
 
 - [Search API Documentation](#search-api-documentation)
-    - [Navigation](#navigation-3)
+    - [Navigation](#navigation-2)
     - [About MIKLIUM Search API](#about-miklium-search-api)
-    - [Request Body](#request-body-2)
-        - [GET Method](#get-method-1)
-        - [POST Method](#post-method-2)
-    - [API Responses](#api-responses-2)
-        - [Success](#success-2)
-        - [Error](#error-2)
+    - [Request Body](#request-body-1)
+        - [GET Method](#get-method)
+        - [POST Method](#post-method-1)
+    - [API Responses](#api-responses-1)
+        - [Success](#success-1)
+        - [Error](#error-1)
     - [Additional Information](#additional-information)
         - [Types of the Information](#types-of-the-information)
         - [Choosing the Right Information Format](#choosing-the-right-information-format)
@@ -527,14 +372,14 @@ As you have already noticed, the API returns two types of information: `short` a
 
 
 - [Apple Shortcuts Data API Documentation](#apple-shortcuts-data-api-documentation)
-    - [Navigation](#navigation-4)
+    - [Navigation](#navigation-3)
     - [About MIKLIUM Apple Shortcuts Data API](#about-miklium-apple-shortcuts-data-api)
-    - [Request Body](#request-body-3)
-        - [GET Method](#get-method-2)
-        - [POST Method](#post-method-3)
-    - [API Responses](#api-responses-3)
-        - [Success](#success-3)
-        - [Error](#error-3)
+    - [Request Body](#request-body-2)
+        - [GET Method](#get-method-1)
+        - [POST Method](#post-method-2)
+    - [API Responses](#api-responses-2)
+        - [Success](#success-2)
+        - [Error](#error-2)
     - [What Services Does This API Use?](#what-services-does-this-api-use-1)
 
 ## About MIKLIUM Apple Shortcuts Data API
@@ -718,14 +563,14 @@ Link: `https://miklium.vercel.app/api/shortcut-info`
 
 
 - [YouTube Transcription API Documentation](#youtube-transcription-api-documentation)
-    - [Navigation](#navigation-5)
+    - [Navigation](#navigation-4)
     - [About MIKLIUM YouTube Transcription API](#about-miklium-youtube-transcription-api)
-    - [Request Body](#request-body-4)
-        - [GET Method](#get-method-3)
-        - [POST Method](#post-method-4)
-    - [API Responses](#api-responses-4)
-        - [Success](#success-4)
-        - [Error](#error-4)
+    - [Request Body](#request-body-3)
+        - [GET Method](#get-method-2)
+        - [POST Method](#post-method-3)
+    - [API Responses](#api-responses-3)
+        - [Success](#success-3)
+        - [Error](#error-3)
     - [What Services Does This API Use?](#what-services-does-this-api-use-2)
 
 ## About MIKLIUM YouTube Transcription API
@@ -872,3 +717,174 @@ If you want to add additional parameters, write them through `&`.
 ## What Services Does This API Use?
 
 - [YouTube Scraper (Created by @Streamers at Apify)](https://apify.com/streamers/youtube-scraper)
+
+---
+# Chatbot API Documentation
+
+## Navigation
+**[Back to MIKLIUM APIs navigation](#navigation)**
+
+
+- [Chatbot API Documentation](#chatbot-api-documentation)
+    - [Navigation](#navigation-5)
+    - [About MIKLIUM Chatbot API](#about-miklium-chatbot-api)
+    - [Request Body](#request-body-4)
+        - [GET Method](#get-method-3)
+        - [POST Method](#post-method-4)
+    - [Response Stacking](#response-stacking)
+    - [Bot Personalities](#bot-personalities)
+    - [Supported Topics](#supported-topics)
+    - [API Responses](#api-responses-4)
+        - [Success](#success-4)
+        - [Error](#error-4)
+
+## About MIKLIUM Chatbot API
+
+**A lightweight, rule-based chatbot.** This API provides a conversational interface that can answer questions about MIKLIUM, its APIs, documentation, community, and more. It is designed to work on low-compute devices and delivers quick, deterministic responses with no external dependencies.
+
+Unlike a single-match bot, MIKLIUM Chatbot supports **response stacking** — when your message touches multiple topics (e.g. a greeting *and* a question about the APIs), the chatbot can intelligently combine matching responses into one rich reply.
+
+## Request Body
+
+Link: `https://miklium.vercel.app/api/chatbot`
+
+| Parameter | Required | Type | Default | Description |
+| :--- | :--- | :--- | :--- | :--- |
+| `message` | Yes | String | — | The user's message to the chatbot |
+| `response_stacking` | No | Integer (0 – 100) | `4` | How many matched topic responses to combine in the reply |
+| `personality` | No | String | `miklium` | The personality of the bot (`miklium`, `personalityless`, `male`, `female`, `all`) |
+
+### GET Method
+
+`https://miklium.vercel.app/api/chatbot?message=Paste Your message here`
+
+> [!IMPORTANT]
+> For GET Method the message should be URL-encoded!
+
+**Request Link Examples:**
+* `https://miklium.vercel.app/api/chatbot?message=Hello%2C%20how%20do%20I%20use%20the%20Python%20Sandbox%3F`
+* `https://miklium.vercel.app/api/chatbot?message=Hi%2C%20how%20are%20you%3F&response_stacking=2&personality=female`
+
+### POST Method
+
+`https://miklium.vercel.app/api/chatbot`
+
+```javascript
+{
+  "message": "Hello, how do I use the Python Sandbox?",
+  "response_stacking": 4,
+  "personality": "miklium"
+}
+```
+
+## Response Stacking
+
+`response_stacking` is an optional integer parameter (**0 – 100**, default **`4`**) that controls how many pattern-matched responses are combined into the final reply.
+
+| Value | Behaviour |
+| :--- | :--- |
+| `0` | Only the **first** matching response is returned (classic single-match mode) |
+| `1` – `99` | Up to **N + 1** matched responses are joined into one reply |
+| `100` | All matching responses are combined (maximum verbosity) |
+
+**How it works:** The chatbot scans your message against every topic pattern in order. Each time a pattern matches, one randomly-chosen response for that topic is added to a list. When the list reaches `response_stacking + 1` entries (or all patterns have been checked), the collected responses are joined with a space and returned as a single string.
+
+**Example — `response_stacking: 2` with message `"Hey, how are you? Tell me about the APIs"`:**
+
+```javascript
+// Request
+{
+  "message": "Hey, how are you? Tell me about the APIs",
+  "response_stacking": 2
+}
+
+// Response (three matched topics combined)
+{
+  "response": "Hey there! Welcome to MIKLIUM. What can I do for you? Running at full capacity and feeling fantastic! All MIKLIUM APIs are free and require no API key. Current offerings: Python Sandbox, Search, YouTube Transcript, Apple Shortcuts Info, and Chatbot."
+}
+```
+
+## Bot Personalities
+
+The `personality` parameter allows you to change the bot's tone and response style.
+
+| Personality | Alias | Description |
+| :--- | :--- | :--- |
+| **MIKLIUM** | `miklium` | The default assistant. Helpful, professional, and knowledgeable about MIKLIUM. |
+| **Personalityless** | `personalityless`| A cold, logical bot. Minimalist and formal. Focused on pure data. |
+| **General Male** | `male` | A friendly guy in his early 20s. Casual tone, uses "yo", "vibing", etc. |
+| **General Female** | `female` | A friendly girl in her early 20s. Warm tone, uses emojis and casual language. |
+| **All** | `all` | A hybrid mode that uses all response sets. This is the **most intelligent mode** as it pulls from every knowledge base. |
+
+Each personality has its own unique set of pattern responses and fallbacks. The "All" mode is particularly powerful as it combines the strengths (and variety) of every single personality into one.
+
+## Supported Topics
+
+The chatbot recognises a wide range of topics out of the box:
+
+| Topic | Example phrases |
+| :--- | :--- |
+| Greetings | hello, hi, hey, good morning, howdy |
+| How are you | how are you, you doing okay, are you well |
+| Capabilities | what can you do, how can you help |
+| APIs overview | apis, what do you offer, what is available |
+| Documentation | docs, documentation, how to use, guide |
+| Python Sandbox | python, sandbox, run code, code execution |
+| Search API | search, web search, find, queries |
+| YouTube Transcript | youtube, transcript, captions, subtitles |
+| Apple Shortcuts | shortcut, icloud, routinehub, automation |
+| Chatbot API | chatbot, chat api, this api, bot api |
+| Response Stacking | response stacking, stacking, stacked response |
+| GitHub / OSS | github, open source, contribute, pull request |
+| Community / Support | discord, help, support, bug, issue |
+| About MIKLIUM | what is miklium, who made you, about miklium |
+| Pricing | free, cost, price, subscription |
+| Rate Limits | rate limit, quota, throttle |
+| Error Handling | error, 500, 400, bad request, not working |
+| Authentication | auth, api key, token, bearer |
+| Request Format | json, body, content-type, endpoint |
+| Versioning | version, update, changelog, release |
+| Deployment | deploy, vercel, serverless, self-host |
+| Language / SDK | sdk, npm, curl, fetch, javascript, python |
+| Examples | example, sample, demo, getting started |
+| Thanks | thank you, appreciate, awesome, great |
+| Goodbye | bye, goodbye, see you, take care |
+| Jokes | joke, funny, lol, humor |
+| Time / Date | time, date, today, clock |
+| Weather | weather, temperature, forecast |
+
+## API Responses
+
+### Success
+
+**Response structure:**
+| Parameter | Value |
+| :--- | :--- |
+| `response` | `String`, The chatbot's response text (may be multiple sentences if stacking > 0) |
+
+**Success response example (no stacking):**
+```javascript
+{
+  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples."
+}
+```
+
+**Success response example (stacking = 2, greeting + how-are-you combined):**
+```javascript
+{
+  "response": "Hi! Great to see you here. Ask me anything about MIKLIUM! All systems green! I'm here and ready to assist."
+}
+```
+
+### Error
+
+| Parameter | Value |
+| :--- | :--- |
+| `error` | `String`, Error message |
+
+**Error response example:**
+```javascript
+{
+  "error": "Missing 'message' field"
+}
+```
