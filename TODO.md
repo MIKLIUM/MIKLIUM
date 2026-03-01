@@ -6,10 +6,10 @@
 - [x] Add documentation to APIDOCS.html
 - [x] Introduce Featured Porjects Powered with MIKLIUM
 - [ ] Update and refine our website
-  - [ ] Improve the design
-  - [ ] Add a Support page with navigation links to Discord, Tawk, and GitHub Issues
+  - [x] Improve the design
+  - [x] Add a Support page
+  - [x] Add a Featured Projects page, sythronized with FEATURED_PROJECTS.md
+  - [x] Enhance site navigation
   - [ ] Add an API Playground page
-  - [ ] Add a Featured Projects page, sythronized with FEATURED_PROJECTS.md
-  - [ ] Enhance site navigation
 - [ ] Fix all issues (check the issues section)
 - [ ] Write APIs
