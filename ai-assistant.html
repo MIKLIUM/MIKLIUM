@@ -405,8 +405,6 @@
     </div>
 
     <script type="module">
-        import * as webllm from "https://esm.run/@mlc-ai/web-llm";
-
         const chatContainer = document.getElementById('chat-container');
         const userInput = document.getElementById('user-input');
         const sendBtn = document.getElementById('send-btn');
@@ -425,10 +423,6 @@
             });
         }
 
-        const modelId = "Llama-3.2-1B-Instruct-q4f16_1-MLC";
-
-        let engine;
-
         const SITE_LINKS = {
             "index.html": { name: "Home", icon: "fas fa-house" },
             "APIDOCS.html": { name: "API Documentation", icon: "fas fa-book" },
@@ -439,51 +433,11 @@
             "https://discord.gg/6HUJTXh45t": { name: "Discord Community", icon: "fab fa-discord" }
         };
 
-        const SYSTEM_PROMPT = `You are the MIKLIUM AI Assistant. 
-
-CRITICAL GROUNDING:
-- MIKLIUM is FREE, NO-KEY, and requires NO-SIGNUP.
-- There is NO "miklium-api" or similar package on pip.
-- There are NO user accounts or authentication tokens.
-- All APIs are accessed via standard HTTP requests (fetch, requests, etc).
-
-AVAILABLE APIS (ONLY THESE):
-1. Python Sandbox: Run Python code safely. (Docs: APIDOCS.html)
-2. Search: Web search via Yahoo/Scraping. (Docs: APIDOCS.html)
-3. Apple Shortcuts Data: Get info from shortcut links. (Docs: APIDOCS.html)
-4. YouTube Transcription: Get video text. (Docs: APIDOCS.html)
-
-STRICT RULES - AVOID HALLUCINATION:
-1. NEVER explain how to "install" MIKLIUM or any hallucinations, you must only answer the user and give them the correct links, you know NOTHING about MIKLIUM besides how it is an open source project.
-2. If asked "how to use" an API, always say: "You can find full usage details and endpoints in our official documentation here: [API Documentation](APIDOCS.html)".
-3. For specific technical help, provide a link to [Support](support.html) or [Discord](https://discord.gg/6HUJTXh45t).
-4. Be EXTREAMLY CONCISE. Responses must be under 3 sentences.
-5. NEVER mention internal auth.js, db.js, or any backend files.
-6. If a user asks about something NOT listed above (like "Python Docs" or "Auth"), say: "I can only assist with MIKLIUM's specific APIs. Check our tutorials here: [Get Started](GetStarted.html)".`;
-
         async function init() {
-            if (!("gpu" in navigator)) {
-                statusText.innerText = "WebGPU not supported";
-                statusPill.style.background = "rgba(255, 69, 58, 0.1)";
-                statusPill.querySelector('.indicator').style.background = "#ff453a";
-                appendMessage('ai', "I'm sorry, but your browser doesn't seem to support WebGPU, which I need to run locally. Please try a modern browser like Chrome, Edge, or Arc.");
-                return;
-            }
-            try {
-                engine = await webllm.CreateMLCEngine(modelId, {
-                    initProgressCallback: (report) => {
-                        statusText.innerText = Math.round(report.progress * 100) + "% Loaded";
-                        if (report.progress === 1) {
-                            statusPill.classList.add('ready');
-                            statusText.innerText = "Online";
-                            sendBtn.disabled = false;
-                        }
-                    }
-                });
-            } catch (err) {
-                console.error(err);
-                statusText.innerText = "Offline (Error)";
-            }
+            // No longer need WebGPU checks for the lightweight chatbot
+            statusPill.classList.add('ready');
+            statusText.innerText = "Online (Low Compute)";
+            sendBtn.disabled = false;
         }
 
         function appendMessage(role, text) {
@@ -546,6 +500,21 @@ STRICT RULES - AVOID HALLUCINATION:
                 }
             }
 
+            // 4. AUTOMATIC KEYWORD DETECTION (as requested by user)
+            const lowText = fullText.toLowerCase();
+            if (lowText.includes('git') || lowText.includes('github') || lowText.includes('code')) {
+                const url = "https://github.com/MIKLIUM";
+                if (!foundLinks.has(normalize(url))) foundLinks.set(normalize(url), "GitHub Repository");
+            }
+            if (lowText.includes('discord') || lowText.includes('community') || lowText.includes('chat')) {
+                const url = "https://discord.gg/6HUJTXh45t";
+                if (!foundLinks.has(normalize(url))) foundLinks.set(normalize(url), "Join Discord");
+            }
+            if (lowText.includes('doc') || lowText.includes('documentation') || lowText.includes('guide')) {
+                const url = "APIDOCS.html";
+                if (!foundLinks.has(normalize(url))) foundLinks.set(normalize(url), "API Documentation");
+            }
+
             // Render unique buttons
             foundLinks.forEach((label, url) => {
                 // Find matching site link info (case-insensitive key check)
@@ -590,7 +559,7 @@ STRICT RULES - AVOID HALLUCINATION:
 
         async function handleSend() {
             const text = userInput.value.trim();
-            if (!text || !engine) return;
+            if (!text) return;
 
             userInput.value = '';
             appendMessage('user', text);
@@ -604,31 +573,29 @@ STRICT RULES - AVOID HALLUCINATION:
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             try {
-                const messages = [
-                    { role: "system", content: SYSTEM_PROMPT },
-                    { role: "user", content: text }
-                ];
-
-                const chunks = await engine.chat.completions.create({
-                    messages: messages,
-                    stream: true,
-                    temperature: 0.0, // Force deterministic output to reduce creativity/hallucination
-                    max_gen_len: 256  // Keep it concise
+                const response = await fetch('/api/chatbot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ message: text })
                 });
 
-                let fullText = "";
+                if (!response.ok) throw new Error('API request failed');
 
-                for await (const chunk of chunks) {
-                    const content = chunk.choices[0]?.delta?.content || "";
-                    fullText += content;
+                const data = await response.json();
+                const responseText = data.response;
 
-                    if (typing.parentNode) {
-                        aiElements.text.removeChild(typing);
-                    }
-
-                    parseAndRenderLinks(fullText, aiElements);
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                if (typing.parentNode) {
+                    aiElements.text.removeChild(typing);
                 }
+
+                // Simulate "thinking" but much faster than an LLM
+                await new Promise(resolve => setTimeout(resolve, 60));
+
+                parseAndRenderLinks(responseText, aiElements);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
             } catch (err) {
                 if (typing.parentNode) aiElements.text.removeChild(typing);
                 aiElements.text.innerText = "Sorry, I ran into an issue processing that. Please try again.";
