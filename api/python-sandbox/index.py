@@ -74,6 +74,9 @@ builtins.exec = None
 builtins.eval = None
 builtins.compile = None
 builtins.breakpoint = None
+for _m in list(sys.modules.keys()):
+    if _m.split(".")[0] in _blocked:
+        del sys.modules[_m]
 {code}
 '''
 
