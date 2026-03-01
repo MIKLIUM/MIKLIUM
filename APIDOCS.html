@@ -1,454 +1,184 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>API Docs - MIKLIUM</title>
-		 <meta name="description" content="Whether you’re building a hobby project or the next big thing, MIKLIUM is here to support you.">
-  <meta property="og:title" content="MIKLIUM">
-  <meta property="og:description" content="Whether you’re building a hobby project or the next big thing, MIKLIUM is here to support you.">
+<html lang="en" data-page="apidocs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Docs - MIKLIUM</title>
+  <meta name="description" content="Here you will find detailed documentation for each of our APIs.">
+  <meta property="og:title" content="API Docs - MIKLIUM">
+  <meta property="og:description" content="Here you will find detailed documentation for each of our APIs.">
   <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <meta property="og:type" content="website">
   <meta name="theme-color" content="#0155A1">
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-		/>
-		<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-		<style>
-			* {
-				margin: 0;
-				padding: 0;
-				box-sizing: border-box;
-				font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-			}
-			body {
-				background: #0d0d0d;
-				color: #f5f5f5;
-				display: flex;
-				flex-direction: column;
-				min-height: 100vh;
-			}
-			header {
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				padding: 2rem;
-				background: #111;
-				flex-shrink: 0;
-			}
-			header i {
-				font-size: 3rem;
-				color: #00d8ff;
-				margin-right: 1rem;
-			}
-			header h1 {
-				font-size: 2.2rem;
-				font-weight: 700;
-				letter-spacing: 2px;
-				color: #00d8ff;
-			}
-			main {
-				flex: 1;
-				padding: 2rem;
-				max-width: 1200px;
-				margin: 0 auto;
-				width: 100%;
-			}
-			main h2 {
-				font-size: 1.8rem;
-				margin-bottom: 1rem;
-				color: #00d8ff;
-			}
-			main p {
-				font-size: 1.1rem;
-				line-height: 1.6;
-				margin-bottom: 2rem;
-				color: #ccc;
-			}
-			.cta {
-				text-align: center;
-				margin-top: 2rem;
-			}
-			button {
-				background: #00d8ff;
-				color: #0d0d0d;
-				border: none;
-				border-radius: 55px;
-				padding: 0.9rem 2.2rem;
-				font-weight: 600;
-				font-size: 1.1rem;
-				cursor: pointer;
-				transition: all 0.3s ease;
-			}
-			button:hover {
-				background: #00b8cc;
-			}
-			a {
-				color: #fff;
-				text-decoration: none;
-			}
-			#api-content {
-				background: #111;
-				padding: 2rem;
-				border-radius: 15px;
-				border: 1px solid #222;
-				margin-top: 2rem;
-				overflow-wrap: break-word;
-			}
-			#api-content h1,
-			#api-content h2,
-			#api-content h3,
-			#api-content h4 {
-				color: #00d8ff;
-				margin: 1.5rem 0 1rem 0;
-			}
-			#api-content h1 {
-				font-size: 2rem;
-				border-bottom: 2px solid #00d8ff;
-				padding-bottom: 0.5rem;
-			}
-			#api-content h2 {
-				font-size: 1.6rem;
-				border-bottom: 1px solid #333;
-				padding-bottom: 0.3rem;
-			}
-			#api-content h3 {
-				font-size: 1.3rem;
-			}
-			#api-content p {
-				text-align: left;
-				margin-bottom: 1rem;
-				line-height: 1.6;
-				color: #ccc;
-			}
-			#api-content code {
-				background: #222;
-				padding: 0.2rem 0.4rem;
-				border-radius: 4px;
-				font-family: "Courier New", monospace;
-				color: #00d8ff;
-			}
-			#api-content pre {
-				background: #1a1a1a;
-				padding: 1.5rem;
-				border-radius: 8px;
-				overflow-x: auto;
-				margin: 1.5rem 0;
-				border-left: 4px solid #00d8ff;
-				white-space: pre;
-				-webkit-overflow-scrolling: touch;
-			}
-			#api-content pre code {
-				background: none;
-				padding: 0;
-				color: #f5f5f5;
-				font-size: 0.9rem;
-				white-space: pre;
-			}
-			#api-content ul,
-			#api-content ol {
-				margin: 1rem 0;
-				padding-left: 2rem;
-			}
-			#api-content li {
-				margin-bottom: 0.5rem;
-				color: #ccc;
-			}
-			#api-content blockquote {
-				border-left: 4px solid #00d8ff;
-				padding: 1rem 1.5rem;
-				margin: 1.5rem 0;
-				background: #1a1a1a;
-				border-radius: 0 8px 8px 0;
-			}
-			#api-content blockquote p {
-				margin: 0;
-				color: #bbb;
-				font-style: italic;
-			}
-			#api-content table {
-				width: 100%;
-				border-collapse: collapse;
-				margin: 1.5rem 0;
-				background: #1a1a1a;
-				border-radius: 8px;
-				overflow: hidden;
-				display: block;
-				max-width: 100%;
-				overflow-x: auto;
-				-webkit-overflow-scrolling: touch;
-			}
-			#api-content th,
-			#api-content td {
-				border: 1px solid #333;
-				padding: 1rem;
-				text-align: left;
-				min-width: 120px;
-			}
-			#api-content th {
-				background: #222;
-				color: #00d8ff;
-				font-weight: 600;
-			}
-			#api-content td {
-				color: #ccc;
-			}
-			#api-content a {
-				color: #00d8ff;
-				text-decoration: none;
-			}
-			#api-content a:hover {
-				text-decoration: underline;
-			}
-			#api-content hr {
-				border: none;
-				height: 2px;
-				background-color: #00d8ff;
-				margin: 2rem 0;
-			}
-			.alert {
-				padding: 1rem 1.5rem;
-				margin: 1.5rem 0;
-				border-radius: 8px;
-				border-left: 4px solid;
-			}
-			.alert-important {
-				background: rgba(255, 193, 7, 0.1);
-				border-color: #ffc107;
-				color: #ffc107;
-			}
-			.alert-note {
-				background: rgba(0, 216, 255, 0.1);
-				border-color: #00d8ff;
-				color: #00d8ff;
-			}
-			.alert-warning {
-				background: rgba(255, 87, 34, 0.1);
-				border-color: #ff5722;
-				color: #ff5722;
-			}
-			.anchor-header {
-				position: relative;
-				padding-right: 1.5rem;
-			}
-			.anchor-link {
-				position: absolute;
-				right: 0;
-				top: 50%;
-				transform: translateY(-50%);
-				color: #00d8ff;
-				text-decoration: none;
-				opacity: 0;
-				font-weight: bold;
-				transition: opacity 0.2s;
-				font-size: 1.1em;
-			}
-			.anchor-header:hover .anchor-link {
-				opacity: 1;
-			}
-			.loading {
-				text-align: center;
-				color: #00d8ff;
-				font-size: 1.2rem;
-				padding: 2rem;
-			}
-			.error {
-				text-align: center;
-				color: #ff4444;
-				background: #1a1a1a;
-				padding: 2rem;
-				border-radius: 8px;
-				border: 1px solid #ff4444;
-			}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <style>
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: calc(var(--nav-height) + 48px);
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-top">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/Logo.svg" alt="" class="nav-logo">
+        MIKLIUM
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="index.html" data-nav="home">Home</a></li>
+							 <li><a href="projects.html" data-nav="projects">Featured Projects</a></li>
+								<li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
+        <li><a href="APIDOCS.html" data-nav="apidocs">API Docs</a></li>
+        <li><a href="support.html" data-nav="support">Support</a></li>
+        <li class="nav-icons">
+          <a href="https://discord.gg/6HUJTXh45t" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://github.com/MIKLIUM" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-mobile-links">
+      <a href="index.html" data-nav="home"><i class="fas fa-house"></i> Home</a>
+						<a href="projects.html" data-nav="projects"><i class="fas fa-cube"></i> Featured Projects</a>
+						<a href="GetStarted.html" data-nav="getstarted"><i class="fas fa-play"></i> Get Started</a>
+      <a href="APIDOCS.html" data-nav="apidocs"><i class="fas fa-book"></i> API Docs</a>
+      <a href="support.html" data-nav="support"><i class="fas fa-headset"></i> Support</a>
+      <div class="nav-mobile-icons">
+        <a href="https://discord.gg/6HUJTXh45t" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://github.com/MIKLIUM" target="_blank"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <div class="page-header">
+      <h2>API Documentation</h2>
+      <p>Here you will find detailed documentation for each of our APIs.</p>
+    </div>
+    <div id="api-content">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        Loading documentation...
+      </div>
+    </div>
+    <div class="cta">
+      <a href="index.html" class="btn btn-ghost"><i class="fas fa-arrow-left"></i> Back to Home</a>
+    </div>
+  </main>
+  <button id="scrollTop" class="scroll-top-btn" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var page = document.documentElement.getAttribute("data-page");
+      document.querySelectorAll("[data-nav]").forEach(function (a) {
+        if (a.getAttribute("data-nav") === page) a.classList.add("active");
+      });
+      var toggle = document.querySelector(".nav-toggle");
+      var mobileLinks = document.querySelector(".nav-mobile-links");
+      var navEl = document.querySelector("nav");
+      if (toggle && mobileLinks && navEl) {
+        toggle.addEventListener("click", function () {
+          var open = mobileLinks.classList.toggle("open");
+          navEl.classList.toggle("nav-expanded", open);
+          toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+        });
+      }
+      
+      var scrollBtn = document.getElementById("scrollTop");
+      
+      window.addEventListener("scroll", function() {
+        if (window.scrollY > 300) {
+          scrollBtn.classList.add("visible");
+        } else {
+          scrollBtn.classList.remove("visible");
+        }
+      });
 
-			@media (max-width: 600px) {
-				header {
-					padding: 1.5rem 1rem;
-				}
-				header h1 {
-					font-size: 1.8rem;
-				}
-				header i {
-					font-size: 2.5rem;
-				}
-				main {
-					padding: 1rem;
-				}
-				main h2 {
-					font-size: 1.5rem;
-				}
-				main p {
-					font-size: 1rem;
-				}
-				#api-content {
-					padding: 1.5rem;
-				}
-				#api-content h1 {
-					font-size: 1.7rem;
-				}
-				#api-content h2 {
-					font-size: 1.4rem;
-				}
-				#api-content h3 {
-					font-size: 1.2rem;
-				}
-				#api-content pre {
-					padding: 1rem;
-				}
-				#api-content th,
-				#api-content td {
-					padding: 0.8rem;
-				}
-			}
-		</style>
-	</head>
-	<body>
-		<header>
-			<i class="fas fa-cow"></i>
-			<h1>MIKLIUM</h1>
-		</header>
-		<main>
-			<center>
-				<h2>API Docs</h2>
-				<p>MIKLIUM API Documentation</p>
-			</center>
-			<div id="api-content">
-				<div class="loading">
-					<i class="fas fa-spinner fa-spin"></i> Loading
-					documentation...
-				</div>
-			</div>
-			<div class="cta">
-				<button onclick="location.href='index.html'">
-					Go back home
-				</button>
-			</div>
-		</main>
-		<script>
-			const slugs = {};
+      scrollBtn.addEventListener("click", function() {
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+      
+      var slugs = {};
 
-			function escapeHtml(str) {
-				if (str == null) return "";
-				if (typeof str !== "string") str = String(str);
-				return str
-					.replace(/&/g, "&amp;")
-					.replace(/</g, "&lt;")
-					.replace(/>/g, "&gt;")
-					.replace(/"/g, "&quot;")
-					.replace(/'/g, "&#039;");
-			}
+      function escapeHtml(str) {
+        if (str == null) return "";
+        if (typeof str !== "string") str = String(str);
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
 
-			function slugify(text) {
-				let slug = String(text)
-					.toLowerCase()
-					.replace(/[^a-z0-9\s-]/g, "")
-					.replace(/\s+/g, "-");
-				
-				if (slugs[slug]) {
-					slugs[slug]++;
-					slug = slug + "-" + (slugs[slug] - 1);
-				} else {
-					slugs[slug] = 1;
-				}
+      function slugify(text) {
+        var slug = String(text).toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+        if (slugs[slug]) { slugs[slug]++; slug = slug + "-" + (slugs[slug] - 1); }
+        else { slugs[slug] = 1; }
+        return slug;
+      }
 
-				return slug;
-			}
+      async function loadAPIDocs() {
+        var el = document.getElementById("api-content");
+        try {
+          var res = await fetch("https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/APIDOCS.md");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          var md = await res.text();
+          var processedMd = md.replace(/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/, "");
 
-			async function loadAPIDocs() {
-				for (const key in slugs) {
-					delete slugs[key];
-				}
+          var renderer = {
+            blockquote: function (token) {
+              var raw = token.text;
+              if (raw.startsWith("[!IMPORTANT]"))
+                return '<div class="alert alert-important">' + escapeHtml(raw.replace("[!IMPORTANT]", "").trim()) + "</div>";
+              if (raw.startsWith("[!WARNING]"))
+                return '<div class="alert alert-warning">' + escapeHtml(raw.replace("[!WARNING]", "").trim()) + "</div>";
+              if (raw.startsWith("[!NOTE]"))
+                return '<div class="alert alert-note">' + escapeHtml(raw.replace("[!NOTE]", "").trim()) + "</div>";
+              return false;
+            },
+            code: function (token) {
+              var lang = (token.lang || "").split(/\s+/)[0] || "text";
+              var highlighted;
+              try {
+                if (lang !== "text" && hljs.getLanguage(lang))
+                  highlighted = hljs.highlight(token.text, { language: lang }).value;
+                else highlighted = hljs.highlightAuto(token.text).value;
+              } catch (e) { highlighted = escapeHtml(token.text); }
+              return '<pre><code class="hljs language-' + escapeHtml(lang) + '">' + highlighted + "</code></pre>";
+            },
+            heading: function (token) {
+              var textStr = this.parser.parseInline(token.tokens);
+              var id = slugify(token.text);
+              return "<h" + token.depth + ' id="' + id + '" class="anchor-header">' + textStr + '<a href="#' + id + '" class="anchor-link" aria-hidden="true">#</a></h' + token.depth + ">";
+            }
+          };
 
-				const el = document.getElementById("api-content");
-				try {
-					const res = await fetch(
-						"https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/APIDOCS.md"
-					);
-					if (!res.ok) throw new Error(`HTTP ${res.status}`);
-					const md = await res.text();
+          marked.use({ renderer: renderer });
+          el.innerHTML = marked.parse(processedMd);
 
-					const processedMd = md.replace(
-						/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/,
-						""
-					);
+          if (location.hash) {
+            setTimeout(function () {
+              var target = document.querySelector(location.hash);
+              if (target) target.scrollIntoView({ behavior: "smooth" });
+            }, 150);
+          }
+        } catch (err) {
+          el.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Documentation</h3><p>' + escapeHtml(err.message) + "</p></div>";
+        }
+      }
 
-					const renderer = {
-						blockquote(token) {
-							const raw = token.text;
-							if (raw.startsWith("[!IMPORTANT]")) {
-								const content = raw
-									.replace("[!IMPORTANT]", "")
-									.trim();
-								return `<div class="alert alert-important">${escapeHtml(
-									content
-								)}</div>`;
-							}
-							if (raw.startsWith("[!WARNING]")) {
-								const content = raw
-									.replace("[!WARNING]", "")
-									.trim();
-								return `<div class="alert alert-warning">${escapeHtml(
-									content
-								)}</div>`;
-							}
-							if (raw.startsWith("[!NOTE]")) {
-								const content = raw
-									.replace("[!NOTE]", "")
-									.trim();
-								return `<div class="alert alert-note">${escapeHtml(
-									content
-								)}</div>`;
-							}
-							return false;
-						},
-						code(token) {
-							const codeText = token.text;
-							const info = token.lang || "";
-							const language = info.split(/\s+/)[0] || "text";
-							return `<pre><code class="language-${escapeHtml(
-								language
-							)}">${escapeHtml(codeText)}</code></pre>`;
-						},
-						heading(token) {
-							const textStr = this.parser.parseInline(
-								token.tokens
-							);
-							const clean = token.text;
-							const id = slugify(clean);
-							return `<h${token.depth} id="${id}" class="anchor-header">${textStr}<a href="#${id}" class="anchor-link" aria-hidden="true">#</a></h${token.depth}>`;
-						},
-					};
-
-					marked.use({ renderer });
-					const html = marked.parse(processedMd);
-					el.innerHTML = html;
-
-					if (location.hash) {
-						setTimeout(() => {
-							const target = document.querySelector(
-								location.hash
-							);
-							if (target)
-								target.scrollIntoView({ behavior: "smooth" });
-						}, 100);
-					}
-				} catch (err) {
-					console.error(err);
-					el.innerHTML = `
-          <div class="error">
-            <i class="fas fa-exclamation-triangle"></i>
-            <h3>Error Loading Documentation</h3>
-            <p>Unable to load API documentation. Please try again later.</p>
-            <p><small>Error: ${escapeHtml(err.message)}</small></p>
-          </div>
-        `;
-				}
-			}
-
-			document.addEventListener("DOMContentLoaded", loadAPIDocs);
-		</script>
-	</body>
+      loadAPIDocs();
+    });
+  </script>
+</body>
 </html>
