@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-page="home">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,132 +12,199 @@
   <meta name="theme-color" content="#0155A1">
   <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
   <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-pV8p2r1h0R+3zZp+Ih6Cw1K6P0Q8/UfE+T7rB5Hnpwz+zEiOB9qYxJQo1iT8u3wZtqL5q+FecXcGv7sQ1PdpUg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-  <!--Start of Tawk.to Script-->
-  <script type="text/javascript">
-  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-  (function(){
-  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-  s1.async=true;
-  s1.src='https://embed.tawk.to/69a1bbd14833711c3cf93144/1jifsbakb';
-  s1.charset='UTF-8';
-  s1.setAttribute('crossorigin','*');
-  s0.parentNode.insertBefore(s1,s0);
-  })();
-  </script>
-  <!--End of Tawk.to Script-->
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="css/style.css">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    body {
-      background-color: #0d0d0d;
-      color: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
-    }
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem;
-      background-color: #111;
-      flex-shrink: 0;
-    }
-    header i {
-      font-size: 3rem;
-      color: #00d8ff;
-      margin-right: 1rem;
-    }
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: #00d8ff;
-    }
     main {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       text-align: center;
       padding: 2rem;
+      padding-top: 140px;
+      min-height: 100vh;
+    }
+    .hero-logo {
+      width: min(70%, 200px);
+      margin-bottom: 1rem;
+      animation: fadeInUp 0.9s var(--transition-smooth);
+      filter: drop-shadow(0 0 40px rgba(0, 170, 255, 0.08));
+      border-radius: 24%;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      border-radius: var(--radius-pill);
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: inset 0 1px 0 var(--glass-highlight);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.2rem;
+      letter-spacing: 0.3px;
+      animation: fadeInUp 0.9s var(--transition-smooth) 0.1s both;
     }
     main h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      color: #00d8ff;
+      font-size: clamp(2rem, 5.5vw, 3.6rem);
+      margin-bottom: 0.8rem;
+      color: var(--text-primary);
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      line-height: 1.15;
+      animation: fadeInUp 0.9s var(--transition-smooth) 0.2s both;
     }
-    main p {
+    main > p {
       font-size: 1.1rem;
-      max-width: 600px;
+      max-width: 560px;
       line-height: 1.6;
-      margin-bottom: 2rem;
-      color: #ccc;
+      margin-bottom: 1.2rem;
+      color: var(--text-secondary);
+      animation: fadeInUp 0.9s var(--transition-smooth) 0.3s both;
     }
     .cta-buttons {
       display: flex;
-      gap: 1rem;
+      gap: 0.8rem;
       flex-wrap: wrap;
       justify-content: center;
+      animation: fadeInUp 0.9s var(--transition-smooth) 0.4s both;
+      margin-bottom: 2rem;
     }
-    .cta-buttons a {
-      padding: 0.8rem 2rem;
-      border-radius: 55px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      min-width: 150px;
+    .features-strip {
+      width: 100%;
+      padding: 2rem 2rem 4rem;
+    }
+    .features-strip h3 {
       text-align: center;
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
     }
-    .cta-buttons .primary {
-      background-color: #00d8ff;
-      color: #0d0d0d;
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.2rem;
+      max-width: 900px;
+      margin: 0 auto;
     }
-    .cta-buttons .primary:hover {
-      background-color: #00b8cc;
+    .feature-card { animation: fadeInUp 0.8s var(--transition-smooth) both; }
+    .feature-card:nth-child(1) { animation-delay: 0.1s; }
+    .feature-card:nth-child(2) { animation-delay: 0.2s; }
+    .feature-card:nth-child(3) { animation-delay: 0.3s; }
+    .feature-card i {
+      font-size: 1.8rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
     }
-    .cta-buttons .secondary {
-      border: 2px solid #00d8ff;
-      color: #00d8ff;
+    .feature-card h4 {
+      font-size: 1.05rem;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
     }
-    .cta-buttons .secondary:hover {
-      background-color: #00d8ff;
-      color: #0d0d0d;
+    .feature-card p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      position: relative;
+      z-index: 1;
     }
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      main h2 {
-        font-size: 1.5rem;
-      }
-      main p {
-        font-size: 1rem;
+    @media (max-width: 768px) {
+      main { padding-top: 110px; }
+      main h2 { font-size: 1.9rem; }
+      main > p { font-size: 1rem; }
+      .features-grid {
+        grid-template-columns: 1fr;
       }
     }
   </style>
 </head>
 <body>
-  <header>
-    <i class="fas fa-cow"></i>
-    <h1>MIKLIUM</h1>
-  </header>
+  <nav>
+    <div class="nav-top">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/Logo.svg" alt="" class="nav-logo">
+        MIKLIUM
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="index.html" data-nav="home">Home</a></li>
+        <li><a href="APIDOCS.html" data-nav="apidocs">API Docs</a></li>
+        <li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
+        <li><a href="projects.html" data-nav="projects">Projects</a></li>
+        <li><a href="support.html" data-nav="support">Support</a></li>
+        <li class="nav-icons">
+          <a href="https://discord.gg/6HUJTXh45t" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://github.com/MIKLIUM" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-mobile-links">
+      <a href="index.html" data-nav="home"><i class="fas fa-house"></i> Home</a>
+      <a href="APIDOCS.html" data-nav="apidocs"><i class="fas fa-book"></i> API Docs</a>
+      <a href="GetStarted.html" data-nav="getstarted"><i class="fas fa-play"></i> Get Started</a>
+      <a href="projects.html" data-nav="projects"><i class="fas fa-cube"></i> Projects</a>
+      <a href="support.html" data-nav="support"><i class="fas fa-headset"></i> Support</a>
+      <div class="nav-mobile-icons">
+        <a href="https://discord.gg/6HUJTXh45t" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://github.com/MIKLIUM" target="_blank"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </nav>
   <main>
-    <img src="assets/Logo_Header_Light.png" alt="MIKLIUM Logo" style="width: 80%;">
-    <h2>Free APIs & Software for Everyone</h2>
-    <p>At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.</p>
+      <img src="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png" alt="MIKLIUM" class="hero-logo">
+    
+    <span class="hero-badge"><i class="fas fa-bolt"></i> Open Source & Free Forever</span>
+    <h2>Free APIs & Software<br><span class="gradient-text">for Everyone</span></h2>
+    <p>We empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.</p>
     <div class="cta-buttons">
-      <a href="APIDOCS.html" class="primary">Explore APIs</a>
-      <a href="GetStarted.html" class="secondary">Get Started</a>
+      <a href="GetStarted.html" class="btn btn-primary">Get Started</a>
+      <a href="APIDOCS.html" class="btn btn-ghost">Explore APIs</a>
     </div>
   </main>
+  <section class="features-strip">
+    <h3>Why MIKLIUM?</h3>
+    <div class="features-grid">
+      <div class="glass-card feature-card">
+        <i class="fas fa-lock-open"></i>
+        <h4>No API Keys</h4>
+        <p>Start building immediately. No sign-ups, no tokens, no limits, no barriers.</p>
+      </div>
+      <div class="glass-card feature-card">
+        <i class="fas fa-code"></i>
+        <h4>Developer First</h4>
+        <p>Open-source, clean documentation, predictable responses, and simple integration, opportunity to have your project featured on MIKLIUM.</p>
+      </div>
+    </div>
+  </section>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var page = document.documentElement.getAttribute("data-page");
+      document.querySelectorAll("[data-nav]").forEach(function (a) {
+        if (a.getAttribute("data-nav") === page) a.classList.add("active");
+      });
+      var toggle = document.querySelector(".nav-toggle");
+      var mobileLinks = document.querySelector(".nav-mobile-links");
+      var navEl = document.querySelector("nav");
+      if (!toggle || !mobileLinks || !navEl) return;
+      toggle.addEventListener("click", function () {
+        var open = mobileLinks.classList.toggle("open");
+        navEl.classList.toggle("nav-expanded", open);
+        toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+      });
+    });
+  </script>
 </body>
 </html>
