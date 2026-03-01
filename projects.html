@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" data-page="projects">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Featured Projects - MIKLIUM</title>
+  <meta name="description" content="Featured community projects powered with MIKLIUM">
+  <meta property="og:title" content="Featured Projects - MIKLIUM">
+  <meta property="og:description" content="Featured community projects powered with MIKLIUM">
+  <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0155A1">
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    main {
+      flex: 1;
+      padding: 2rem;
+      max-width: 960px;
+      margin: 0 auto;
+      width: 100%;
+      padding-top: calc(var(--nav-height) + 48px);
+    }
+    .page-header { margin-bottom: 1.2rem; }
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--accent-border);
+      box-shadow: inset 0 1px 0 var(--glass-highlight);
+      color: var(--accent);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    .submit-cta {
+      text-align: center;
+      margin-bottom: 2.5rem;
+      animation: fadeInUp 0.8s var(--transition-smooth) 0.1s both;
+    }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .project-card {
+      text-align: left;
+      padding: 1.8rem;
+      border-radius: 18px;
+    }
+    .project-card h3 {
+      font-size: 1.1rem;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+    }
+    .project-card h3 a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.3s;
+    }
+    .project-card h3 a:hover { opacity: 0.8; }
+    .project-card .project-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-bottom: 0.7rem;
+      position: relative;
+      z-index: 1;
+    }
+    .project-card .project-creator {
+      font-size: 0.82rem;
+      color: var(--text-tertiary);
+      position: relative;
+      z-index: 1;
+    }
+    .project-card .project-creator a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .project-card .project-creator a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-top">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/Logo.svg" alt="" class="nav-logo">
+        MIKLIUM
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="index.html" data-nav="home">Home</a></li>
+        <li><a href="projects.html" data-nav="projects">Featured Projects</a></li>
+        <li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
+        <li><a href="APIDOCS.html" data-nav="apidocs">API Docs</a></li>
+        <li><a href="support.html" data-nav="support">Support</a></li>
+        <li class="nav-icons">
+          <a href="https://discord.gg/6HUJTXh45t" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://github.com/MIKLIUM" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-mobile-links">
+      <a href="index.html" data-nav="home"><i class="fas fa-house"></i> Home</a>
+      <a href="projects.html" data-nav="projects"><i class="fas fa-cube"></i> Featured Projects</a>
+      <a href="GetStarted.html" data-nav="getstarted"><i class="fas fa-play"></i> Get Started</a>
+      <a href="APIDOCS.html" data-nav="apidocs"><i class="fas fa-book"></i> API Docs</a>
+      <a href="support.html" data-nav="support"><i class="fas fa-headset"></i> Support</a>
+      <div class="nav-mobile-icons">
+        <a href="https://discord.gg/6HUJTXh45t" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://github.com/MIKLIUM" target="_blank"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <div class="page-header">
+      <h2>Featured Projects</h2>
+      <span class="count-badge" id="project-count"><i class="fas fa-spinner fa-spin"></i></span>
+      <p>Community projects powered with MIKLIUM</p>
+    </div>
+    <div class="submit-cta">
+      <a href="https://github.com/MIKLIUM/MIKLIUM/issues/new?template=project-submission.yml" target="_blank" class="btn btn-primary"><i class="fas fa-plus"></i> Submit Your Project</a>
+    </div>
+    <div id="projects-container">
+      <div class="loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        Loading projects...
+      </div>
+    </div>
+  </main>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var page = document.documentElement.getAttribute("data-page");
+      document.querySelectorAll("[data-nav]").forEach(function (a) {
+        if (a.getAttribute("data-nav") === page) a.classList.add("active");
+      });
+      var toggle = document.querySelector(".nav-toggle");
+      var mobileLinks = document.querySelector(".nav-mobile-links");
+      var navEl = document.querySelector("nav");
+      if (toggle && mobileLinks && navEl) {
+        toggle.addEventListener("click", function () {
+          var open = mobileLinks.classList.toggle("open");
+          navEl.classList.toggle("nav-expanded", open);
+          toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+        });
+      }
+
+      function escapeHtml(str) {
+        if (str == null) return "";
+        if (typeof str !== "string") str = String(str);
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      }
+
+      async function loadProjects() {
+        var container = document.getElementById("projects-container");
+        var countBadge = document.getElementById("project-count");
+        try {
+          var res = await fetch("https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/FEATURED_PROJECTS.md");
+          if (!res.ok) throw new Error("HTTP " + res.status);
+          var md = await res.text();
+
+          var countMatch = md.match(/<!-- FEATURED_COUNT_START -->(\d+)<!-- FEATURED_COUNT_END -->/);
+          var count = countMatch ? countMatch[1] : "0";
+          countBadge.innerHTML = count + " projects featured";
+
+          var tableMatch = md.match(/<!-- FEATURED_PROJECTS_TABLE_START -->([\s\S]*?)<!-- FEATURED_PROJECTS_TABLE_END -->/);
+          if (!tableMatch) throw new Error("No projects table found");
+          var tableContent = tableMatch[1].trim();
+          var lines = tableContent.split("\n").filter(function (l) { return l.trim().startsWith("|"); });
+          var dataLines = lines.slice(2);
+
+          if (dataLines.length === 0) {
+            container.innerHTML = '<p style="text-align:center;color:var(--text-secondary);">No projects yet. Be the first to submit one!</p>';
+            return;
+          }
+
+          var html = '<div class="projects-grid">';
+          dataLines.forEach(function (line, i) {
+            var cells = line.split("|").filter(function (c) { return c.trim() !== ""; });
+            if (cells.length < 3) return;
+            var name = cells[0].trim();
+            var desc = cells[1].trim();
+            var creator = cells[2].trim();
+
+            var nameMatch = name.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            var nameText = nameMatch ? nameMatch[1] : name;
+            var nameUrl = nameMatch ? nameMatch[2] : "#";
+
+            var creatorMatch = creator.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            var creatorText = creatorMatch ? creatorMatch[1] : creator;
+            var creatorUrl = creatorMatch ? creatorMatch[2] : "#";
+
+            html += '<div class="glass-card project-card" style="animation:fadeInUp 0.7s var(--transition-smooth) ' + (0.1 + i * 0.08) + 's both">';
+            html += '<h3><a href="' + escapeHtml(nameUrl) + '" target="_blank">' + escapeHtml(nameText) + '</a></h3>';
+            html += '<p class="project-desc">' + escapeHtml(desc) + '</p>';
+            html += '<span class="project-creator">by <a href="' + escapeHtml(creatorUrl) + '" target="_blank">' + escapeHtml(creatorText) + '</a></span>';
+            html += '</div>';
+          });
+          html += '</div>';
+          container.innerHTML = html;
+        } catch (err) {
+          container.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Projects</h3><p>' + escapeHtml(err.message) + '</p></div>';
+          countBadge.textContent = "\u2014";
+        }
+      }
+
+      loadProjects();
+    });
+  </script>
+</body>
+</html>
