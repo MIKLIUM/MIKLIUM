@@ -1,0 +1,42 @@
+name: Support
+description: Ask any questions you’re interested in - we’ll be happy to help.
+title: "[Support]"
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Ask any questions you’re interested in - we’ll be happy to help.
+        > Our team will try to respond as soon as possible, or within 48 hours.
+
+  - type: input
+    id: support-title
+    attributes:
+      label: Question Title
+      description: How would you briefly title your question?
+      placeholder: "e.g., API Docs question"
+    validations:
+      required: true
+
+  - type: textarea
+    id: support-main
+    attributes:
+      label: Question Body
+      description: Describe the issue you encountered or the question you would like to ask in details
+      placeholder: "e.g., What is MIKLIUM for..."
+    validations:
+      required: true
+
+  - type: input
+    id: discord-contact
+    attributes:
+      label: Discord Contact
+      description: Your Discord username so we can reach you (optional)
+      placeholder: "e.g., @username"
+ 
+  - type: input
+    id: email-contact
+    attributes:
+      label: Email Contact
+      description: Your Email so we can reach you (optional)
+      placeholder: "e.g., example@inbox.com"
