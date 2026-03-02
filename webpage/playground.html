@@ -1,508 +1,1333 @@
 <!DOCTYPE html>
 <html lang="en" data-page="playground">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Playground - MIKLIUM</title>
-    <meta name="description" content="Test MIKLIUM APIs in real-time with our interactive playground.">
-    <link rel="icon" type="image/png" href="assets/Logo_Transparent_White.png">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        body {
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API Playground - MIKLIUM</title>
+  <meta name="description" content="Test MIKLIUM APIs in real-time with our interactive playground.">
+  <meta property="og:title" content="API Playground - MIKLIUM">
+  <meta property="og:description" content="Test MIKLIUM APIs in real-time with our interactive playground.">
+  <meta property="og:image" content="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <meta property="og:type" content="website">
+  <meta name="theme-color" content="#0155A1">
+  <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Original.png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <style>
+    body {
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        main {
-            flex: 1;
-            padding: 1.5rem 2rem;
-            padding-top: calc(var(--nav-height) + 40px);
-            max-width: 1200px;
-            margin: 0 auto;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
+    main {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      padding-top: calc(var(--nav-height) + 36px);
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
 
-        .playground-container {
-            display: grid;
-            grid-template-columns: 360px 1fr;
-            gap: 1.5rem;
-            flex: 1;
-            min-height: 0;
-            /* Critical for nested scroll */
-        }
+    .page-header {
+      text-align: center;
+      margin-bottom: 0.5rem;
+      animation: fadeInUp 0.6s var(--transition-smooth);
+    }
 
-        .config-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            text-align: left;
-            align-items: flex-start;
-            overflow-y: auto;
-            padding: 1.8rem;
-            /* Even, balanced padding */
-        }
+    .page-header h2 {
+      font-size: clamp(1.5rem, 3vw, 2rem);
+      margin-bottom: 0.4rem;
+    }
 
-        /* Remove hover effects for the side panel */
-        .config-panel:hover {
-            transform: none !important;
-            border-color: var(--glass-border) !important;
-            background: var(--glass-bg) !important;
-            box-shadow:
-                inset 1.5px 1.5px 0 0 rgba(255, 255, 255, 0.15),
-                inset -1px -1px 0 0 rgba(255, 255, 255, 0.05),
-                0 4px 24px rgba(0, 0, 0, 0.3) !important;
-        }
+    .page-header p {
+      font-size: 0.95rem;
+    }
 
-        .config-panel .section {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
+    .playground-container {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 1rem;
+      flex: 1;
+      min-height: 0;
+      animation: fadeInUp 0.7s var(--transition-smooth) 0.1s both;
+    }
 
-        .response-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            text-align: left;
-            min-height: 0;
-        }
+    .config-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      text-align: left;
+      align-items: flex-start;
+      overflow-y: auto;
+      overflow-x: visible;
+      padding: 1.5rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+      position: relative;
+    }
 
-        .section-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 0.5rem;
-        }
+    .config-panel::-webkit-scrollbar {
+      width: 4px;
+    }
 
-        .api-selector {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 0.7rem 0.9rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.9rem;
-            outline: none;
-            cursor: pointer;
-            transition: all 0.3s var(--transition-smooth);
-            text-align: left;
-        }
+    .config-panel::-webkit-scrollbar-track {
+      background: transparent;
+    }
 
-        .api-selector:focus {
-            border-color: var(--accent);
-            background: var(--surface-hover);
-        }
+    .config-panel::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
 
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1.2rem;
-            width: 100%;
-            align-items: flex-start;
-        }
+    .config-panel:hover {
+      transform: none !important;
+      border-color: var(--glass-border) !important;
+      background: var(--glass-bg) !important;
+      box-shadow:
+        inset 1.5px 1.5px 0 0 rgba(255, 255, 255, 0.15),
+        inset -1px -1px 0 0 rgba(255, 255, 255, 0.05),
+        0 4px 24px rgba(0, 0, 0, 0.3) !important;
+    }
 
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            width: 100%;
-            align-items: flex-start;
-        }
+    .config-panel .section {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
 
-        .form-field label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
+    .response-panel {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      text-align: left;
+      min-height: 0;
+    }
 
-        .form-field input,
-        .form-field textarea,
-        .form-field select {
-            width: 100%;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            color: var(--text-primary);
-            padding: 0.65rem 0.8rem;
-            border-radius: var(--radius-sm);
-            font-size: 0.85rem;
-            outline: none;
-            transition: all 0.3s var(--transition-smooth);
-            text-align: left;
-        }
+    .section-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.5rem;
+    }
 
-        .form-field input:focus,
-        .form-field textarea:focus,
-        .form-field select:focus {
-            border-color: var(--accent);
-            background: var(--surface-hover);
-        }
+    .section-title i {
+      font-size: 0.7rem;
+      opacity: 0.6;
+    }
 
-        .run-btn {
-            margin-top: 0.5rem;
-            width: 100%;
-            justify-content: center;
-        }
+    .custom-select-wrapper {
+      position: relative;
+      width: 100%;
+    }
 
-        .output-area {
-            flex: 1;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-card);
-            padding: 1.2rem;
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            overflow: auto;
-            position: relative;
-        }
+    .custom-select-trigger {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.65rem 2.2rem 0.65rem 0.85rem;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      text-align: left;
+      display: flex;
+      align-items: center;
+      user-select: none;
+      position: relative;
+    }
 
-        .output-area pre {
-            margin: 0;
-            color: #e6edf3;
-            white-space: pre-wrap;
-            word-break: break-all;
-        }
+    .custom-select-trigger::after {
+      content: '';
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 5px solid var(--text-tertiary);
+      transition: transform 0.25s var(--transition-smooth);
+    }
 
-        .status-bar {
-            padding: 0.4rem 0.9rem;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-pill);
-            font-size: 0.7rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            color: var(--text-secondary);
-        }
+    .custom-select-wrapper.open .custom-select-trigger::after {
+      transform: translateY(-50%) rotate(180deg);
+    }
 
-        @keyframes pulseLoading {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
+    .custom-select-trigger:hover {
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+    }
 
-            50% {
-                transform: scale(1.2);
-                opacity: 0.7;
-            }
+    .custom-select-wrapper.open .custom-select-trigger {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(1, 85, 161, 0.15);
+      border-radius: 12px 12px 0 0;
+    }
 
-            100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+    .custom-select-dropdown {
+      position: absolute;
+      left: 0;
+      right: 0;
+      background: #1a1a1e;
+      border: 1px solid var(--accent);
+      border-top: none;
+      border-radius: 0 0 12px 12px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      z-index: 50;
+      transition: max-height 0.3s var(--transition-smooth), opacity 0.2s var(--transition-smooth);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
 
-        .placeholder-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: var(--text-tertiary);
-            text-align: center;
-            pointer-events: none;
-            width: 80%;
-        }
+    .custom-select-wrapper.drop-up .custom-select-dropdown {
+      bottom: 100%;
+      top: auto;
+      border-radius: 12px 12px 0 0;
+      border: 1px solid var(--accent);
+      border-bottom: none;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+    }
 
-        .loading-spinner {
-            display: none;
-            margin-right: 0.5rem;
-        }
+    .custom-select-wrapper.drop-up.open .custom-select-trigger {
+      border-radius: 0 0 12px 12px;
+    }
 
-        @media (max-width: 900px) {
-            body {
-                overflow-y: auto;
-                height: auto;
-            }
+    .custom-select-wrapper.drop-up .custom-select-option:first-child {
+      border-radius: 12px 12px 0 0;
+    }
 
-            main {
-                height: auto;
-            }
+    .custom-select-wrapper.drop-up .custom-select-option:last-child {
+      border-radius: 0;
+    }
 
-            .playground-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    .custom-select-wrapper:not(.drop-up) .custom-select-dropdown {
+      top: 100%;
+    }
+
+    .custom-select-wrapper.open .custom-select-dropdown {
+      max-height: 260px;
+      opacity: 1;
+      overflow-y: auto;
+    }
+
+    .custom-select-dropdown::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-select-dropdown::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+    }
+
+    .custom-select-option {
+      padding: 0.6rem 0.85rem;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s var(--transition-smooth);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .custom-select-option:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-primary);
+    }
+
+    .custom-select-option.selected {
+      color: var(--accent);
+      font-weight: 600;
+      background: rgba(1, 85, 161, 0.08);
+    }
+
+    .custom-select-option:last-child {
+      border-radius: 0 0 12px 12px;
+    }
+
+    .endpoint-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .method-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.6rem;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .method-badge.post {
+      background: rgba(34, 197, 94, 0.12);
+      color: #22c55e;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .method-badge.get {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .endpoint-url {
+      font-family: var(--font-mono);
+      font-size: 0.73rem;
+      color: var(--text-tertiary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      flex: 1;
+    }
+
+    .endpoint-docs-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-tertiary);
+      text-decoration: none;
+      font-size: 0.68rem;
+      font-weight: 500;
+      transition: all 0.3s var(--transition-smooth);
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+
+    .endpoint-docs-btn:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+      background: rgba(1, 85, 161, 0.08);
+    }
+
+    .endpoint-docs-btn i {
+      font-size: 0.58rem;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    .form-field label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .form-field label.label-required {
+      font-weight: 700;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 0.6rem 0.75rem;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      outline: none;
+      transition: all 0.3s var(--transition-smooth);
+      text-align: left;
+      font-family: inherit;
+    }
+
+    .form-field textarea {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+      box-shadow: 0 0 0 3px rgba(1, 85, 161, 0.12);
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: var(--text-tertiary);
+      opacity: 0.6;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      cursor: pointer;
+      padding: 0.4rem 0;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .custom-checkbox {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      border: 1.5px solid var(--text-tertiary);
+      background: var(--surface);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s var(--transition-smooth);
+      cursor: pointer;
+    }
+
+    .custom-checkbox i {
+      font-size: 0.55rem;
+      color: transparent;
+      transition: color 0.2s var(--transition-smooth);
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      display: none;
+    }
+
+    .checkbox-row input[type="checkbox"]:checked + .custom-checkbox {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .checkbox-row input[type="checkbox"]:checked + .custom-checkbox i {
+      color: #fff;
+    }
+
+    .checkbox-row:hover .custom-checkbox {
+      border-color: var(--text-secondary);
+    }
+
+    .config-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      width: 100%;
+      margin-top: 0.3rem;
+    }
+
+    .config-actions .btn {
+      justify-content: center;
+      padding: 0.7rem 1rem;
+      font-size: 0.85rem;
+    }
+
+    .config-actions .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .copy-body-btn.copied {
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.08);
+    }
+
+    .response-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.8rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      border: 1px solid;
+      transition: all 0.3s var(--transition-smooth);
+    }
+
+    .status-badge.idle {
+      background: var(--surface);
+      border-color: var(--border);
+      color: var(--text-tertiary);
+    }
+
+    .status-badge.loading {
+      background: rgba(1, 85, 161, 0.08);
+      border-color: rgba(1, 85, 161, 0.25);
+      color: var(--accent);
+    }
+
+    .status-badge.success {
+      background: rgba(34, 197, 94, 0.08);
+      border-color: rgba(34, 197, 94, 0.25);
+      color: #22c55e;
+    }
+
+    .status-badge.error {
+      background: rgba(255, 69, 58, 0.08);
+      border-color: rgba(255, 69, 58, 0.25);
+      color: #ff453a;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+      flex-shrink: 0;
+    }
+
+    .status-badge.loading .status-dot {
+      animation: statusPulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    .response-meta {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-left: auto;
+    }
+
+    .meta-item {
+      font-size: 0.72rem;
+      color: var(--text-tertiary);
+      font-family: var(--font-mono);
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .meta-item i {
+      font-size: 0.65rem;
+      opacity: 0.6;
+    }
+
+    .copy-response-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      font-size: 0.72rem;
+      font-weight: 500;
+    }
+
+    .copy-response-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+    }
+
+    .copy-response-btn.copied {
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.08);
+    }
+
+    .output-area {
+      flex: 1;
+      background: rgba(13, 17, 23, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .output-scroll {
+      flex: 1;
+      overflow: auto;
+      padding: 1.2rem 1.4rem;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+
+    .output-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    .output-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .output-scroll::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+    }
+
+    .output-scroll pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .output-scroll pre code {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      line-height: 1.65;
+      background: none !important;
+      padding: 0 !important;
+      border: none !important;
+    }
+
+    .placeholder-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--text-tertiary);
+      text-align: center;
+      pointer-events: none;
+      width: 80%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .placeholder-text i {
+      font-size: 2rem;
+      opacity: 0.15;
+    }
+
+    .placeholder-text span {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      opacity: 0.5;
+    }
+
+    .placeholder-text kbd {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.15rem 0.5rem;
+      border-radius: 5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    .loading-spinner {
+      display: none;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-pill);
+      background: rgba(20, 20, 22, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s var(--transition-smooth);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast i {
+      color: #22c55e;
+    }
+
+    @media (max-width: 900px) {
+      body {
+        overflow-y: auto;
+        height: auto;
+      }
+
+      main {
+        height: auto;
+        padding: 1rem;
+        padding-top: calc(var(--nav-height) + 30px);
+      }
+
+      .playground-container {
+        grid-template-columns: 1fr;
+      }
+
+      .config-panel {
+        max-height: none;
+        overflow: visible;
+      }
+
+      .output-area {
+        min-height: 400px;
+      }
+
+      .response-toolbar {
+        flex-wrap: wrap;
+      }
+
+      .response-meta {
+        margin-left: 0;
+      }
+
+      .config-actions {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .custom-select-wrapper {
+        z-index: 50;
+      }
+    }
+  </style>
 </head>
-
 <body>
-    <nav>
-        <div class="nav-top">
-            <a href="index.html" class="nav-brand">
-                <img src="assets/Logo.svg" alt="" class="nav-logo">
-                MIKLIUM
-            </a>
-            <ul class="nav-links">
-                <li><a href="index.html" class="btn btn-ghost" style="padding: 0.4rem 1rem; font-size: 0.85rem;"><i
-                            class="fas fa-house"></i> Home</a></li>
-            </ul>
-        </div>
-    </nav>
+  <nav>
+    <div class="nav-top">
+      <a href="index.html" class="nav-brand">
+        <img src="assets/Logo.svg" alt="" class="nav-logo">
+        MIKLIUM
+      </a>
+      <button class="nav-toggle" aria-label="Menu"><i class="fas fa-bars"></i></button>
+      <ul class="nav-links">
+        <li><a href="index.html" data-nav="home">Home</a></li>
+        <li><a href="projects.html" data-nav="projects">Projects</a></li>
+        <li><a href="GetStarted.html" data-nav="getstarted">Get Started</a></li>
+        <li><a href="APIDOCS.html" data-nav="apidocs">API Docs</a></li>
+        <li><a href="playground.html" data-nav="playground">Playground</a></li>
+        <li><a href="support.html" data-nav="support">Support</a></li>
+        <li class="nav-icons">
+          <a href="https://discord.gg/6HUJTXh45t" target="_blank" title="Discord"><i class="fab fa-discord"></i></a>
+          <a href="https://github.com/MIKLIUM" target="_blank" title="GitHub"><i class="fab fa-github"></i></a>
+        </li>
+      </ul>
+    </div>
+    <div class="nav-mobile-links">
+      <a href="index.html" data-nav="home"><i class="fas fa-house"></i> Home</a>
+      <a href="projects.html" data-nav="projects"><i class="fas fa-cube"></i> Featured Projects</a>
+      <a href="GetStarted.html" data-nav="getstarted"><i class="fas fa-play"></i> Get Started</a>
+      <a href="APIDOCS.html" data-nav="apidocs"><i class="fas fa-book"></i> API Docs</a>
+      <a href="playground.html" data-nav="playground"><i class="fas fa-flask"></i> API Playground</a>
+      <a href="support.html" data-nav="support"><i class="fas fa-headset"></i> Support</a>
+      <div class="nav-mobile-icons">
+        <a href="https://discord.gg/6HUJTXh45t" target="_blank"><i class="fab fa-discord"></i></a>
+        <a href="https://github.com/MIKLIUM" target="_blank"><i class="fab fa-github"></i></a>
+      </div>
+    </div>
+  </nav>
 
-    <main>
-        <div class="playground-container">
-            <!-- Left Panel: Configuration -->
-            <div class="glass-card config-panel">
-                <div class="section">
-                    <div class="section-title"><i class="fas fa-plug"></i> Select API</div>
-                    <select id="apiSelector" class="api-selector">
-                        <option value="chatbot">Chatbot API</option>
-                        <option value="python-sandbox">Python Sandbox</option>
-                        <option value="search">Search API</option>
-                        <option value="shortcut-info">Shortcut Info</option>
-                        <option value="youtube-transcript">YouTube Transcript</option>
-                    </select>
-                </div>
+  <main>
+    <div class="page-header">
+      <h2>API Playground</h2>
+      <p>Test MIKLIUM APIs in real-time with our interactive playground.</p>
+    </div>
 
-                <div class="section">
-                    <div class="section-title"><i class="fas fa-sliders"></i> Parameters</div>
-                    <div id="dynamicInputs" class="input-group">
-                        <!-- Dynamic inputs will be injected here -->
-                    </div>
-                </div>
-
-                <button id="runBtn" class="btn btn-primary run-btn">
-                    <i class="fas fa-spinner fa-spin loading-spinner" id="spinner"></i>
-                    <i class="fas fa-play" id="playIcon"></i>
-                    <span>Execute Request</span>
-                </button>
+    <div class="playground-container">
+      <div class="glass-card config-panel">
+        <div class="section">
+          <div class="section-title"><i class="fas fa-plug"></i> Endpoint</div>
+          <div class="custom-select-wrapper" id="apiSelectWrapper">
+            <div class="custom-select-trigger" id="apiSelectTrigger">Chatbot API</div>
+            <div class="custom-select-dropdown" id="apiSelectDropdown">
+              <div class="custom-select-option selected" data-value="chatbot">Chatbot API</div>
+              <div class="custom-select-option" data-value="python-sandbox">Python Sandbox</div>
+              <div class="custom-select-option" data-value="search">Search API</div>
+              <div class="custom-select-option" data-value="shortcut-info">Shortcut Info</div>
+              <div class="custom-select-option" data-value="youtube-transcript">YouTube Transcript</div>
             </div>
-
-            <!-- Right Panel: Output -->
-            <div class="response-panel">
-                <div class="status-bar">
-                    <span id="statusText">Ready</span>
-                    <span style="margin-left: auto;" id="executionTime"></span>
-                </div>
-                <div class="output-area">
-                    <div id="placeholder" class="placeholder-text">
-                        <i class="fas fa-terminal"
-                            style="font-size: 1.5rem; margin-bottom: 0.8rem; display: block; opacity: 0.3;"></i>
-                        Select an API and click execute to see the response
-                    </div>
-                    <pre id="outputPre"></pre>
-                </div>
-            </div>
+          </div>
+          <div class="endpoint-row">
+            <span class="method-badge post" id="methodBadge">POST</span>
+            <span class="endpoint-url" id="endpointUrl">/api/chatbot</span>
+            <a href="APIDOCS.html" class="endpoint-docs-btn" id="apiDocsLink" target="_blank"><i class="fas fa-book"></i> View Docs</a>
+          </div>
         </div>
-    </main>
 
-    <script>
-        const API_CONFIGS = {
-            'chatbot': {
-                endpoint: 'https://miklium.vercel.app/api/chatbot',
-                method: 'POST',
-                inputs: [
-                    { id: 'message', label: 'Message', type: 'text', placeholder: 'Hello, how are you?', required: true },
-                    { id: 'personality', label: 'Personality', type: 'select', options: ['miklium', 'personalityless', 'male', 'female', 'all'], default: 'miklium' },
-                    { id: 'response_stacking', label: 'Response Stacking', type: 'number', min: 0, max: 100, default: 4 }
-                ]
-            },
-            'python-sandbox': {
-                endpoint: 'https://miklium.vercel.app/api/python-sandbox',
-                method: 'POST',
-                inputs: [
-                    { id: 'code', label: 'Python Code', type: 'textarea', placeholder: "print('Hello MIKLIUM!')", required: true },
-                    { id: 'stdin', label: 'Stdin (Comma separated)', type: 'text', placeholder: 'input1, input2' },
-                    { id: 'timeout', label: 'Timeout (Seconds)', type: 'number', min: 0.5, max: 40, default: 20 }
-                ]
-            },
-            'search': {
-                endpoint: 'https://miklium.vercel.app/api/search',
-                method: 'POST',
-                inputs: [
-                    { id: 'search', label: 'Queries (Comma separated, max 3)', type: 'text', placeholder: 'iPhone 17, Apple Vision', required: true },
-                    { id: 'maxSmallSnippets', label: 'Max Small Snippets', type: 'number', default: 5 },
-                    { id: 'maxLargeSnippets', label: 'Max Large Snippets', type: 'number', default: 2 },
-                    { id: 'maxLargeSnippetSymbols', label: 'Max Characters per Snippet', type: 'number', default: 4500 }
-                ]
-            },
-            'shortcut-info': {
-                endpoint: 'https://miklium.vercel.app/api/shortcut-info',
-                method: 'POST',
-                inputs: [
-                    { id: 'url', label: 'Shortcuts Link', type: 'text', placeholder: 'https://www.icloud.com/shortcuts/...', required: true }
-                ]
-            },
-            'youtube-transcript': {
-                endpoint: 'https://miklium.vercel.app/api/youtube-transcript',
-                method: 'POST',
-                inputs: [
-                    { id: 'url', label: 'YouTube URL', type: 'text', placeholder: 'https://youtu.be/...', required: true },
-                    { id: 'removeTimestamps', label: 'Remove Timestamps', type: 'checkbox', default: false },
-                    { id: 'includeInfo', label: 'Include Video Info', type: 'checkbox', default: false }
-                ]
-            }
-        };
+        <div class="section">
+          <div class="section-title"><i class="fas fa-sliders"></i> Parameters</div>
+          <div id="dynamicInputs" class="input-group"></div>
+        </div>
 
-        const apiSelector = document.getElementById('apiSelector');
-        const dynamicInputs = document.getElementById('dynamicInputs');
-        const runBtn = document.getElementById('runBtn');
-        const outputPre = document.getElementById('outputPre');
-        const placeholder = document.getElementById('placeholder');
-        const statusText = document.getElementById('statusText');
-        const executionTime = document.getElementById('executionTime');
-        const spinner = document.getElementById('spinner');
-        const playIcon = document.getElementById('playIcon');
+        <div class="config-actions">
+          <button id="runBtn" class="btn btn-primary">
+            <i class="fas fa-spinner fa-spin loading-spinner" id="spinner"></i>
+            <i class="fas fa-play" id="playIcon" style="font-size: 0.75rem;"></i>
+            <span>Execute</span>
+          </button>
+          <button id="copyBodyBtn" class="btn btn-ghost copy-body-btn">
+            <i class="fas fa-copy"></i>
+            <span>Copy Body</span>
+          </button>
+        </div>
+      </div>
 
-        function updateInputs() {
-            const api = apiSelector.value;
-            const config = API_CONFIGS[api];
-            dynamicInputs.innerHTML = '';
+      <div class="response-panel">
+        <div class="response-toolbar">
+          <div class="status-badge idle" id="statusBadge">
+            <span class="status-dot"></span>
+            <span id="statusText">Ready</span>
+          </div>
+          <div class="response-meta">
+            <span class="meta-item" id="responseTime" style="display:none;">
+              <i class="fas fa-clock"></i>
+              <span id="responseTimeValue"></span>
+            </span>
+            <span class="meta-item" id="responseSize" style="display:none;">
+              <i class="fas fa-weight-hanging"></i>
+              <span id="responseSizeValue"></span>
+            </span>
+            <button class="copy-response-btn" id="copyResponseBtn" style="display:none;" title="Copy Response">
+              <i class="fas fa-copy"></i> Copy Response
+            </button>
+          </div>
+        </div>
+        <div class="output-area">
+          <div class="output-scroll">
+            <div id="placeholder" class="placeholder-text">
+              <i class="fas fa-terminal"></i>
+              <span>Select an API and click <kbd>Execute</kbd> to see the response</span>
+            </div>
+            <pre id="outputPre" style="display:none;"><code id="outputCode"></code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
-            config.inputs.forEach(input => {
-                const field = document.createElement('div');
-                field.className = 'form-field';
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Copied to clipboard</span>
+  </div>
 
-                const label = document.createElement('label');
-                label.innerText = input.label;
-                field.appendChild(label);
+  <script>
+    var API_CONFIGS = {
+      'chatbot': {
+        endpoint: 'https://miklium.vercel.app/api/chatbot',
+        path: '/api/chatbot',
+        method: 'POST',
+        docsAnchor: 'chatbot-api',
+        inputs: [
+          { id: 'message', label: 'Message', type: 'text', placeholder: 'Hello, how are you?', required: true },
+          { id: 'personality', label: 'Personality', type: 'select', options: ['miklium', 'personalityless', 'male', 'female', 'all'], default: 'miklium' },
+          { id: 'response_stacking', label: 'Response Stacking', type: 'number', min: 0, max: 100, default: 4 }
+        ]
+      },
+      'python-sandbox': {
+        endpoint: 'https://miklium.vercel.app/api/python-sandbox',
+        path: '/api/python-sandbox',
+        method: 'POST',
+        docsAnchor: 'python-sandbox-api',
+        inputs: [
+          { id: 'code', label: 'Python Code', type: 'textarea', placeholder: "print('Hello MIKLIUM!')", required: true },
+          { id: 'stdin', label: 'Stdin (Comma separated)', type: 'text', placeholder: 'input1, input2' },
+          { id: 'timeout', label: 'Timeout (Seconds)', type: 'number', min: 0.5, max: 40, default: 20 }
+        ]
+      },
+      'search': {
+        endpoint: 'https://miklium.vercel.app/api/search',
+        path: '/api/search',
+        method: 'POST',
+        docsAnchor: 'search-api',
+        inputs: [
+          { id: 'search', label: 'Queries (Comma separated, max 3)', type: 'text', placeholder: 'iPhone 17, Apple Vision', required: true },
+          { id: 'maxSmallSnippets', label: 'Max Small Snippets', type: 'number', default: 5 },
+          { id: 'maxLargeSnippets', label: 'Max Large Snippets', type: 'number', default: 2 },
+          { id: 'maxLargeSnippetSymbols', label: 'Max Characters per Snippet', type: 'number', default: 4500 }
+        ]
+      },
+      'shortcut-info': {
+        endpoint: 'https://miklium.vercel.app/api/shortcut-info',
+        path: '/api/shortcut-info',
+        method: 'POST',
+        docsAnchor: 'shortcut-info-api',
+        inputs: [
+          { id: 'url', label: 'Shortcuts Link', type: 'text', placeholder: 'https://www.icloud.com/shortcuts/...', required: true }
+        ]
+      },
+      'youtube-transcript': {
+        endpoint: 'https://miklium.vercel.app/api/youtube-transcript',
+        path: '/api/youtube-transcript',
+        method: 'POST',
+        docsAnchor: 'youtube-transcript-api',
+        inputs: [
+          { id: 'url', label: 'YouTube URL', type: 'text', placeholder: 'https://youtu.be/...', required: true },
+          { id: 'removeTimestamps', label: 'Remove Timestamps', type: 'checkbox', default: false },
+          { id: 'includeInfo', label: 'Include Video Info', type: 'checkbox', default: false }
+        ]
+      }
+    };
 
-                if (input.type === 'textarea') {
-                    const el = document.createElement('textarea');
-                    el.id = input.id;
-                    el.placeholder = input.placeholder || '';
-                    el.rows = 5;
-                    if (input.required) el.required = true;
-                    field.appendChild(el);
-                } else if (input.type === 'select') {
-                    const el = document.createElement('select');
-                    el.id = input.id;
-                    input.options.forEach(opt => {
-                        const o = document.createElement('option');
-                        o.value = opt;
-                        o.innerText = opt.charAt(0).toUpperCase() + opt.slice(1);
-                        el.appendChild(o);
-                    });
-                    if (input.default) el.value = input.default;
-                    field.appendChild(el);
-                } else if (input.type === 'checkbox') {
-                    const container = document.createElement('label');
-                    container.style.display = 'flex';
-                    container.style.alignItems = 'center';
-                    container.style.gap = '10px';
-                    container.style.cursor = 'pointer';
+    var currentApi = 'chatbot';
+    var dynamicInputs = document.getElementById('dynamicInputs');
+    var runBtn = document.getElementById('runBtn');
+    var outputPre = document.getElementById('outputPre');
+    var outputCode = document.getElementById('outputCode');
+    var placeholder = document.getElementById('placeholder');
+    var statusBadge = document.getElementById('statusBadge');
+    var statusText = document.getElementById('statusText');
+    var spinner = document.getElementById('spinner');
+    var playIcon = document.getElementById('playIcon');
+    var endpointUrl = document.getElementById('endpointUrl');
+    var methodBadge = document.getElementById('methodBadge');
+    var apiDocsLink = document.getElementById('apiDocsLink');
+    var copyBodyBtn = document.getElementById('copyBodyBtn');
+    var copyResponseBtn = document.getElementById('copyResponseBtn');
+    var responseTime = document.getElementById('responseTime');
+    var responseTimeValue = document.getElementById('responseTimeValue');
+    var responseSize = document.getElementById('responseSize');
+    var responseSizeValue = document.getElementById('responseSizeValue');
+    var toast = document.getElementById('toast');
+    var toastText = document.getElementById('toastText');
+    var lastResponseText = '';
+    var toastTimeout = null;
 
-                    const el = document.createElement('input');
-                    el.type = 'checkbox';
-                    el.id = input.id;
-                    el.checked = input.default || false;
+    var selectWrapper = document.getElementById('apiSelectWrapper');
+    var selectTrigger = document.getElementById('apiSelectTrigger');
+    var selectDropdown = document.getElementById('apiSelectDropdown');
+    var selectOptions = selectDropdown.querySelectorAll('.custom-select-option');
 
-                    container.prepend(el);
-                    field.replaceChild(container, label);
-                    container.appendChild(document.createTextNode(input.label));
-                } else {
-                    const el = document.createElement('input');
-                    el.type = input.type;
-                    el.id = input.id;
-                    el.placeholder = input.placeholder || '';
-                    if (input.min !== undefined) el.min = input.min;
-                    if (input.max !== undefined) el.max = input.max;
-                    if (input.default !== undefined) el.value = input.default;
-                    if (input.required) el.required = true;
-                    field.appendChild(el);
-                }
-                dynamicInputs.appendChild(field);
-            });
+    function calcDropDirection(wrapper) {
+      var rect = wrapper.getBoundingClientRect();
+      var spaceBelow = window.innerHeight - rect.bottom;
+      var spaceAbove = rect.top;
+      if (spaceBelow < 200 && spaceAbove > spaceBelow) {
+        wrapper.classList.add('drop-up');
+      } else {
+        wrapper.classList.remove('drop-up');
+      }
+    }
+
+    function scrollToShowDropdown(wrapper) {
+      var panel = wrapper.closest('.config-panel');
+      if (!panel) return;
+      var dropdown = wrapper.querySelector('.custom-select-dropdown');
+      if (!dropdown) return;
+
+      requestAnimationFrame(function() {
+        var dropdownRect = dropdown.getBoundingClientRect();
+        var panelRect = panel.getBoundingClientRect();
+
+        if (dropdownRect.bottom > panelRect.bottom) {
+          var overflow = dropdownRect.bottom - panelRect.bottom + 12;
+          panel.scrollTop += overflow;
         }
 
-        async function runAPI() {
-            const api = apiSelector.value;
-            const config = API_CONFIGS[api];
-            const data = {};
-
-            // Collect data
-            let valid = true;
-            config.inputs.forEach(input => {
-                const el = document.getElementById(input.id);
-                if (input.required && !el.value) {
-                    el.style.borderColor = '#ff453a';
-                    valid = false;
-                } else {
-                    el.style.borderColor = 'var(--border)';
-                }
-
-                if (input.type === 'checkbox') {
-                    data[input.id] = el.checked;
-                } else if (input.type === 'number') {
-                    data[input.id] = parseFloat(el.value);
-                } else if (input.id === 'search' || input.id === 'stdin') {
-                    data[input.id] = el.value.split(',').map(s => s.trim()).filter(s => s);
-                } else {
-                    data[input.id] = el.value;
-                }
-            });
-
-            if (!valid) return;
-
-            // UI State
-            runBtn.disabled = true;
-            spinner.style.display = 'inline-block';
-            playIcon.style.display = 'none';
-            statusText.innerText = 'Executing...';
-            placeholder.style.display = 'none';
-            outputPre.innerText = '// Authenticating and making request...';
-            const startTime = performance.now();
-
-            try {
-                const response = await fetch(config.endpoint, {
-                    method: config.method,
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(data)
-                });
-
-                const endTime = performance.now();
-                const duration = (endTime - startTime).toFixed(0);
-                executionTime.innerText = `${duration}ms`;
-
-                const result = await response.json();
-                outputPre.innerText = JSON.stringify(result, null, 2);
-
-                if (response.ok) {
-                    statusText.innerText = `Success (${response.status})`;
-                } else {
-                    statusText.innerText = `Error (${response.status})`;
-                }
-            } catch (err) {
-                statusText.innerText = 'Network Error';
-                outputPre.innerText = `Error: ${err.message}`;
-            } finally {
-                runBtn.disabled = false;
-                spinner.style.display = 'none';
-                playIcon.style.display = 'inline-block';
-            }
+        if (dropdownRect.top < panelRect.top) {
+          var overflow = panelRect.top - dropdownRect.top + 12;
+          panel.scrollTop -= overflow;
         }
+      });
+    }
 
-        apiSelector.addEventListener('change', updateInputs);
-        runBtn.addEventListener('click', runAPI);
+    selectTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      calcDropDirection(selectWrapper);
+      selectWrapper.classList.toggle('open');
+      if (selectWrapper.classList.contains('open')) {
+        scrollToShowDropdown(selectWrapper);
+      }
+    });
 
-        // Initialize
+    selectOptions.forEach(function(opt) {
+      opt.addEventListener('click', function(e) {
+        e.stopPropagation();
+        selectOptions.forEach(function(o) { o.classList.remove('selected'); });
+        opt.classList.add('selected');
+        selectTrigger.textContent = opt.textContent;
+        currentApi = opt.getAttribute('data-value');
+        selectWrapper.classList.remove('open');
         updateInputs();
+      });
+    });
 
-        // Mobile Nav Toggle
-        document.addEventListener("DOMContentLoaded", function () {
-            var toggle = document.querySelector(".nav-toggle");
-            var mobileLinks = document.querySelector(".nav-mobile-links");
-            var navEl = document.querySelector("nav");
-            if (!toggle || !mobileLinks || !navEl) return;
-            toggle.addEventListener("click", function () {
-                var open = mobileLinks.classList.toggle("open");
-                navEl.classList.toggle("nav-expanded", open);
-                toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
-            });
+    function showToast(message) {
+      toastText.textContent = message;
+      toast.classList.add('visible');
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(function() {
+        toast.classList.remove('visible');
+      }, 2000);
+    }
+
+    function formatBytes(bytes) {
+      if (bytes < 1024) return bytes + ' B';
+      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+
+    function getStatusCodeText(code) {
+      var map = {
+        200: 'OK', 201: 'Created', 204: 'No Content',
+        400: 'Bad Request', 401: 'Unauthorized', 403: 'Forbidden',
+        404: 'Not Found', 405: 'Method Not Allowed', 408: 'Request Timeout',
+        429: 'Too Many Requests', 500: 'Internal Server Error',
+        502: 'Bad Gateway', 503: 'Service Unavailable'
+      };
+      return map[code] || '';
+    }
+
+    function buildRequestBody() {
+      var config = API_CONFIGS[currentApi];
+      var data = {};
+
+      config.inputs.forEach(function(input) {
+        var el = document.getElementById(input.id);
+        if (!el) return;
+
+        if (input.type === 'checkbox') {
+          data[input.id] = el.checked;
+        } else if (input.type === 'number') {
+          if (el.value !== '') data[input.id] = parseFloat(el.value);
+        } else if (input.id === 'search' || input.id === 'stdin') {
+          if (el.value) data[input.id] = el.value.split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s; });
+        } else {
+          if (el.value) data[input.id] = el.value;
+        }
+      });
+
+      return data;
+    }
+
+    function updateEndpointInfo() {
+      var config = API_CONFIGS[currentApi];
+      endpointUrl.textContent = config.path;
+      apiDocsLink.href = 'APIDOCS.html#' + config.docsAnchor;
+      methodBadge.textContent = config.method;
+      methodBadge.className = 'method-badge ' + config.method.toLowerCase();
+    }
+
+    function createInlineSelect(input) {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'custom-select-wrapper';
+
+      var trigger = document.createElement('div');
+      trigger.className = 'custom-select-trigger';
+      var defaultVal = input.default || input.options[0];
+      trigger.textContent = defaultVal.charAt(0).toUpperCase() + defaultVal.slice(1);
+
+      var dropdown = document.createElement('div');
+      dropdown.className = 'custom-select-dropdown';
+
+      var hiddenInput = document.createElement('input');
+      hiddenInput.type = 'hidden';
+      hiddenInput.id = input.id;
+      hiddenInput.value = defaultVal;
+
+      input.options.forEach(function(opt) {
+        var optEl = document.createElement('div');
+        optEl.className = 'custom-select-option';
+        if (opt === defaultVal) optEl.classList.add('selected');
+        optEl.setAttribute('data-value', opt);
+        optEl.textContent = opt.charAt(0).toUpperCase() + opt.slice(1);
+
+        optEl.addEventListener('click', function(e) {
+          e.stopPropagation();
+          dropdown.querySelectorAll('.custom-select-option').forEach(function(o) { o.classList.remove('selected'); });
+          optEl.classList.add('selected');
+          trigger.textContent = optEl.textContent;
+          hiddenInput.value = opt;
+          wrapper.classList.remove('open');
         });
-    </script>
-</body>
 
+        dropdown.appendChild(optEl);
+      });
+
+      trigger.addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.querySelectorAll('.custom-select-wrapper.open').forEach(function(w) {
+          if (w !== wrapper) w.classList.remove('open');
+        });
+        calcDropDirection(wrapper);
+        wrapper.classList.toggle('open');
+        if (wrapper.classList.contains('open')) {
+          scrollToShowDropdown(wrapper);
+        }
+      });
+
+      wrapper.appendChild(trigger);
+      wrapper.appendChild(dropdown);
+      wrapper.appendChild(hiddenInput);
+
+      return wrapper;
+    }
+
+    document.addEventListener('click', function(e) {
+      document.querySelectorAll('.custom-select-wrapper.open').forEach(function(w) {
+        if (!w.contains(e.target)) w.classList.remove('open');
+      });
+    });
+
+    function updateInputs() {
+      var config = API_CONFIGS[currentApi];
+      dynamicInputs.innerHTML = '';
+      updateEndpointInfo();
+
+      config.inputs.forEach(function(input) {
+        var field = document.createElement('div');
+        field.className = 'form-field';
+
+        if (input.type === 'checkbox') {
+          var container = document.createElement('label');
+          container.className = 'checkbox-row';
+
+          var el = document.createElement('input');
+          el.type = 'checkbox';
+          el.id = input.id;
+          el.checked = input.default || false;
+
+          var box = document.createElement('span');
+          box.className = 'custom-checkbox';
+          box.innerHTML = '<i class="fas fa-check"></i>';
+
+          container.appendChild(el);
+          container.appendChild(box);
+          container.appendChild(document.createTextNode(input.label));
+          field.appendChild(container);
+        } else if (input.type === 'select') {
+          var label = document.createElement('label');
+          label.textContent = input.label;
+          field.appendChild(label);
+          field.appendChild(createInlineSelect(input));
+        } else {
+          var label = document.createElement('label');
+          label.setAttribute('for', input.id);
+          label.textContent = input.label;
+          if (input.required) label.classList.add('label-required');
+          field.appendChild(label);
+
+          if (input.type === 'textarea') {
+            var el = document.createElement('textarea');
+            el.id = input.id;
+            el.placeholder = input.placeholder || '';
+            el.rows = 4;
+            if (input.required) el.required = true;
+            field.appendChild(el);
+          } else {
+            var el = document.createElement('input');
+            el.type = input.type;
+            el.id = input.id;
+            el.placeholder = input.placeholder || '';
+            if (input.min !== undefined) el.min = input.min;
+            if (input.max !== undefined) el.max = input.max;
+            if (input.default !== undefined) el.value = input.default;
+            if (input.required) el.required = true;
+            field.appendChild(el);
+          }
+        }
+
+        dynamicInputs.appendChild(field);
+      });
+    }
+
+    function setStatus(type, text) {
+      statusBadge.className = 'status-badge ' + type;
+      statusText.textContent = text;
+    }
+
+    function highlightOutput(text) {
+      var newCode = document.createElement('code');
+      newCode.id = 'outputCode';
+      newCode.className = 'language-json';
+      newCode.textContent = text;
+
+      var oldCode = document.getElementById('outputCode');
+      oldCode.parentNode.replaceChild(newCode, oldCode);
+      outputCode = newCode;
+
+      hljs.highlightElement(newCode);
+    }
+
+    async function runAPI() {
+      var config = API_CONFIGS[currentApi];
+      var data = buildRequestBody();
+
+      var valid = true;
+      config.inputs.forEach(function(input) {
+        if (!input.required) return;
+        var el = document.getElementById(input.id);
+        if (!el || !el.value) {
+          if (el) {
+            el.style.borderColor = '#ff453a';
+            el.style.boxShadow = '0 0 0 3px rgba(255, 69, 58, 0.12)';
+          }
+          valid = false;
+        } else {
+          el.style.borderColor = '';
+          el.style.boxShadow = '';
+        }
+      });
+
+      if (!valid) return;
+
+      runBtn.disabled = true;
+      spinner.style.display = 'inline-block';
+      playIcon.style.display = 'none';
+      setStatus('loading', 'Executing...');
+      placeholder.style.display = 'none';
+      outputPre.style.display = 'block';
+      outputCode.className = '';
+      outputCode.textContent = '';
+      responseTime.style.display = 'none';
+      responseSize.style.display = 'none';
+      copyResponseBtn.style.display = 'none';
+      lastResponseText = '';
+
+      var startTime = performance.now();
+
+      try {
+        var response = await fetch(config.endpoint, {
+          method: config.method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        var endTime = performance.now();
+        var duration = (endTime - startTime).toFixed(0);
+
+        var resultText = await response.text();
+        lastResponseText = resultText;
+
+        var sizeBytes = new Blob([resultText]).size;
+
+        try {
+          var parsed = JSON.parse(resultText);
+          resultText = JSON.stringify(parsed, null, 2);
+          lastResponseText = resultText;
+        } catch (e) {}
+
+        highlightOutput(resultText);
+
+        var codeNum = response.status;
+        var codeText = getStatusCodeText(codeNum);
+
+        responseTime.style.display = 'flex';
+        responseTimeValue.textContent = duration + 'ms';
+
+        responseSize.style.display = 'flex';
+        responseSizeValue.textContent = formatBytes(sizeBytes);
+
+        copyResponseBtn.style.display = 'inline-flex';
+
+        if (response.ok) {
+          setStatus('success', codeNum + ' ' + codeText);
+        } else {
+          setStatus('error', codeNum + ' ' + codeText);
+        }
+      } catch (err) {
+        setStatus('error', 'Network Error');
+        outputCode.textContent = 'Error: ' + err.message;
+        outputCode.className = '';
+        lastResponseText = 'Error: ' + err.message;
+        copyResponseBtn.style.display = 'inline-flex';
+      } finally {
+        runBtn.disabled = false;
+        spinner.style.display = 'none';
+        playIcon.style.display = 'inline-block';
+      }
+    }
+
+    copyBodyBtn.addEventListener('click', function() {
+      var data = buildRequestBody();
+      var text = JSON.stringify(data, null, 2);
+      navigator.clipboard.writeText(text).then(function() {
+        copyBodyBtn.classList.add('copied');
+        showToast('Request body copied');
+        setTimeout(function() { copyBodyBtn.classList.remove('copied'); }, 1500);
+      });
+    });
+
+    copyResponseBtn.addEventListener('click', function() {
+      if (!lastResponseText) return;
+      navigator.clipboard.writeText(lastResponseText).then(function() {
+        copyResponseBtn.classList.add('copied');
+        copyResponseBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+        showToast('Response copied');
+        setTimeout(function() {
+          copyResponseBtn.classList.remove('copied');
+          copyResponseBtn.innerHTML = '<i class="fas fa-copy"></i> Copy Response';
+        }, 1500);
+      });
+    });
+
+    runBtn.addEventListener('click', runAPI);
+
+    updateInputs();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      var page = document.documentElement.getAttribute("data-page");
+      document.querySelectorAll("[data-nav]").forEach(function (a) {
+        if (a.getAttribute("data-nav") === page) a.classList.add("active");
+      });
+      var toggle = document.querySelector(".nav-toggle");
+      var mobileLinks = document.querySelector(".nav-mobile-links");
+      var navEl = document.querySelector("nav");
+      if (!toggle || !mobileLinks || !navEl) return;
+      toggle.addEventListener("click", function () {
+        var open = mobileLinks.classList.toggle("open");
+        navEl.classList.toggle("nav-expanded", open);
+        toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
+      });
+    });
+  </script>
+</body>
 </html>
