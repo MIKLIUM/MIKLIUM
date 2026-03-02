@@ -865,7 +865,7 @@
         endpoint: 'https://miklium.vercel.app/api/chatbot',
         path: '/api/chatbot',
         method: 'POST',
-        docsAnchor: 'chatbot-api',
+        docsAnchor: 'chatbot-api-documentation',
         inputs: [
           { id: 'message', label: 'Message', type: 'text', placeholder: 'Hello, how are you?', required: true },
           { id: 'personality', label: 'Personality', type: 'select', options: ['miklium', 'personalityless', 'male', 'female', 'all'], default: 'miklium' },
@@ -876,7 +876,7 @@
         endpoint: 'https://miklium.vercel.app/api/python-sandbox',
         path: '/api/python-sandbox',
         method: 'POST',
-        docsAnchor: 'python-sandbox-api',
+        docsAnchor: 'python-sandbox-api-documentation',
         inputs: [
           { id: 'code', label: 'Python Code', type: 'textarea', placeholder: "print('Hello MIKLIUM!')", required: true },
           { id: 'stdin', label: 'Stdin (Comma separated)', type: 'text', placeholder: 'input1, input2' },
@@ -887,7 +887,7 @@
         endpoint: 'https://miklium.vercel.app/api/search',
         path: '/api/search',
         method: 'POST',
-        docsAnchor: 'search-api',
+        docsAnchor: 'search-api-documentation',
         inputs: [
           { id: 'search', label: 'Queries (Comma separated, max 3)', type: 'text', placeholder: 'iPhone 17, Apple Vision', required: true },
           { id: 'maxSmallSnippets', label: 'Max Small Snippets', type: 'number', default: 5 },
@@ -899,7 +899,7 @@
         endpoint: 'https://miklium.vercel.app/api/shortcut-info',
         path: '/api/shortcut-info',
         method: 'POST',
-        docsAnchor: 'shortcut-info-api',
+        docsAnchor: 'shortcut-info-api-documentation',
         inputs: [
           { id: 'url', label: 'Shortcuts Link', type: 'text', placeholder: 'https://www.icloud.com/shortcuts/...', required: true }
         ]
@@ -908,7 +908,7 @@
         endpoint: 'https://miklium.vercel.app/api/youtube-transcript',
         path: '/api/youtube-transcript',
         method: 'POST',
-        docsAnchor: 'youtube-transcript-api',
+        docsAnchor: 'youtube-transcript-api-documentation',
         inputs: [
           { id: 'url', label: 'YouTube URL', type: 'text', placeholder: 'https://youtu.be/...', required: true },
           { id: 'removeTimestamps', label: 'Remove Timestamps', type: 'checkbox', default: false },
