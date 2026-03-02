@@ -244,7 +244,8 @@ nav .nav-links .nav-icons a {
 .nav-mobile-links.open a:nth-child(3) { transition-delay: 0.12s; }
 .nav-mobile-links.open a:nth-child(4) { transition-delay: 0.16s; }
 .nav-mobile-links.open a:nth-child(5) { transition-delay: 0.20s; }
-.nav-mobile-links.open .nav-mobile-icons { transition-delay: 0.24s; }
+.nav-mobile-links.open a:nth-child(6) { transition-delay: 0.24s; }
+.nav-mobile-links.open .nav-mobile-icons { transition-delay: 0.28s; }
 
 .nav-mobile-links a:hover {
   color: var(--text-primary);
