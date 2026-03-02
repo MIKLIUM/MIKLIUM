@@ -26,4 +26,4 @@ Once a report is received:
 
 ## Recognition & Thanks
 
-We greatly appreciate everyone who helps make MIKLIUM safer. As a token of our gratitude, we will publicly thank you and display your username in our release notes and and in a special thanks section for helping with the development. Your contributions make a real difference!
+Thank you for helping us make MIKLIUM safer for everyone! As a token of our gratitude, we will publicly thank you and display your username in our release notes and in a special thanks section for helping with the development. Your contributions make a real difference!
