@@ -27,27 +27,37 @@ async function handler(req, res) {
       removeTimestamps = body.removeTimestamps === true || body.removeTimestamps === 'true';
       includeInfo = body.includeInfo === true || body.includeInfo === 'true';
     } else {
+      console.log(`Method not allowed: ${req.method}`);
       return res.status(405).json({ success: false, error: "Method not allowed" });
     }
     
     const videoId = extractVideoId(url);
     
     if (!videoId) {
+      console.log(`Invalid URL provided: ${url}`);
       return res.status(400).json({ success: false, error: 'Invalid YouTube URL.' });
     }
 
     const result = await fetchVideo(videoId, { removeTimestamps, includeInfo });
 
+    if (!result.success) {
+      console.log(`Fetch failed for videoId ${videoId}: ${result.error}`);
+      return res.status(404).json(result);
+    }
+
     res.setHeader('Content-Type', 'application/json');
     res.status(200).json(result);
     
   } catch (error) {
+    console.log(`Error: ${error.name}`);
+    console.log(`Message: ${error.message}`);
+    console.log(`Stack: ${error.stack?.split('\n')[1]?.trim()}`);
     res.status(500).json({ 
       success: false, 
       error: 'Internal server error'
     });
   }
-};
+}
 
 async function fetchVideo(videoId, options) {
   const { removeTimestamps, includeInfo } = options;
@@ -73,8 +83,22 @@ async function fetchVideo(videoId, options) {
     startUrls: [{ url: `https://youtu.be/${videoId}` }]
   };
 
-  const run = await client.actor("h7sDV53CddomktSi5").call(apifyInput);
-  const { items } = await client.dataset(run.defaultDatasetId).listItems();
+  let run;
+  try {
+    run = await client.actor("h7sDV53CddomktSi5").call(apifyInput);
+  } catch (error) {
+    console.log(`Apify actor call failed: ${error.message}`);
+    throw error;
+  }
+
+  let items;
+  try {
+    const dataset = await client.dataset(run.defaultDatasetId).listItems();
+    items = dataset.items;
+  } catch (error) {
+    console.log(`Apify dataset fetch failed: ${error.message}`);
+    throw error;
+  }
   
   if (!items || items.length === 0) {
     return { success: false, error: 'Video not found or no data returned' };
