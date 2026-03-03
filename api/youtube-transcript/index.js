@@ -1,11 +1,7 @@
-const { ApifyClient } = require('apify-client');
-
-const client = new ApifyClient({
-  token: process.env.APIFY_TOKEN,
-});
+const https = require('https');
 
 async function handler(req, res) {
-  
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -13,10 +9,10 @@ async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   try {
     let url, removeTimestamps, includeInfo;
-    
+
     if (req.method === "GET") {
       url = req.query.url || "";
       removeTimestamps = req.query.removeTimestamps === 'true' || req.query.removeTimestamps === '1';
@@ -30,9 +26,9 @@ async function handler(req, res) {
       console.log(`Method not allowed: ${req.method}`);
       return res.status(405).json({ success: false, error: "Method not allowed" });
     }
-    
+
     const videoId = extractVideoId(url);
-    
+
     if (!videoId) {
       console.log(`Invalid URL provided: ${url}`);
       return res.status(400).json({ success: false, error: 'Invalid YouTube URL.' });
@@ -47,16 +43,51 @@ async function handler(req, res) {
 
     res.setHeader('Content-Type', 'application/json');
     res.status(200).json(result);
-    
+
   } catch (error) {
     console.log(`Error: ${error.name}`);
     console.log(`Message: ${error.message}`);
     console.log(`Stack: ${error.stack?.split('\n')[1]?.trim()}`);
-    res.status(500).json({ 
-      success: false, 
+    res.status(500).json({
+      success: false,
       error: 'Internal server error'
     });
   }
+}
+
+function apifyRequest(method, path, body) {
+  return new Promise((resolve, reject) => {
+    const token = process.env.APIFY_TOKEN;
+    const options = {
+      hostname: 'api.apify.com',
+      path: `/v2${path}?token=${token}`,
+      method: method,
+      headers: { 'Content-Type': 'application/json' }
+    };
+
+    const req = https.request(options, (resp) => {
+      let data = '';
+      resp.on('data', (chunk) => { data += chunk; });
+      resp.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (e) {
+          reject(new Error(`Failed to parse response: ${data.substring(0, 200)}`));
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.setTimeout(300000, () => {
+      req.destroy();
+      reject(new Error('Request timeout'));
+    });
+
+    if (body) {
+      req.write(JSON.stringify(body));
+    }
+    req.end();
+  });
 }
 
 async function fetchVideo(videoId, options) {
@@ -83,24 +114,49 @@ async function fetchVideo(videoId, options) {
     startUrls: [{ url: `https://youtu.be/${videoId}` }]
   };
 
-  let run;
+  let runResult;
   try {
-    run = await client.actor("h7sDV53CddomktSi5").call(apifyInput);
+    runResult = await apifyRequest('POST', '/acts/h7sDV53CddomktSi5/runs', apifyInput);
   } catch (error) {
-    console.log(`Apify actor call failed: ${error.message}`);
+    console.log(`Apify actor start failed: ${error.message}`);
     throw error;
   }
 
-  let items;
+  const runId = runResult.data?.id;
+  if (!runId) {
+    console.log(`No run ID returned`);
+    throw new Error('Failed to start actor run');
+  }
+
+  let status = runResult.data.status;
+  while (status === 'RUNNING' || status === 'READY') {
+    await new Promise(r => setTimeout(r, 3000));
+    try {
+      const check = await apifyRequest('GET', `/acts/h7sDV53CddomktSi5/runs/${runId}`, null);
+      status = check.data?.status;
+    } catch (error) {
+      console.log(`Apify status check failed: ${error.message}`);
+      throw error;
+    }
+  }
+
+  if (status !== 'SUCCEEDED') {
+    console.log(`Actor run finished with status: ${status}`);
+    throw new Error(`Actor run failed with status: ${status}`);
+  }
+
+  const datasetId = runResult.data.defaultDatasetId;
+  let dataset;
   try {
-    const dataset = await client.dataset(run.defaultDatasetId).listItems();
-    items = dataset.items;
+    dataset = await apifyRequest('GET', `/datasets/${datasetId}/items`, null);
   } catch (error) {
     console.log(`Apify dataset fetch failed: ${error.message}`);
     throw error;
   }
-  
-  if (!items || items.length === 0) {
+
+  const items = Array.isArray(dataset) ? dataset : dataset.items || [];
+
+  if (items.length === 0) {
     return { success: false, error: 'Video not found or no data returned' };
   }
 
@@ -109,7 +165,7 @@ async function fetchVideo(videoId, options) {
 
 function buildResponse(data, options) {
   const { removeTimestamps, includeInfo } = options;
-  
+
   const transcript = processSubtitles(data.subtitles, removeTimestamps);
 
   const response = {
@@ -148,15 +204,15 @@ function extractVideoId(url) {
 
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=|shorts\/)([^#&?]*).*/;
   const match = url.match(regExp);
-  
+
   if (match && match[2].length === 11) {
     return match[2];
   }
-  
+
   if (url.length === 11 && /^[a-zA-Z0-9_-]+$/.test(url)) {
     return url;
   }
-  
+
   return null;
 }
 
@@ -166,7 +222,7 @@ function processSubtitles(subtitles, removeTimestamps) {
   }
 
   const subtitle = subtitles[0];
-  
+
   if (!subtitle || !subtitle.srt) {
     return null;
   }
@@ -176,26 +232,26 @@ function processSubtitles(subtitles, removeTimestamps) {
 
 function cleanSRT(srtText) {
   if (!srtText) return '';
-  
+
   const blocks = srtText.split(/\n\n+/);
   const textLines = [];
-  
+
   for (const block of blocks) {
     const lines = block.trim().split('\n');
-    
+
     for (const line of lines) {
       const trimmed = line.trim();
-      
+
       if (!trimmed) continue;
       if (/^\d+$/.test(trimmed)) continue;
       if (/^\d{2}:\d{2}:\d{1,2},\d{1,3}\s*-->\s*\d{2}:\d{2}:\d{1,2},\d{1,3}$/.test(trimmed)) continue;
-      
+
       textLines.push(trimmed);
     }
   }
-  
+
   const unique = textLines.filter((line, i) => i === 0 || line !== textLines[i - 1]);
-  
+
   return unique.join(' ').replace(/\s+/g, ' ').trim();
 }
 
