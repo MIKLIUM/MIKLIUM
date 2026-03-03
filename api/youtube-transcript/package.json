@@ -2,10 +2,6 @@
   "name": "miklium-youtube-transcript",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "apify-client": "^2.21.0",
-    "proxy-agent": "^6.3.0"
-  },
   "engines": {
     "node": "22.x"
   }
