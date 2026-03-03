@@ -7,7 +7,7 @@ function isLowValue(text) {
     'Loading...',
     'Creating an answer',
     'AI-generated answer',
-    'We weren’t able to create a summary',
+    'We weren\'t able to create a summary',
     'Refresh your page'
   ];
   return badPhrases.some(phrase => text.includes(phrase));
@@ -54,7 +54,7 @@ async function fetchWithFallback(url, maxSymbols = 5000, maxRetries = 2) {
 }
 
 async function handler(request, response) {
-  
+
   response.setHeader('Access-Control-Allow-Origin', '*');
   response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   response.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -62,7 +62,7 @@ async function handler(request, response) {
   if (request.method === 'OPTIONS') {
     return response.status(200).end();
   }
-  
+
   let search = [];
   let maxSmallSnippets = 5;
   let maxLargeSnippets = 2;
@@ -92,25 +92,22 @@ async function handler(request, response) {
       let parsed;
       try {
         parsed = JSON.parse(body);
-      } catch (e) {
-        response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.end(JSON.stringify({ success: false, error: 'Invalid JSON' }));
-        return;
+      } catch (error) {
+        console.log(`JSON parse failed: ${error.message}`);
+        return response.status(400).json({ success: false, error: 'Invalid JSON' });
       }
       search = Array.isArray(parsed.search) ? parsed.search : [];
       if (typeof parsed.maxSmallSnippets === 'number' && parsed.maxSmallSnippets >= 0) maxSmallSnippets = parsed.maxSmallSnippets;
       if (typeof parsed.maxLargeSnippets === 'number' && parsed.maxLargeSnippets >= 0) maxLargeSnippets = parsed.maxLargeSnippets;
       if (typeof parsed.maxLargeSnippetSymbols === 'number' && parsed.maxLargeSnippetSymbols > 0) maxLargeSnippetSymbols = parsed.maxLargeSnippetSymbols;
     } else {
-      response.writeHead(405, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ success: false, error: 'Method not allowed' }));
-      return;
+      console.log(`Method not allowed: ${request.method}`);
+      return response.status(405).json({ success: false, error: 'Method not allowed' });
     }
 
     if (!Array.isArray(search) || search.length === 0) {
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ success: false, error: 'Invalid or missing "search" parameter' }));
-      return;
+      console.log('Missing or invalid search parameter');
+      return response.status(400).json({ success: false, error: 'Invalid or missing "search" parameter' });
     }
 
     const results = [];
@@ -158,7 +155,7 @@ async function handler(request, response) {
                 const decoded = decodeURIComponent(encodedLink);
                 realUrl = decoded.split('#')[0].split('?')[0];
                 new URL(realUrl);
-              } catch (e) {
+              } catch (error) {
                 realUrl = null;
               }
             }
@@ -178,7 +175,12 @@ async function handler(request, response) {
           }
 
           if (maxLargeSnippets > 0 && queryLongCount < maxLargeSnippets && realUrl) {
-            const urlObj = new URL(realUrl);
+            let urlObj;
+            try {
+              urlObj = new URL(realUrl);
+            } catch (error) {
+              continue;
+            }
             const domain = `${urlObj.protocol}//${urlObj.hostname}`;
             if (!processedDomains.has(domain) && !queryDomains.has(domain)) {
               queryDomains.add(domain);
@@ -193,35 +195,39 @@ async function handler(request, response) {
                   query: query
                 });
                 queryLongCount++;
-              } catch (e) {}
+              } catch (error) {
+                console.log(`Large snippet fetch failed for ${realUrl}: ${error.message}`);
+              }
             }
           }
         }
-      } catch (e) {
+      } catch (error) {
+        console.log(`Yahoo search failed for query "${query}": ${error.message}`);
         continue;
       }
     }
 
     if (results.length === 0) {
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({
+      console.log(`No results found for queries: ${search.join(', ')}`);
+      return response.status(404).json({
         success: false,
         error: 'No valid results found for the given queries'
-      }));
-    } else {
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({
-        results,
-        success: true
-      }));
+      });
     }
+
+    return response.status(200).json({
+      results,
+      success: true
+    });
+
   } catch (error) {
-    console.error('Handler error:', error.message || error);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.end(JSON.stringify({
+    console.log(`Error: ${error.name}`);
+    console.log(`Message: ${error.message}`);
+    console.log(`Stack: ${error.stack?.split('\n')[1]?.trim()}`);
+    return response.status(500).json({
       success: false,
-      error: error.message || 'An unexpected error occurred'
-    }));
+      error: 'Internal server error'
+    });
   }
 }
 

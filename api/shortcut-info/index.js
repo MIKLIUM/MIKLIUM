@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 async function handler(req, res) {
-  
+
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -9,9 +9,10 @@ async function handler(req, res) {
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'GET' && req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
+    console.log(`Method not allowed: ${req.method}`);
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
   let url;
@@ -21,12 +22,14 @@ async function handler(req, res) {
     try {
       const body = typeof req.body === 'object' ? req.body : JSON.parse(req.body);
       url = body.url;
-    } catch {
+    } catch (error) {
+      console.log(`JSON parse failed: ${error.message}`);
       return res.status(400).json({ success: false, error: 'Invalid JSON in request body' });
     }
   }
 
   if (!url) {
+    console.log('Missing url parameter');
     return res.status(400).json({ success: false, error: 'Missing "url" parameter' });
   }
 
@@ -44,18 +47,20 @@ async function handler(req, res) {
   if (url.startsWith('https://routinehub.co/shortcut/')) {
     linkType = 'RoutineHub Link';
     links.routineHubLink = originalUrl;
-    
-    const match = url.match(/\/shortcut\/(\d+)/);
-    if (!match) {
+
+    const rhMatch = url.match(/\/shortcut\/(\d+)/);
+    if (!rhMatch) {
+      console.log(`Invalid RoutineHub URL format: ${url}`);
       return res.status(400).json({ success: false, error: 'Invalid RoutineHub shortcut URL' });
     }
-    shortcutId = match[1];
-    
+    shortcutId = rhMatch[1];
+
     try {
-      const apiResponse = await fetch(`https://routinehub.co/api/v1/shortcuts/${shortcutId}/versions/latest`, { headers: {'User-Agent': 'Mozilla/5.0 (compatible; ShortcutResolver/1.0)'} });
+      const apiResponse = await fetch(`https://routinehub.co/api/v1/shortcuts/${shortcutId}/versions/latest`, { headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ShortcutResolver/1.0)' } });
       if (!apiResponse.ok) {
-        return res.status(404).json({ 
-          success: false, 
+        console.log(`RoutineHub API returned ${apiResponse.status} for shortcut ${shortcutId}`);
+        return res.status(404).json({
+          success: false,
           error: 'RoutineHub shortcut not found'
         });
       }
@@ -63,8 +68,9 @@ async function handler(req, res) {
       url = apiData.URL;
       links.iCloudLink = url;
       links.routineHubDirectLink = `https://routinehub.co/download/${apiData.id}`;
-    } catch {
-      return res.status(500).json({ success: false, error: 'Failed to fetch RoutineHub metadata' });
+    } catch (error) {
+      console.log(`RoutineHub API fetch failed: ${error.message}`);
+      return res.status(502).json({ success: false, error: 'Failed to fetch RoutineHub metadata' });
     }
   }
   else if (url.startsWith('https://routinehub.co/download/')) {
@@ -72,34 +78,37 @@ async function handler(req, res) {
     links.routineHubDirectLink = originalUrl;
 
     try {
-      const redirectResponse = await fetch(url, { 
+      const redirectResponse = await fetch(url, {
         method: 'HEAD',
         redirect: 'follow',
-        headers: {'User-Agent': 'Mozilla/5.0 (compatible; ShortcutResolver/1.0)'} 
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ShortcutResolver/1.0)' }
       });
 
       const finalUrl = redirectResponse.url;
 
       if (!finalUrl || !finalUrl.includes('icloud.com/shortcuts')) {
-        return res.status(400).json({ 
-            success: false, 
-            error: 'Final redirected URL is not a valid iCloud shortcut'
+        console.log(`RoutineHub redirect did not resolve to iCloud: ${finalUrl}`);
+        return res.status(400).json({
+          success: false,
+          error: 'Final redirected URL is not a valid iCloud shortcut'
         });
       }
       url = finalUrl;
       links.iCloudLink = url;
-      
+
     } catch (error) {
-      return res.status(500).json({ success: false, error: 'Failed to resolve RoutineHub redirect' });
+      console.log(`RoutineHub redirect failed: ${error.message}`);
+      return res.status(502).json({ success: false, error: 'Failed to resolve RoutineHub redirect' });
     }
   }
   else if (url.includes('icloud.com/shortcuts')) {
-      linkType = 'iCloud Link';
-      links.iCloudLink = originalUrl;
+    linkType = 'iCloud Link';
+    links.iCloudLink = originalUrl;
   }
 
   const match = url.match(/\/shortcuts\/([a-f0-9]{32})/i);
   if (!match) {
+    console.log(`Could not extract shortcut ID from URL: ${url}`);
     return res.status(400).json({ success: false, error: 'Invalid shortcut URL' });
   }
 
@@ -109,10 +118,17 @@ async function handler(req, res) {
   try {
     const response = await fetch(apiUrl);
     if (!response.ok) {
+      console.log(`iCloud API returned ${response.status} for shortcut ${id}`);
       return res.status(404).json({ success: false, error: 'Shortcut not found' });
     }
 
-    const data = await response.json();
+    let data;
+    try {
+      data = await response.json();
+    } catch (error) {
+      console.log(`iCloud API response parse failed: ${error.message}`);
+      return res.status(502).json({ success: false, error: 'Invalid response from iCloud API' });
+    }
 
     let record;
     if (data.records && data.records[id]) {
@@ -120,6 +136,7 @@ async function handler(req, res) {
     } else if (data.recordName && data.recordName.replace(/-/g, '').toLowerCase() === id) {
       record = data;
     } else {
+      console.log(`Record data missing for shortcut ${id}`);
       return res.status(404).json({ success: false, error: 'Record data missing' });
     }
 
@@ -137,16 +154,16 @@ async function handler(req, res) {
     const fileUrl = rawFileLink
       ? rawFileLink.replace(/\$\{f\}/g, `${encodeURIComponent(name || 'Shortcut')}.shortcut`)
       : null;
-    
+
     const plistSize = fields.shortcut?.value?.size;
     const plistMb = plistSize ? Number((plistSize / (1024 * 1024)).toFixed(2)) : null;
     const plistKb = plistSize ? Number((plistSize / 1024).toFixed(2)) : null;
     const rawPlistLink = fields.shortcut?.value?.downloadURL;
-    
+
     const plistUrl = rawPlistLink
       ? rawPlistLink.replace(/\$\{f\}/g, `${encodeURIComponent(name || 'Shortcut')}.plist`)
       : null;
-      
+
     const iconColor = fields.icon_color?.value;
     const iconGlyph = fields.icon_glyph?.value;
     const iconSize = fields.icon?.value?.size;
@@ -177,7 +194,7 @@ async function handler(req, res) {
           year: 'numeric',
           month: 'long',
           day: 'numeric'
-        }).replace(',',''),
+        }).replace(',', ''),
         iso8601: d.toISOString(),
         rfc2822: d.toUTCString(),
         timestamp: ts
@@ -211,7 +228,7 @@ async function handler(req, res) {
           downloadUrl: fileUrl
         },
         plistShortcutFile: {
-          size:{
+          size: {
             mb: plistMb,
             kb: plistKb,
             bit: plistSize
@@ -224,6 +241,9 @@ async function handler(req, res) {
     res.setHeader('Content-Type', 'application/json');
     return res.status(200).json(result);
   } catch (error) {
+    console.log(`Error: ${error.name}`);
+    console.log(`Message: ${error.message}`);
+    console.log(`Stack: ${error.stack?.split('\n')[1]?.trim()}`);
     return res.status(500).json({ success: false, error: 'Internal server error' });
   }
 }

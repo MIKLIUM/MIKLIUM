@@ -25,7 +25,6 @@ BLOCKED_MODULES = [
     "importlib", "code", "codeop",
     "webbrowser", "antigravity", "turtle",
     "gc", "resource", "atexit", "io",
-    # FIX: Low-level OS modules that bypass the "os" block via sys.modules
     "posix", "nt", "posixpath", "ntpath", "genericpath",
     "_io", "_posixsubprocess", "_signal",
     "pwd", "grp", "fcntl", "termios", "tty", "pty",
@@ -42,7 +41,6 @@ BLOCKED_DUNDERS = [
     "__code__", "__bases__", "__mro__",
 ]
 
-# FIX: Also block direct sys.modules access to retrieve pre-loaded dangerous modules
 BLOCKED_SYSMODULES_KEYS = {
     "posix", "nt", "_io", "_posixsubprocess", "_signal",
     "pwd", "grp", "fcntl", "posixpath", "ntpath", "genericpath",
@@ -64,15 +62,11 @@ LINE_RE = re.compile(r'(?<=line )\d+')
 WRAPPER = '''
 import sys, builtins
 
-# FIX: Purge ALL dangerous low-level modules from sys.modules before user code runs,
-# including posix, nt, _io, _signal and other C-level modules that wrap OS access.
 _BLOCKED_SYS_MODULES = {blocked_sysmodules}
 for _mk in list(sys.modules.keys()):
     if _mk in _BLOCKED_SYS_MODULES or _mk.split(".")[0] in {blocked_set}:
         del sys.modules[_mk]
 
-# FIX: Patch sys.modules.__getitem__ to prevent access to blocked modules
-# even if they get re-loaded by the interpreter internals.
 class _SafeModules(dict):
     def __getitem__(self, key):
         if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in {blocked_set}:
@@ -150,6 +144,7 @@ def clean_stderr(text):
 class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
+        print("GET request rejected")
         return self._json(405, {"success": False, "error": "Only POST method is supported"})
 
     def do_OPTIONS(self):
@@ -160,11 +155,13 @@ class handler(BaseHTTPRequestHandler):
     def do_POST(self):
         length = int(self.headers.get("Content-Length", 0))
         if not length:
+            print("Empty request body")
             return self._json(400, {"success": False, "error": "Empty body"})
 
         try:
             body = json.loads(self.rfile.read(length))
-        except json.JSONDecodeError:
+        except json.JSONDecodeError as e:
+            print(f"JSON parse failed: {e}")
             return self._json(400, {"success": False, "error": "Invalid JSON"})
 
         code = body.get("code", "")
@@ -172,12 +169,15 @@ class handler(BaseHTTPRequestHandler):
         timeout = min(max(0.5, body.get("timeout", DEFAULT_TIMEOUT)), MAX_TIMEOUT)
 
         if not code or not isinstance(code, str):
+            print("Missing or invalid code field")
             return self._json(400, {"success": False, "error": "Missing 'code'"})
 
         if len(code) > MAX_CODE_LENGTH:
+            print(f"Code too long: {len(code)} chars")
             return self._json(400, {"success": False, "error": "Code too long"})
 
         if not isinstance(stdin_list, list):
+            print("Invalid stdin type")
             return self._json(400, {"success": False, "error": "'stdin' must be an array"})
 
         stdin_data = "\n".join(str(item) for item in stdin_list)
@@ -185,6 +185,7 @@ class handler(BaseHTTPRequestHandler):
         blocked = check(code)
         if blocked:
             names = ", ".join(blocked)
+            print(f"Blocked modules detected: {names}")
             return self._json(403, {
                 "success": False,
                 "error": f"Blocked: {names} — not allowed in sandbox",
@@ -223,6 +224,7 @@ class handler(BaseHTTPRequestHandler):
                 error_msg = "Runtime error"
                 if stderr_clean:
                     error_msg += ": " + stderr_clean.strip()
+                print(f"Runtime error, exit code {result.returncode}")
                 return self._json(200, {
                     "success": False,
                     "error": error_msg,
@@ -239,6 +241,7 @@ class handler(BaseHTTPRequestHandler):
             })
         except subprocess.TimeoutExpired:
             ms = int(f"{(time.perf_counter() - start) * 1000:.2f}".split(".")[0])
+            print(f"Execution timed out after {timeout}s")
             return self._json(200, {
                 "success": False,
                 "error": f"Timed out after {timeout}s",
@@ -247,16 +250,17 @@ class handler(BaseHTTPRequestHandler):
                 "time_ms": ms,
             })
         except Exception as e:
-            return self._json(200, {
+            print(f"Execution error: {type(e).__name__}: {e}")
+            return self._json(500, {
                 "success": False,
-                "error": "Code execution error: " + str(e),
+                "error": "Internal server error",
             })
         finally:
             if tmp:
                 try:
                     os.unlink(tmp)
-                except:
-                    pass
+                except Exception as e:
+                    print(f"Temp file cleanup failed: {e}")
 
     def _json(self, status, data):
         body = json.dumps(data, ensure_ascii=False, default=str).encode()
