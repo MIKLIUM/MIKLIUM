@@ -5,6 +5,20 @@
       "*": false
     }
   },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "handle": "error"
+    },
+    {
+      "src": "/.*",
+      "status": 404,
+      "dest": "/api/404.js"
+    }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
