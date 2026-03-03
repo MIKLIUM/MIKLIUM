@@ -2,8 +2,10 @@
 ![](https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
 
 <div align= "center">
-  <a href="https://github.com/MIKLIUM/MIKLIUM/stargazers"><img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/MIKLIUM/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
-  <a href="https://discord.gg/6HUJTXh45t"><img alt="Discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
+  <a href="https://github.com/MIKLIUM/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
+  <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
+  <img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs">
+  <img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website">
 
   The GitHub Repository for the MIKLIUM software company.
 </div>
