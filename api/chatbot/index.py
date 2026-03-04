@@ -7,56 +7,37 @@ from urllib.parse import urlparse, parse_qs
 import os
 import sys
 
-# Ensure the 'personalities' folder can be found on Vercel/Local
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.append(current_dir)
 
 from personalities import miklium, personalityless, male, female
 
-# ---------------------------------------------------------------------------
-# Response stacking
-# ---------------------------------------------------------------------------
 DEFAULT_RESPONSE_STACKING = 4
 
+PERSONALITY_MAP = {
+    "miklium": (miklium, "RESPONSES", "FALLBACK"),
+    "personalityless": (personalityless, "RESPONSES", "FALLBACK"),
+    "male": (male, "RESPONSES", "FALLBACK"),
+    "female": (female, "RESPONSES", "FALLBACK"),
+}
+
+
 def get_response(user_input: str, response_stacking: int = 4, personality: str = "miklium") -> str:
-    """Return a chatbot reply for *user_input*.
-
-    response_stacking (0–100):
-        0  → return the reply for only the first matching pattern.
-        N  → collect up to N+1 matching patterns and join their replies.
-        The function always returns at least one response.
-
-    personality: "miklium", "personalityless", "male", "female", or "all".
-    """
-    # Clamp to valid range
     response_stacking = max(0, min(100, int(response_stacking)))
     personality = personality.lower()
 
-    # Determine response and fallback lists
-    current_responses = []
-    current_fallbacks = []
-
-    if personality == "miklium":
-        current_responses = miklium.RESPONSES
-        current_fallbacks = miklium.FALLBACK
-    elif personality == "personalityless":
-        current_responses = personalityless.RESPONSES
-        current_fallbacks = personalityless.FALLBACK
-    elif personality == "male":
-        current_responses = male.RESPONSES
-        current_fallbacks = male.FALLBACK
-    elif personality == "female":
-        current_responses = female.RESPONSES
-        current_fallbacks = female.FALLBACK
-    elif personality == "all":
-        # Mix everyone for maximum intelligence
-        current_responses = (miklium.RESPONSES + personalityless.RESPONSES + 
+    if personality == "all":
+        current_responses = (miklium.RESPONSES + personalityless.RESPONSES +
                              male.RESPONSES + female.RESPONSES)
-        current_fallbacks = (miklium.FALLBACK + personalityless.FALLBACK + 
+        current_fallbacks = (miklium.FALLBACK + personalityless.FALLBACK +
                              male.FALLBACK + female.FALLBACK)
+    elif personality in PERSONALITY_MAP:
+        mod = PERSONALITY_MAP[personality][0]
+        current_responses = mod.RESPONSES
+        current_fallbacks = mod.FALLBACK
     else:
-        # Fallback to miklium if personality is not recognized
+        print(f"Unknown personality requested: {personality}, falling back to miklium")
         current_responses = miklium.RESPONSES
         current_fallbacks = miklium.FALLBACK
 
@@ -66,14 +47,12 @@ def get_response(user_input: str, response_stacking: int = 4, personality: str =
     for pattern, options in current_responses:
         if re.search(pattern, text):
             matched_replies.append(random.choice(options))
-            # +1 because stacking=0 still gives 1 response
             if len(matched_replies) >= response_stacking + 1:
                 break
 
     if matched_replies:
         return " ".join(matched_replies)
 
-    # No pattern matched — use correct fallback
     return random.choice(current_fallbacks)
 
 
@@ -84,48 +63,69 @@ class handler(BaseHTTPRequestHandler):
         message = params.get('message', [None])[0]
 
         if not message:
-            self._send_json(400, {"error": "Missing 'message' query parameter"})
+            print("GET: missing message parameter")
+            self._send_json(400, {"success": False, "error": "Missing 'message' query parameter"})
             return
 
         stacking_raw = params.get('response_stacking', [str(DEFAULT_RESPONSE_STACKING)])[0]
         try:
             stacking = int(stacking_raw)
         except (ValueError, TypeError):
+            print(f"GET: invalid response_stacking value: {stacking_raw}")
             stacking = DEFAULT_RESPONSE_STACKING
 
         personality = params.get('personality', ["miklium"])[0]
 
-        response_text = get_response(message, stacking, personality)
-        self._send_json(200, {"response": response_text})
+        try:
+            response_text = get_response(message, stacking, personality)
+            self._send_json(200, {"success": True, "response": response_text})
+        except Exception as e:
+            print(f"GET: get_response failed: {type(e).__name__}: {e}")
+            self._send_json(500, {"success": False, "error": "Internal server error"})
 
     def do_POST(self):
         content_length = int(self.headers.get('Content-Length', 0))
         if not content_length:
-            self._send_json(400, {"error": "Missing body"})
+            print("POST: empty request body")
+            self._send_json(400, {"success": False, "error": "Missing body"})
             return
 
         try:
             body_bytes = self.rfile.read(content_length)
             body = json.loads(body_bytes)
-            message = body.get('message', '').strip()
-        except Exception:
-            self._send_json(400, {"error": "Invalid JSON"})
+        except json.JSONDecodeError as e:
+            print(f"POST: JSON parse failed: {e}")
+            self._send_json(400, {"success": False, "error": "Invalid JSON"})
+            return
+        except Exception as e:
+            print(f"POST: body read failed: {type(e).__name__}: {e}")
+            self._send_json(400, {"success": False, "error": "Invalid request body"})
             return
 
+        message = body.get('message', '')
+        if isinstance(message, str):
+            message = message.strip()
+
         if not message:
-            self._send_json(400, {"error": "Missing 'message' field"})
+            print("POST: missing message field")
+            self._send_json(400, {"success": False, "error": "Missing 'message' field"})
             return
 
         stacking = body.get('response_stacking', DEFAULT_RESPONSE_STACKING)
         try:
             stacking = int(stacking)
         except (ValueError, TypeError):
+            print(f"POST: invalid response_stacking value: {stacking}")
             stacking = DEFAULT_RESPONSE_STACKING
 
         personality = body.get('personality', "miklium")
 
-        response_text = get_response(message, stacking, personality)
-        self._send_json(200, {"response": response_text})
+        try:
+            response_text = get_response(message, stacking, personality)
+            self._send_json(200, {"success": True, "response": response_text})
+        except Exception as e:
+            print(f"POST: get_response failed: {type(e).__name__}: {e}")
+            self._send_json(500, {"success": False, "error": "Internal server error"})
 
     def do_OPTIONS(self):
         self.send_response(204)
@@ -133,11 +133,12 @@ class handler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def _send_json(self, status, data):
+        body = json.dumps(data, ensure_ascii=False).encode('utf-8')
         self.send_response(status)
         self.send_header('Content-Type', 'application/json')
         self._cors()
         self.end_headers()
-        self.wfile.write(json.dumps(data).encode('utf-8'))
+        self.wfile.write(body)
 
     def _cors(self):
         self.send_header('Access-Control-Allow-Origin', '*')
