@@ -1,0 +1,11 @@
+{
+  "name": "miklium-translate",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "node-fetch": "^2.6.7"
+  },
+  "engines": {
+    "node": "22.x"
+  }
+}

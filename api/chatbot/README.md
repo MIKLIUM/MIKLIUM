@@ -191,19 +191,20 @@ curl -X POST https://miklium.vercel.app/api/chatbot \
 **Response structure:**
 | Parameter | Value |
 | :--- | :--- |
+| `success` | `true` |
 | `response` | `String`, The chatbot's response text (may be multiple sentences if stacking > 0) |
 
-**Success response example (no stacking):**
+**Success response examples:**
 ```javascript
 {
-  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples."
+  "success": "true",
+  "response": "You can find our full API documentation at APIDOCS.html. It covers all endpoints and usage examples." // No stacking
 }
 ```
-
-**Success response example (stacking = 2, greeting + how-are-you combined):**
 ```javascript
 {
-  "response": "Hi! Great to see you here. Ask me anything about MIKLIUM! All systems green! I'm here and ready to assist."
+  "success": "true",
+  "response": "Hi! Great to see you here. Ask me anything about MIKLIUM! All systems green! I'm here and ready to assist." // Stacking = 2, greeting + how-are-you combined
 }
 ```
 
@@ -211,11 +212,13 @@ curl -X POST https://miklium.vercel.app/api/chatbot \
 
 | Parameter | Value |
 | :--- | :--- |
+| `success` | `false` |
 | `error` | `String`, Error message |
 
 **Error response example:**
 ```javascript
 {
+  "success": "false",
   "error": "Missing 'message' field"
 }
 ```

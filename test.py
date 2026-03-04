@@ -12,36 +12,49 @@ TESTS = [
     {
         "name": "Python Sandbox API",
         "endpoint": "/api/python-sandbox",
-        "payload": {"code": "print('MIKLIUM TEST SUCCESS')"},
+        "payload": {
+            "code": "print('Hello, MIKLIUM!')"
+        },
         "expected_key": "success",
         "expected_val": True
     },
     {
         "name": "Search API",
         "endpoint": "/api/search",
-        "payload": {"search": ["miklium"]},
+        "payload": {
+            "search": ["MIKLIUM"],
+            "maxSmallSnippets": 2,
+            "maxLargeSnippets": 1
+        },
         "expected_key": "success",
         "expected_val": True
     },
     {
         "name": "Shortcut Info API",
         "endpoint": "/api/shortcut-info",
-        "payload": {"url": "https://routinehub.co/shortcut/18431/"},
+        "payload": {
+            "url": "https://routinehub.co/shortcut/18431/"
+        },
         "expected_key": "success",
         "expected_val": True
     },
     {
         "name": "YouTube Transcript API",
         "endpoint": "/api/youtube-transcript",
-        "payload": {"url": "https://youtu.be/Qz8u00pX738"},
+        "payload": {
+            "url": "https://youtu.be/Qz8u00pX738"
+        },
         "expected_key": "success",
         "expected_val": True
     },
     {
         "name": "Chatbot API",
         "endpoint": "/api/chatbot",
-        "payload": {"message": "Hello"},
-        "expected_key": "response"
+        "payload": {
+            "message": "Hello"
+        },
+        "expected_key": "success",
+        "expected_val": True
     }
 ]
 
@@ -56,7 +69,6 @@ def run_tests():
             response = requests.post(url, json=test["payload"], timeout=15)
             data = response.json()
             
-            # Simple check logic
             status = False
             if "expected_val" in test:
                 status = data.get(test["expected_key"]) == test["expected_val"]

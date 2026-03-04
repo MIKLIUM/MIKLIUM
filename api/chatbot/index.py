@@ -64,8 +64,7 @@ class handler(BaseHTTPRequestHandler):
 
         if not message:
             print("GET: missing message parameter")
-            self._send_json(400, {"success": False, "error": "Missing 'message' query parameter"})
-            return
+            return self._send_json(400, {"success": False, "error": "Missing 'message' query parameter"})
 
         stacking_raw = params.get('response_stacking', [str(DEFAULT_RESPONSE_STACKING)])[0]
         try:
@@ -78,29 +77,26 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             response_text = get_response(message, stacking, personality)
-            self._send_json(200, {"success": True, "response": response_text})
+            return self._send_json(200, {"success": True, "response": response_text})
         except Exception as e:
             print(f"GET: get_response failed: {type(e).__name__}: {e}")
-            self._send_json(500, {"success": False, "error": "Internal server error"})
+            return self._send_json(500, {"success": False, "error": "Internal server error"})
 
     def do_POST(self):
         content_length = int(self.headers.get('Content-Length', 0))
         if not content_length:
             print("POST: empty request body")
-            self._send_json(400, {"success": False, "error": "Missing body"})
-            return
+            return self._send_json(400, {"success": False, "error": "Missing body"})
 
         try:
             body_bytes = self.rfile.read(content_length)
             body = json.loads(body_bytes)
         except json.JSONDecodeError as e:
             print(f"POST: JSON parse failed: {e}")
-            self._send_json(400, {"success": False, "error": "Invalid JSON"})
-            return
+            return self._send_json(400, {"success": False, "error": "Invalid JSON"})
         except Exception as e:
             print(f"POST: body read failed: {type(e).__name__}: {e}")
-            self._send_json(400, {"success": False, "error": "Invalid request body"})
-            return
+            return self._send_json(400, {"success": False, "error": "Invalid request body"})
 
         message = body.get('message', '')
         if isinstance(message, str):
@@ -108,8 +104,7 @@ class handler(BaseHTTPRequestHandler):
 
         if not message:
             print("POST: missing message field")
-            self._send_json(400, {"success": False, "error": "Missing 'message' field"})
-            return
+            return self._send_json(400, {"success": False, "error": "Missing 'message' field"})
 
         stacking = body.get('response_stacking', DEFAULT_RESPONSE_STACKING)
         try:
@@ -122,10 +117,10 @@ class handler(BaseHTTPRequestHandler):
 
         try:
             response_text = get_response(message, stacking, personality)
-            self._send_json(200, {"success": True, "response": response_text})
+            return self._send_json(200, {"success": True, "response": response_text})
         except Exception as e:
             print(f"POST: get_response failed: {type(e).__name__}: {e}")
-            self._send_json(500, {"success": False, "error": "Internal server error"})
+            return self._send_json(500, {"success": False, "error": "Internal server error"})
 
     def do_OPTIONS(self):
         self.send_response(204)
