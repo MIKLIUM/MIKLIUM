@@ -19,9 +19,8 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 * **[Contribution Guidelines](CONTRIBUTING.md)**
 
 ## Currently Available APIs:
-> <!-- API_COUNT_START -->5<!-- API_COUNT_END --> APIs are available now
+> **<!-- API_COUNT_START -->5<!-- API_COUNT_END --> APIs are available now:**
 
-* **APIs:**
 <!-- API_LIST_START -->
   - [Chatbot](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/chatbot/README.md)
   - [Python Sandbox](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/python-sandbox/README.md)
@@ -33,7 +32,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
 ## Featured Projects Powered with MIKLIUM 
-> <!-- README_FEATURED_COUNT_START -->3<!-- README_FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured
+> **<!-- README_FEATURED_COUNT_START -->3<!-- README_FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured:**
 
 <!-- FEATURED_PROJECTS_START -->
 | Name | Description | Creator |
