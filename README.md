@@ -19,13 +19,16 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 * **[Contribution Guidelines](CONTRIBUTING.md)**
 
 ## Currently Available APIs:
+> <!-- API_COUNT_START -->5<!-- API_COUNT_END --> APIs are available now
 
 * **APIs:**
+<!-- API_LIST_START -->
   - [Chatbot](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/chatbot/README.md)
   - [Python Sandbox](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/python-sandbox/README.md)
   - [Search](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/search/README.md)
   - [Shortcut Info](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/shortcut-info/README.md)
   - [YouTube Transcript](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/youtube-transcript/README.md)
+<!-- API_LIST_END -->
 
 [API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
 
