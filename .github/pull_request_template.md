@@ -31,12 +31,12 @@ Closes issues such as: #
 **All pull requests MUST meet the following requirements:**
 
 - [x] I have read [`Contributing rules`](https://github.com/MIKLIUM/MIKLIUM/blob/main/CONTRIBUTING.md)
+- [x] I didn’t change `README.md` and `APIDOCS.md` in the root directory, because I know they are will be updated automatically using a workflow.
 - [ ] I have run `python3 test.py` in the root directory
 - [ ] All tests pass successfully
 - [ ] I thoroughly tested my changes locally
 - [ ] Existing functionality is not broken
 - [ ] If I added a new API, I added a corresponding test case to the `TESTS` list in `test.py`
-- [ ] I updated `README.md` and/or `APIDOCS.md` if required
 - [ ] My code follows the existing project structure and naming conventions
 
 Pull requests that do not meet these requirements will not be reviewed.

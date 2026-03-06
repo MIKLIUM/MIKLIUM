@@ -28,6 +28,6 @@ To maintain the quality and reliability of our APIs, every contribution **MUST**
 
 - Keep code clean, well-commented, and efficient.
 - Follow the existing project structure and naming conventions.
-- Ensure all new features are documented in `README.md` and/or `APIDOCS.md`.
+- Don't change `README.md` and `APIDOCS.md` in the root directory: they are updates automatically using a workflows.
 
 Thank you for helping us make MIKLIUM better for everyone! As a token of our gratitude, we will publicly thank you and display your username in our release notes and in a special thanks section for helping with the development. Your contributions make a real difference!
