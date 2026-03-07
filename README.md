@@ -7,7 +7,7 @@
   <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
   <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
 
-  The GitHub Repository for the MIKLIUM software company.
+  The Official GitHub Repository of the MIKLIUM Team.
 </div>
 
 ## Free APIs & Software for Everyone
