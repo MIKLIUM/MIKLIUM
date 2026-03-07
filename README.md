@@ -1,11 +1,11 @@
-![](https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Dark.png#gh-light-mode-only)
-![](https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
+![](https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Dark.png#gh-light-mode-only)
+![](https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
 
 <div align= "center">
-  <a href="https://github.com/MIKLIUM/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
+  <a href="https://github.com/MIKLIUM-Team/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM-Team/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
   <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
-  <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
-  <a href="https://miklium.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
+  <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
+  <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
 
   The GitHub Repository for the MIKLIUM software company.
 </div>
@@ -14,7 +14,7 @@
 
 At MIKLIUM, we empower developers and users with high-quality, free APIs and software tools to help you build, innovate, and explore without limits.
 
-* **[Our Website](https://miklium.github.io/MIKLIUM/)**
+* **[Our Website](https://miklium-team.github.io/MIKLIUM/)**
 * **[Our Discord server](https://discord.gg/d3txS4q8)**
 * **[Contribution Guidelines](CONTRIBUTING.md)**
 
