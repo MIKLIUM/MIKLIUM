@@ -25,6 +25,27 @@ jobs:
             const org = process.env.ORGANIZATION;
             const projectNumber = parseInt(process.env.PROJECT_NUMBER);
             const issueNodeId = context.payload.issue.node_id;
+            const labels = context.payload.issue.labels.map(l => l.name);
+
+            const priorityMap = {
+              'asap': 'Urgent',
+              'bug': 'Medium',
+              'help wanted': 'High',
+              'enhancement': 'Medium',
+              'project submission': 'Low',
+              'question': 'Low',
+              'documentation': 'Low'
+            };
+
+            let priority = 'No Priority';
+            const precedence = ['Urgent', 'High', 'Medium', 'Low', 'No Priority'];
+
+            for (const label of labels) {
+              const mapped = priorityMap[label.toLowerCase()];
+              if (mapped && precedence.indexOf(mapped) < precedence.indexOf(priority)) {
+                priority = mapped;
+              }
+            }
 
             const projectQuery = await github.graphql(`
               query($org: String!, $number: Int!) {
@@ -57,9 +78,9 @@ jobs:
               return;
             }
 
-            const noPriorityOption = priorityField.options.find(o => o.name === 'No Priority');
-            if (!noPriorityOption) {
-              core.setFailed('No Priority option not found');
+            const priorityOption = priorityField.options.find(o => o.name === priority);
+            if (!priorityOption) {
+              core.setFailed(`Priority option "${priority}" not found`);
               return;
             }
 
@@ -92,7 +113,7 @@ jobs:
               projectId,
               itemId,
               fieldId: priorityField.id,
-              optionId: noPriorityOption.id
+              optionId: priorityOption.id
             });
 
   process-question:
