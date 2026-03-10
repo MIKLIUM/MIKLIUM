@@ -6,8 +6,6 @@
   <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
   <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
   <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
-
-  The Official GitHub Repository of the MIKLIUM Team.
 </div>
 
 ## Free APIs & Software for Everyone
