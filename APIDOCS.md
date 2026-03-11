@@ -1,13 +1,11 @@
 # MIKLIUM API Documentation
-
-> 5 APIs are available now
-
 # Navigation
 ### Information
  - [MIKLIUM API Documentation](#miklium-api-documentation)
  - [Navigation](#navigation)
  - [About MIKLIUM APIs](#about-miklium-apis)
 ### APIs Documentations
+> **5 APIs are avaiable now:**
  - [Chatbot API Documentation](#chatbot-api-documentation)
  - [Python Sandbox API Documentation](#python-sandbox-api-documentation)
  - [Search API Documentation](#search-api-documentation)
