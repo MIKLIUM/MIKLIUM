@@ -39,6 +39,8 @@ BLOCKED_BUILTINS = [
 BLOCKED_DUNDERS = [
     "__subclasses__", "__globals__", "__builtins__",
     "__code__", "__bases__", "__mro__",
+    "__dict__",
+    "__class__",
 ]
 
 BLOCKED_SYSMODULES_KEYS = {
@@ -62,48 +64,96 @@ LINE_RE = re.compile(r'(?<=line )\d+')
 WRAPPER = '''
 import sys, builtins
 
-_BLOCKED_SYS_MODULES = {blocked_sysmodules}
-for _mk in list(sys.modules.keys()):
-    if _mk in _BLOCKED_SYS_MODULES or _mk.split(".")[0] in {blocked_set}:
-        del sys.modules[_mk]
-
-class _SafeModules(dict):
-    def __getitem__(self, key):
-        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in {blocked_set}:
-            raise KeyError(f"Access to '{{key}}' is blocked")
-        return super().__getitem__(key)
-    def get(self, key, default=None):
-        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in {blocked_set}:
-            return default
-        return super().get(key, default)
-
-sys.modules = _SafeModules(sys.modules)
-
 try:
     import resource
     _mem = {max_memory} * 1024 * 1024
-    try: resource.setrlimit(resource.RLIMIT_AS, (_mem, _mem))
-    except: pass
-    try: resource.setrlimit(resource.RLIMIT_FSIZE, (0, 0))
-    except: pass
-    try: resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
-    except: pass
-except:
-    pass
+    try:
+        resource.setrlimit(resource.RLIMIT_AS, (_mem, _mem))
+    except Exception:
+        pass
+    try:
+        resource.setrlimit(resource.RLIMIT_FSIZE, (0, 0))
+    except Exception:
+        pass
+    try:
+        resource.setrlimit(resource.RLIMIT_NPROC, (0, 0))
+    except Exception:
+        pass
+except Exception:
+        pass
 
-sys.setrecursionlimit({max_recursion})
+_BLOCKED_SYS_MODULES = {blocked_sysmodules}
 _blocked = set({blocked_set})
+_blocked_attrs = frozenset({blocked_dunders})
+
+for _mk in list(sys.modules.keys()):
+    if _mk in _BLOCKED_SYS_MODULES or _mk.split(".")[0] in _blocked:
+        del sys.modules[_mk]
+
+class _SafeModules(dict):
+    def _check(self, key):
+        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in _blocked:
+            raise KeyError(f"Access to '{{key}}' is blocked")
+
+    def __getitem__(self, key):
+        self._check(key)
+        return super().__getitem__(key)
+
+    def __setitem__(self, key, value):
+        self._check(key)
+        super().__setitem__(key, value)
+
+    def __contains__(self, key):
+        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in _blocked:
+            return False
+        return super().__contains__(key)
+
+    def get(self, key, default=None):
+        if key in _BLOCKED_SYS_MODULES or key.split(".")[0] in _blocked:
+            return default
+        return super().get(key, default)
+
+    def pop(self, key, *args):
+        self._check(key)
+        return super().pop(key, *args)
+
+sys.modules = _SafeModules(sys.modules)
+sys.setrecursionlimit({max_recursion})
+
 _orig = __import__
 def _si(n, *a, **k):
     if n.split(".")[0] in _blocked or n in _BLOCKED_SYS_MODULES:
         raise ImportError(f"'{{n}}' is blocked")
     return _orig(n, *a, **k)
 builtins.__import__ = _si
+
 builtins.open = None
 builtins.exec = None
 builtins.eval = None
 builtins.compile = None
 builtins.breakpoint = None
+
+_orig_getattr = getattr
+
+def _safe_getattr(obj, name, *args):
+    if isinstance(name, str) and name in _blocked_attrs:
+        raise AttributeError(f"Access to '{{name}}' is blocked")
+    return _orig_getattr(obj, name, *args)
+
+def _safe_setattr(obj, name, value):
+    if isinstance(name, str) and name in _blocked_attrs:
+        raise AttributeError(f"Setting '{{name}}' is blocked")
+    object.__setattr__(obj, name, value)
+
+def _safe_delattr(obj, name):
+    if isinstance(name, str) and name in _blocked_attrs:
+        raise AttributeError(f"Deleting '{{name}}' is blocked")
+    object.__delattr__(obj, name)
+
+builtins.getattr = _safe_getattr
+builtins.setattr = _safe_setattr
+builtins.delattr = _safe_delattr
+builtins.vars = None
 
 {code}
 '''
@@ -111,6 +161,7 @@ builtins.breakpoint = None
 WRAPPER_PREFIX_LINES = WRAPPER.split("{code}")[0].format(
     blocked_set=repr(set(BLOCKED_MODULES)),
     blocked_sysmodules=repr(BLOCKED_SYSMODULES_KEYS),
+    blocked_dunders=repr(set(BLOCKED_DUNDERS)),
     max_memory=MAX_MEMORY_MB,
     max_recursion=MAX_RECURSION,
 ).count("\n")
@@ -195,6 +246,7 @@ class handler(BaseHTTPRequestHandler):
             code=code,
             blocked_set=repr(set(BLOCKED_MODULES)),
             blocked_sysmodules=repr(BLOCKED_SYSMODULES_KEYS),
+            blocked_dunders=repr(set(BLOCKED_DUNDERS)),
             max_memory=MAX_MEMORY_MB,
             max_recursion=MAX_RECURSION,
         )
@@ -225,7 +277,7 @@ class handler(BaseHTTPRequestHandler):
                 if stderr_clean:
                     error_msg += ": " + stderr_clean.strip()
                 print(f"Runtime error, exit code {result.returncode}")
-                return self._json(200, {
+                return self._json(400, {
                     "success": False,
                     "error": error_msg,
                     "stdout": stdout,
@@ -242,7 +294,7 @@ class handler(BaseHTTPRequestHandler):
         except subprocess.TimeoutExpired:
             ms = int(f"{(time.perf_counter() - start) * 1000:.2f}".split(".")[0])
             print(f"Execution timed out after {timeout}s")
-            return self._json(200, {
+            return self._json(408, {
                 "success": False,
                 "error": f"Timed out after {timeout}s",
                 "stdout": "",
