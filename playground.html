@@ -795,14 +795,8 @@
         <div class="section">
           <div class="section-title"><i class="fas fa-plug"></i> Endpoint</div>
           <div class="custom-select-wrapper" id="apiSelectWrapper">
-            <div class="custom-select-trigger" id="apiSelectTrigger">Chatbot API</div>
-            <div class="custom-select-dropdown" id="apiSelectDropdown">
-              <div class="custom-select-option selected" data-value="chatbot">Chatbot API</div>
-              <div class="custom-select-option" data-value="python-sandbox">Python Sandbox API</div>
-              <div class="custom-select-option" data-value="search">Search API</div>
-              <div class="custom-select-option" data-value="shortcut-info">Shortcut Info API</div>
-              <div class="custom-select-option" data-value="youtube-transcript">YouTube Transcript API</div>
-            </div>
+            <div class="custom-select-trigger" id="apiSelectTrigger">Loading...</div>
+            <div class="custom-select-dropdown" id="apiSelectDropdown"></div>
           </div>
           <div class="endpoint-row">
             <span class="method-badge post" id="methodBadge">POST</span>
@@ -868,64 +862,21 @@
   </div>
 
   <script>
-    var API_CONFIGS = {
-      'chatbot': {
-        endpoint: 'https://miklium.vercel.app/api/chatbot',
-        path: '/api/chatbot',
-        method: 'POST',
-        docsAnchor: 'chatbot-api-documentation',
-        inputs: [
-          { id: 'message', label: 'Message', type: 'text', placeholder: 'Hello, how are you?', required: true },
-          { id: 'personality', label: 'Personality', type: 'select', options: ['miklium', 'personalityless', 'male', 'female', 'all'], default: 'miklium' },
-          { id: 'response_stacking', label: 'Response Stacking', type: 'number', min: 0, max: 100, default: 4 }
-        ]
-      },
-      'python-sandbox': {
-        endpoint: 'https://miklium.vercel.app/api/python-sandbox',
-        path: '/api/python-sandbox',
-        method: 'POST',
-        docsAnchor: 'python-sandbox-api-documentation',
-        inputs: [
-          { id: 'code', label: 'Python Code', type: 'textarea', placeholder: "print('Hello MIKLIUM!')", required: true },
-          { id: 'stdin', label: 'Stdin (Comma separated)', type: 'text', placeholder: 'input1, input2' },
-          { id: 'timeout', label: 'Timeout (Seconds)', type: 'number', min: 0.5, max: 40, default: 20 }
-        ]
-      },
-      'search': {
-        endpoint: 'https://miklium.vercel.app/api/search',
-        path: '/api/search',
-        method: 'POST',
-        docsAnchor: 'search-api-documentation',
-        inputs: [
-          { id: 'search', label: 'Queries (Comma separated, max 3)', type: 'text', placeholder: 'iPhone 17, Apple Vision', required: true },
-          { id: 'maxSmallSnippets', label: 'Max Small Snippets', type: 'number', default: 5 },
-          { id: 'maxLargeSnippets', label: 'Max Large Snippets', type: 'number', default: 2 },
-          { id: 'maxLargeSnippetSymbols', label: 'Max Characters per Snippet', type: 'number', default: 4500 }
-        ]
-      },
-      'shortcut-info': {
-        endpoint: 'https://miklium.vercel.app/api/shortcut-info',
-        path: '/api/shortcut-info',
-        method: 'POST',
-        docsAnchor: 'shortcut-info-api-documentation',
-        inputs: [
-          { id: 'url', label: 'Shortcuts Link', type: 'text', placeholder: 'https://www.icloud.com/shortcuts/...', required: true }
-        ]
-      },
-      'youtube-transcript': {
-        endpoint: 'https://miklium.vercel.app/api/youtube-transcript',
-        path: '/api/youtube-transcript',
-        method: 'POST',
-        docsAnchor: 'youtube-transcript-api-documentation',
-        inputs: [
-          { id: 'url', label: 'YouTube URL', type: 'text', placeholder: 'https://youtu.be/...', required: true },
-          { id: 'removeTimestamps', label: 'Remove Timestamps', type: 'checkbox', default: false },
-          { id: 'includeInfo', label: 'Include Video Info', type: 'checkbox', default: false }
-        ]
-      }
-    };
+    var API_PROJECTS = [
+      'chatbot',
+      'python-sandbox',
+      'search',
+      'shortcut-info',
+      'youtube-transcript'
+    ];
 
-    var currentApi = 'chatbot';
+    var RAW_BASE = 'https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/main/api/';
+
+    var API_CONFIGS = {};
+    var currentApi = '';
+    var lastResponseText = '';
+    var toastTimeout = null;
+
     var dynamicInputs = document.getElementById('dynamicInputs');
     var runBtn = document.getElementById('runBtn');
     var outputPre = document.getElementById('outputPre');
@@ -946,13 +897,169 @@
     var responseSizeValue = document.getElementById('responseSizeValue');
     var toast = document.getElementById('toast');
     var toastText = document.getElementById('toastText');
-    var lastResponseText = '';
-    var toastTimeout = null;
-
     var selectWrapper = document.getElementById('apiSelectWrapper');
     var selectTrigger = document.getElementById('apiSelectTrigger');
     var selectDropdown = document.getElementById('apiSelectDropdown');
-    var selectOptions = selectDropdown.querySelectorAll('.custom-select-option');
+
+    function parseTOML(text) {
+      var result = {};
+      var currentSection = null;
+      var currentArraySection = null;
+      var lines = text.split('\n');
+
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i].trim();
+        if (!line || line.charAt(0) === '#') continue;
+
+        var arrayMatch = line.match(/^\[\[(.+)\]\]$/);
+        if (arrayMatch) {
+          currentArraySection = arrayMatch[1].trim();
+          var parts = currentArraySection.split('.');
+          var obj = result;
+          for (var p = 0; p < parts.length - 1; p++) {
+            if (!obj[parts[p]]) obj[parts[p]] = {};
+            obj = obj[parts[p]];
+          }
+          var lastKey = parts[parts.length - 1];
+          if (!obj[lastKey]) obj[lastKey] = [];
+          obj[lastKey].push({});
+          currentSection = currentArraySection;
+          continue;
+        }
+
+        var sectionMatch = line.match(/^\[(.+)\]$/);
+        if (sectionMatch) {
+          currentSection = sectionMatch[1].trim();
+          currentArraySection = null;
+          var parts = currentSection.split('.');
+          var obj = result;
+          for (var p = 0; p < parts.length; p++) {
+            if (!obj[parts[p]]) obj[parts[p]] = {};
+            obj = obj[parts[p]];
+          }
+          continue;
+        }
+
+        var kvMatch = line.match(/^(\w+)\s*=\s*(.+)$/);
+        if (kvMatch) {
+          var key = kvMatch[1];
+          var value = parseTOMLValue(kvMatch[2].trim());
+
+          if (currentArraySection) {
+            var parts = currentArraySection.split('.');
+            var obj = result;
+            for (var p = 0; p < parts.length; p++) {
+              obj = obj[parts[p]];
+            }
+            obj[obj.length - 1][key] = value;
+          } else if (currentSection) {
+            var parts = currentSection.split('.');
+            var obj = result;
+            for (var p = 0; p < parts.length; p++) {
+              obj = obj[parts[p]];
+            }
+            obj[key] = value;
+          } else {
+            result[key] = value;
+          }
+        }
+      }
+
+      return result;
+    }
+
+    function parseTOMLValue(val) {
+      if (val === 'true') return true;
+      if (val === 'false') return false;
+      if (/^-?\d+\.\d+$/.test(val)) return parseFloat(val);
+      if (/^-?\d+$/.test(val)) return parseInt(val, 10);
+      if (val.charAt(0) === '"' && val.charAt(val.length - 1) === '"') return val.slice(1, -1);
+      if (val.charAt(0) === '[' && val.charAt(val.length - 1) === ']') {
+        var inner = val.slice(1, -1).trim();
+        if (!inner) return [];
+        return inner.split(',').map(function(item) { return parseTOMLValue(item.trim()); });
+      }
+      return val;
+    }
+
+    async function loadAllConfigs() {
+      var results = await Promise.allSettled(
+        API_PROJECTS.map(function(name) {
+          return fetch(RAW_BASE + name + '/config.toml')
+            .then(function(r) {
+              if (!r.ok) throw new Error(r.status);
+              return r.text();
+            })
+            .then(function(text) {
+              return { name: name, text: text };
+            });
+        })
+      );
+
+      results.forEach(function(r) {
+        if (r.status !== 'fulfilled') return;
+        var parsed = parseTOML(r.value.text);
+        if (!parsed.playground) return;
+
+        var pg = parsed.playground;
+        API_CONFIGS[r.value.name] = {
+          name: pg.name || r.value.name,
+          endpoint: pg.endpoint,
+          path: pg.path,
+          method: pg.method || 'POST',
+          docsAnchor: pg.docs_anchor || '',
+          inputs: (pg.inputs || []).map(function(inp) {
+            var field = { id: inp.id, label: inp.label, type: inp.type };
+            if (inp.placeholder !== undefined) field.placeholder = inp.placeholder;
+            if (inp.required !== undefined) field.required = inp.required;
+            if (inp.options !== undefined) field.options = inp.options;
+            if (inp['default'] !== undefined) field['default'] = inp['default'];
+            if (inp.min !== undefined) field.min = inp.min;
+            if (inp.max !== undefined) field.max = inp.max;
+            return field;
+          })
+        };
+      });
+
+      populateApiDropdown();
+    }
+
+    function populateApiDropdown() {
+      selectDropdown.innerHTML = '';
+      var keys = Object.keys(API_CONFIGS);
+
+      if (keys.length === 0) {
+        selectTrigger.textContent = 'No APIs found';
+        return;
+      }
+
+      keys.forEach(function(key, index) {
+        var config = API_CONFIGS[key];
+        var opt = document.createElement('div');
+        opt.className = 'custom-select-option';
+        if (index === 0) opt.classList.add('selected');
+        opt.setAttribute('data-value', key);
+        opt.textContent = config.name;
+
+        opt.addEventListener('click', function(e) {
+          e.stopPropagation();
+          selectDropdown.querySelectorAll('.custom-select-option').forEach(function(o) {
+            o.classList.remove('selected');
+          });
+          opt.classList.add('selected');
+          selectTrigger.textContent = opt.textContent;
+          currentApi = key;
+          selectWrapper.classList.remove('open');
+          updateInputs();
+        });
+
+        selectDropdown.appendChild(opt);
+      });
+
+      currentApi = keys[0];
+      selectTrigger.textContent = API_CONFIGS[keys[0]].name;
+      updateInputs();
+    }
 
     function calcDropDirection(wrapper) {
       var rect = wrapper.getBoundingClientRect();
@@ -970,19 +1077,14 @@
       if (!panel) return;
       var dropdown = wrapper.querySelector('.custom-select-dropdown');
       if (!dropdown) return;
-
       requestAnimationFrame(function() {
         var dropdownRect = dropdown.getBoundingClientRect();
         var panelRect = panel.getBoundingClientRect();
-
         if (dropdownRect.bottom > panelRect.bottom) {
-          var overflow = dropdownRect.bottom - panelRect.bottom + 12;
-          panel.scrollTop += overflow;
+          panel.scrollTop += dropdownRect.bottom - panelRect.bottom + 12;
         }
-
         if (dropdownRect.top < panelRect.top) {
-          var overflow = panelRect.top - dropdownRect.top + 12;
-          panel.scrollTop -= overflow;
+          panel.scrollTop -= panelRect.top - dropdownRect.top + 12;
         }
       });
     }
@@ -996,25 +1098,11 @@
       }
     });
 
-    selectOptions.forEach(function(opt) {
-      opt.addEventListener('click', function(e) {
-        e.stopPropagation();
-        selectOptions.forEach(function(o) { o.classList.remove('selected'); });
-        opt.classList.add('selected');
-        selectTrigger.textContent = opt.textContent;
-        currentApi = opt.getAttribute('data-value');
-        selectWrapper.classList.remove('open');
-        updateInputs();
-      });
-    });
-
     function showToast(message) {
       toastText.textContent = message;
       toast.classList.add('visible');
       if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(function() {
-        toast.classList.remove('visible');
-      }, 2000);
+      toastTimeout = setTimeout(function() { toast.classList.remove('visible'); }, 2000);
     }
 
     function formatBytes(bytes) {
@@ -1034,25 +1122,35 @@
       return map[code] || '';
     }
 
+    function isArrayField(fieldId) {
+      var config = API_CONFIGS[currentApi];
+      if (!config) return false;
+      for (var i = 0; i < config.inputs.length; i++) {
+        var input = config.inputs[i];
+        if (input.id === fieldId && input.type === 'text') {
+          if ((input.placeholder && input.placeholder.toLowerCase().indexOf('comma') !== -1) ||
+              (input.label && input.label.toLowerCase().indexOf('comma') !== -1)) return true;
+        }
+      }
+      return false;
+    }
+
     function buildRequestBody() {
       var config = API_CONFIGS[currentApi];
       var data = {};
-
       config.inputs.forEach(function(input) {
         var el = document.getElementById(input.id);
         if (!el) return;
-
         if (input.type === 'checkbox') {
           data[input.id] = el.checked;
         } else if (input.type === 'number') {
           if (el.value !== '') data[input.id] = parseFloat(el.value);
-        } else if (input.id === 'search' || input.id === 'stdin') {
+        } else if (isArrayField(input.id)) {
           if (el.value) data[input.id] = el.value.split(',').map(function(s) { return s.trim(); }).filter(function(s) { return s; });
         } else {
           if (el.value) data[input.id] = el.value;
         }
       });
-
       return data;
     }
 
@@ -1070,7 +1168,7 @@
 
       var trigger = document.createElement('div');
       trigger.className = 'custom-select-trigger';
-      var defaultVal = input.default || input.options[0];
+      var defaultVal = input['default'] || input.options[0];
       trigger.textContent = defaultVal.charAt(0).toUpperCase() + defaultVal.slice(1);
 
       var dropdown = document.createElement('div');
@@ -1115,7 +1213,6 @@
       wrapper.appendChild(trigger);
       wrapper.appendChild(dropdown);
       wrapper.appendChild(hiddenInput);
-
       return wrapper;
     }
 
@@ -1137,16 +1234,13 @@
         if (input.type === 'checkbox') {
           var container = document.createElement('label');
           container.className = 'checkbox-row';
-
           var el = document.createElement('input');
           el.type = 'checkbox';
           el.id = input.id;
-          el.checked = input.default || false;
-
+          el.checked = input['default'] || false;
           var box = document.createElement('span');
           box.className = 'custom-checkbox';
           box.innerHTML = '<i class="fas fa-check"></i>';
-
           container.appendChild(el);
           container.appendChild(box);
           container.appendChild(document.createTextNode(input.label));
@@ -1177,7 +1271,7 @@
             el.placeholder = input.placeholder || '';
             if (input.min !== undefined) el.min = input.min;
             if (input.max !== undefined) el.max = input.max;
-            if (input.default !== undefined) el.value = input.default;
+            if (input['default'] !== undefined) el.value = input['default'];
             if (input.required) el.required = true;
             field.appendChild(el);
           }
@@ -1197,11 +1291,9 @@
       newCode.id = 'outputCode';
       newCode.className = 'language-json';
       newCode.textContent = text;
-
       var oldCode = document.getElementById('outputCode');
       oldCode.parentNode.replaceChild(newCode, oldCode);
       outputCode = newCode;
-
       hljs.highlightElement(newCode);
     }
 
@@ -1251,10 +1343,8 @@
 
         var endTime = performance.now();
         var duration = (endTime - startTime).toFixed(0);
-
         var resultText = await response.text();
         lastResponseText = resultText;
-
         var sizeBytes = new Blob([resultText]).size;
 
         try {
@@ -1270,10 +1360,8 @@
 
         responseTime.style.display = 'flex';
         responseTimeValue.textContent = duration + 'ms';
-
         responseSize.style.display = 'flex';
         responseSizeValue.textContent = formatBytes(sizeBytes);
-
         copyResponseBtn.style.display = 'inline-flex';
 
         if (response.ok) {
@@ -1319,7 +1407,7 @@
 
     runBtn.addEventListener('click', runAPI);
 
-    updateInputs();
+    loadAllConfigs();
 
     document.addEventListener("DOMContentLoaded", function () {
       var page = document.documentElement.getAttribute("data-page");
