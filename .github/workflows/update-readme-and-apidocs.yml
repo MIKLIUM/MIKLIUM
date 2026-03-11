@@ -59,10 +59,9 @@ jobs:
 
           api_count = len(docs)
 
-          md = '# MIKLIUM API Documentation\n\n'
-          md += '> ' + str(api_count) + ' APIs are available now\n\n'
+          md = '# MIKLIUM API Documentation\n'
           md += '# Navigation\n### Information\n - [MIKLIUM API Documentation](#miklium-api-documentation)\n - [Navigation](#navigation)\n - [About MIKLIUM APIs](#about-miklium-apis)\n### APIs Documentations\n'
-
+          md += '> **' + str(api_count) + ' APIs are avaiable now:**\n'
           anchor_counts = {}
 
           for m2 in re.finditer(r'^#+\s+(.+)$', md, re.MULTILINE):

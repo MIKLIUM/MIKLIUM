@@ -8,6 +8,8 @@
 - Why is this change necessary?
 - What problem does it solve?
 
+> This pull request...
+
 ## Type of Change
 
 **Select the appropriate option(s):**
@@ -20,35 +22,43 @@
 - [ ] Performance improvement
 - [ ] Other (describe below)
 
+> Other: ...
+
 ## Related Issue
 
 **If this pull request addresses an issue, reference it here:**
 
-Closes issues such as: #
+> Closes issues such as: #...
 
 ## Mandatory Requirements
 
-**All pull requests MUST meet the following requirements:**
+### I Followed the Contributing Guidelines:
+
+**Checklist:**
 
 - [x] I have read [`Contributing rules`](https://github.com/MIKLIUM/MIKLIUM/blob/main/CONTRIBUTING.md)
 - [x] I didn’t change `README.md` and `APIDOCS.md` in the root directory, because I know they are will be updated automatically using a workflow.
-- [ ] I have run `python3 test.py` in the root directory
-- [ ] All tests pass successfully
-- [ ] I thoroughly tested my changes locally
-- [ ] Existing functionality is not broken
-- [ ] If I added a new API, I added a corresponding test case to the `TESTS` list in `test.py`
-- [ ] My code follows the existing project structure and naming conventions
+- [x] Existing functionality is not broken.
+- [x] If I added a new API, I added a corresponding test case to the `TESTS` list in `test.py` and `config.toml` for MIKLIUM API playground configuration.
+- [ ] My code follows the existing project structure and naming conventions.
+- [ ] I have run `python3 test.py` in the root directory.
+- [ ] All tests pass successfully.
+- [ ] I thoroughly tested my changes locally.
 
-Pull requests that do not meet these requirements will not be reviewed.
+_Pull requests that do not meet these requirements will not be reviewed._
 
 ## Testing Details
 
 **Describe how you tested your changes:**
 
-- Environment:
-- Test scenarios:
-- Edge cases considered:
+> Enviroment: ...
+
+> Test scenarios: ...
+
+> Edge cases considered: ...
 
 ## Additional Notes
 
 Provide any additional context or information that reviewers should know.
+
+> ...

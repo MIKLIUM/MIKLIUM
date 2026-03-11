@@ -1,5 +1,5 @@
 ## Featured Projects Powered with MIKLIUM
-> <!-- FEATURED_COUNT_START -->3<!-- FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured
+> **<!-- FEATURED_COUNT_START -->3<!-- FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured**
 
 **[Submit your amazing project](https://github.com/MIKLIUM/MIKLIUM/issues/new?template=project-submission.yml)**
 
