@@ -219,6 +219,8 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
   __code__ # Access bytecode
   __bases__ # Parent classes
   __mro__ # Method Resolution Order
+  __dict__ # Access object internals
+  __class__ # Class manipulation
   ```
 
 ### Code Running and Output Limits:
