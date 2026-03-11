@@ -132,7 +132,7 @@ curl -X POST https://miklium.vercel.app/api/youtube-transcript \
 | :--- | :--- |
 | `success` | `true` |
 | `transcript` | `String`, Video transcription |
-| `info` | `Dictionary`, Video info (if `includeInfo` is `true` |
+| `info` | `Dictionary`, Video info (if `includeInfo` is `true`) |
 
 **Structure of `info`:**
 ```javascript
