@@ -1,0 +1,109 @@
+name: "CodeQL Advanced"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  schedule:
+    - cron: '34 22 * * 6'
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      code: ${{ steps.filter.outputs.code }}
+      is_schedule: ${{ github.event_name == 'schedule' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        if: github.event_name != 'schedule'
+        with:
+          filters: |
+            code:
+              - '**/*.py'
+              - '**/*.js'
+              - '**/*.ts'
+              - '**/*.jsx'
+              - '**/*.tsx'
+              - '**/*.go'
+              - '**/*.rs'
+              - '**/*.yml'
+              - '**/*.yaml'
+
+  analyze:
+    needs: changes
+    if: >
+      github.event_name == 'schedule' ||
+      needs.changes.outputs.code == 'true'
+    name: Analyze (${{ matrix.language }})
+    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - language: actions
+          build-mode: none
+        - language: javascript-typescript
+          build-mode: none
+        - language: python
+          build-mode: none
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v4
+      with:
+        languages: ${{ matrix.language }}
+        build-mode: ${{ matrix.build-mode }}
+
+    - name: Run manual build steps
+      if: matrix.build-mode == 'manual'
+      shell: bash
+      run: |
+        echo 'Manual build required'
+        exit 1
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v4
+      with:
+        category: "/language:${{matrix.language}}"
+
+  codeql-status:
+    runs-on: ubuntu-latest
+    needs: [changes, analyze]
+    if: always()
+    steps:
+      - name: CodeQL Status
+        run: |
+          if [ "${{ github.event_name }}" == "schedule" ]; then
+            if [ "${{ needs.analyze.result }}" == "success" ]; then
+              echo "Scheduled CodeQL passed"
+              exit 0
+            fi
+            echo "Scheduled CodeQL failed"
+            exit 1
+          fi
+          if [ "${{ needs.changes.outputs.code }}" == "false" ]; then
+            echo "No code changes, skipping CodeQL"
+            exit 0
+          fi
+          if [ "${{ needs.analyze.result }}" == "success" ]; then
+            echo "CodeQL passed"
+            exit 0
+          fi
+          if [ "${{ needs.analyze.result }}" == "skipped" ]; then
+            echo "CodeQL skipped"
+            exit 0
+          fi
+          echo "CodeQL failed"
+          exit 1
