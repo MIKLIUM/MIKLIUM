@@ -1,5 +1,7 @@
 # MIKLIUM API Documentation
 
+> 5 APIs are available now
+
 # Navigation
 ### Information
  - [MIKLIUM API Documentation](#miklium-api-documentation)
@@ -469,6 +471,8 @@ Unfortunately, the Python Sandbox is not designed to run very complex or potenti
   __code__ # Access bytecode
   __bases__ # Parent classes
   __mro__ # Method Resolution Order
+  __dict__ # Access object internals
+  __class__ # Class manipulation
   ```
 
 ### Code Running and Output Limits:
@@ -1074,7 +1078,7 @@ curl -X POST https://miklium.vercel.app/api/youtube-transcript \
 | :--- | :--- |
 | `success` | `true` |
 | `transcript` | `String`, Video transcription |
-| `info` | `Dictionary`, Video info (if `includeInfo` is `true` |
+| `info` | `Dictionary`, Video info (if `includeInfo` is `true`) |
 
 **Structure of `info`:**
 ```javascript
