@@ -1,0 +1,28 @@
+[playground]
+name = "Chatbot API"
+endpoint = "https://miklium.vercel.app/api/chatbot"
+path = "/api/chatbot"
+method = "POST"
+docs_anchor = "chatbot-api-documentation"
+
+[[playground.inputs]]
+id = "message"
+label = "Message"
+type = "text"
+placeholder = "Hello, how are you?"
+required = true
+
+[[playground.inputs]]
+id = "personality"
+label = "Personality"
+type = "select"
+options = ["miklium", "personalityless", "male", "female", "all"]
+default = "miklium"
+
+[[playground.inputs]]
+id = "response_stacking"
+label = "Response Stacking"
+type = "number"
+min = 0
+max = 100
+default = 4

@@ -1,0 +1,27 @@
+[playground]
+name = "Python Sandbox API"
+endpoint = "https://miklium.vercel.app/api/python-sandbox"
+path = "/api/python-sandbox"
+method = "POST"
+docs_anchor = "python-sandbox-api-documentation"
+
+[[playground.inputs]]
+id = "code"
+label = "Python Code"
+type = "textarea"
+placeholder = "print('Hello MIKLIUM!')"
+required = true
+
+[[playground.inputs]]
+id = "stdin"
+label = "Stdin (Comma separated)"
+type = "text"
+placeholder = "input1, input2"
+
+[[playground.inputs]]
+id = "timeout"
+label = "Timeout (Seconds)"
+type = "number"
+min = 0.5
+max = 40
+default = 20

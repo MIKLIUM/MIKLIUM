@@ -1,0 +1,31 @@
+[playground]
+name = "Search API"
+endpoint = "https://miklium.vercel.app/api/search"
+path = "/api/search"
+method = "POST"
+docs_anchor = "search-api-documentation"
+
+[[playground.inputs]]
+id = "search"
+label = "Queries (Comma separated, max 3)"
+type = "text"
+placeholder = "iPhone 17, Apple Vision"
+required = true
+
+[[playground.inputs]]
+id = "maxSmallSnippets"
+label = "Max Small Snippets"
+type = "number"
+default = 5
+
+[[playground.inputs]]
+id = "maxLargeSnippets"
+label = "Max Large Snippets"
+type = "number"
+default = 2
+
+[[playground.inputs]]
+id = "maxLargeSnippetSymbols"
+label = "Max Characters per Snippet"
+type = "number"
+default = 4500

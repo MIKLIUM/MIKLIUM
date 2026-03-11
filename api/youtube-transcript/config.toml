@@ -1,0 +1,25 @@
+[playground]
+name = "YouTube Transcript API"
+endpoint = "https://miklium.vercel.app/api/youtube-transcript"
+path = "/api/youtube-transcript"
+method = "POST"
+docs_anchor = "youtube-transcript-api-documentation"
+
+[[playground.inputs]]
+id = "url"
+label = "YouTube URL"
+type = "text"
+placeholder = "https://youtu.be/..."
+required = true
+
+[[playground.inputs]]
+id = "removeTimestamps"
+label = "Remove Timestamps"
+type = "checkbox"
+default = false
+
+[[playground.inputs]]
+id = "includeInfo"
+label = "Include Video Info"
+type = "checkbox"
+default = false

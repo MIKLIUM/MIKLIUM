@@ -1,0 +1,13 @@
+[playground]
+name = "Shortcut Info API"
+endpoint = "https://miklium.vercel.app/api/shortcut-info"
+path = "/api/shortcut-info"
+method = "POST"
+docs_anchor = "shortcut-info-api-documentation"
+
+[[playground.inputs]]
+id = "url"
+label = "Shortcuts Link"
+type = "text"
+placeholder = "https://www.icloud.com/shortcuts/..."
+required = true
