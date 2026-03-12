@@ -2,6 +2,7 @@ import os
 import sys
 import json
 import glob
+import time
 import requests
 
 try:
@@ -40,44 +41,111 @@ def should_test_project(project_name, is_schedule, changed_projects):
     return project_name in changed_projects
 
 
-def run_single_test(base_url, endpoint, method, case, timeout=30):
+def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
     url = base_url + endpoint
     payload = case.get("payload", {})
     expected_key = case.get("expected_key")
     expected_value = case.get("expected_value")
 
+    last_error = None
+
+    for attempt in range(1, retries + 1):
+        try:
+            if method.upper() == "POST":
+                response = requests.post(url, json=payload, timeout=timeout)
+            elif method.upper() == "GET":
+                response = requests.get(url, params=payload, timeout=timeout)
+            else:
+                response = requests.request(method, url, json=payload, timeout=timeout)
+
+            raw_text = response.text
+
+            if not raw_text.strip():
+                last_error = f"Empty response (HTTP {response.status_code})"
+                if attempt < retries:
+                    time.sleep(5)
+                    continue
+                return {
+                    "passed": False,
+                    "status_code": response.status_code,
+                    "response": None,
+                    "raw": "",
+                    "error": last_error
+                }
+
+            try:
+                data = json.loads(raw_text)
+            except json.JSONDecodeError:
+                last_error = f"Non-JSON response (HTTP {response.status_code})"
+                if attempt < retries:
+                    time.sleep(5)
+                    continue
+                return {
+                    "passed": False,
+                    "status_code": response.status_code,
+                    "response": None,
+                    "raw": raw_text[:1000],
+                    "error": last_error
+                }
+
+            if expected_key is not None and expected_value is not None:
+                actual = data.get(expected_key)
+                passed = actual == expected_value
+            elif expected_key is not None:
+                passed = expected_key in data
+            else:
+                passed = response.ok
+
+            return {
+                "passed": passed,
+                "status_code": response.status_code,
+                "response": data,
+                "raw": None,
+                "error": None
+            }
+
+        except requests.exceptions.Timeout:
+            last_error = f"Request timed out ({timeout}s)"
+            if attempt < retries:
+                time.sleep(5)
+                continue
+        except requests.exceptions.ConnectionError as e:
+            last_error = f"Connection error: {e}"
+            if attempt < retries:
+                time.sleep(5)
+                continue
+        except Exception as e:
+            last_error = str(e)
+            break
+
+    return {
+        "passed": False,
+        "status_code": None,
+        "response": None,
+        "raw": None,
+        "error": last_error
+    }
+
+
+def warmup(base_url):
+    print("Warming up deployment...")
+
     try:
-        if method.upper() == "POST":
-            response = requests.post(url, json=payload, timeout=timeout)
-        elif method.upper() == "GET":
-            response = requests.get(url, params=payload, timeout=timeout)
-        else:
-            response = requests.request(method, url, json=payload, timeout=timeout)
-
-        data = response.json()
-
-        if expected_key is not None and expected_value is not None:
-            actual = data.get(expected_key)
-            passed = actual == expected_value
-        elif expected_key is not None:
-            passed = expected_key in data
-        else:
-            passed = response.ok
-
-        return {
-            "passed": passed,
-            "status_code": response.status_code,
-            "response": data,
-            "error": None
-        }
-
+        r = requests.get(base_url, timeout=15)
+        print(f"  GET {base_url} -> HTTP {r.status_code} ({len(r.text)} bytes)")
     except Exception as e:
-        return {
-            "passed": False,
-            "status_code": None,
-            "response": None,
-            "error": str(e)
-        }
+        print(f"  Warmup GET failed: {e}")
+
+    print("  Waiting 10 seconds for cold start...")
+    time.sleep(10)
+
+    try:
+        r = requests.get(base_url, timeout=15)
+        print(f"  GET {base_url} -> HTTP {r.status_code} ({len(r.text)} bytes)")
+    except Exception as e:
+        print(f"  Second warmup failed: {e}")
+
+    print()
 
 
 def main():
@@ -103,6 +171,10 @@ def main():
     print(f"Schedule run: {is_schedule}")
     if changed_projects is not None:
         print(f"Changed projects: {', '.join(changed_projects)}")
+    print()
+
+    warmup(base_url)
+
     print("=" * 60)
     print()
 
@@ -147,9 +219,9 @@ def main():
                 failed += 1
                 failures.append(f"{project_name}: {case_name}")
                 if result["error"]:
-                    print(f"   ❌ {case_name} — Error: {result['error']}")
+                    print(f"   ❌ {case_name} — {result['error']}")
                 else:
-                    print(f"   ❌ {case_name} — Status: {result['status_code']}")
+                    print(f"   ❌ {case_name} — HTTP {result['status_code']}")
 
             if result["response"] is not None:
                 response_str = json.dumps(result["response"], indent=2)
@@ -157,6 +229,8 @@ def main():
                     response_str = response_str[:500] + "\n      ... (truncated)"
                 for line in response_str.split("\n"):
                     print(f"      {line}")
+            elif result["raw"]:
+                print(f"      Raw response: {result['raw'][:300]}")
 
             print()
 
