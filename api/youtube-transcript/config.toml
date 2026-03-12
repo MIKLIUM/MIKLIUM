@@ -23,3 +23,23 @@ id = "includeInfo"
 label = "Include Video Info"
 type = "checkbox"
 default = false
+
+[test]
+endpoint = "/api/youtube-transcript"
+method = "POST"
+
+[[test.cases]]
+name = "Valid YouTube video"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+url = "https://youtu.be/Qz8u00pX738"
+
+[[test.cases]]
+name = "Invalid video URL"
+expected_key = "success"
+expected_value = false
+
+[test.cases.payload]
+url = "https://youtu.be/invalidvideo999"

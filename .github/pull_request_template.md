@@ -39,10 +39,8 @@
 - [x] I have read [`Contributing rules`](https://github.com/MIKLIUM/MIKLIUM/blob/main/CONTRIBUTING.md)
 - [x] I didn’t change `README.md` and `APIDOCS.md` in the root directory, because I know they are will be updated automatically using a workflow.
 - [x] Existing functionality is not broken.
-- [x] If I added a new API, I added a corresponding test case to the `TESTS` list in `test.py` and `config.toml` for MIKLIUM API playground configuration.
-- [ ] My code follows the existing project structure and naming conventions.
-- [ ] I have run `python3 test.py` in the root directory.
-- [ ] All tests pass successfully.
+- [x] If I added a new API, I added a corresponding `README.md` with documentation and `config.toml` for MIKLIUM API playground configuration and Testing Workflow.
+- [ ] My code follows the existing project structure, style and naming conventions.
 - [ ] I thoroughly tested my changes locally.
 
 _Pull requests that do not meet these requirements will not be reviewed._
@@ -59,6 +57,6 @@ _Pull requests that do not meet these requirements will not be reviewed._
 
 ## Additional Notes
 
-Provide any additional context or information that reviewers should know.
+**Provide any additional context or information that reviewers should know:**
 
 > ...

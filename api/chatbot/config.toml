@@ -26,3 +26,23 @@ type = "number"
 min = 0
 max = 100
 default = 4
+
+[test]
+endpoint = "/api/chatbot"
+method = "POST"
+
+[[test.cases]]
+name = "Basic greeting"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+message = "Hello"
+
+[[test.cases]]
+name = "Question"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+message = "What is MIKLIUM?"

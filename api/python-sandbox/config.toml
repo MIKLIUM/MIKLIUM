@@ -25,3 +25,31 @@ type = "number"
 min = 0.5
 max = 40
 default = 20
+
+[test]
+endpoint = "/api/python-sandbox"
+method = "POST"
+
+[[test.cases]]
+name = "Basic print"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+code = "print('Hello, MIKLIUM!')"
+
+[[test.cases]]
+name = "Math expression"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+code = "print(2 + 2)"
+
+[[test.cases]]
+name = "Empty code returns error"
+expected_key = "success"
+expected_value = false
+
+[test.cases.payload]
+code = ""

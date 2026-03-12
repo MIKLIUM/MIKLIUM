@@ -11,3 +11,23 @@ label = "Shortcuts Link"
 type = "text"
 placeholder = "https://www.icloud.com/shortcuts/..."
 required = true
+
+[test]
+endpoint = "/api/shortcut-info"
+method = "POST"
+
+[[test.cases]]
+name = "Valid shortcut URL"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+url = "https://routinehub.co/shortcut/18431/"
+
+[[test.cases]]
+name = "Invalid URL"
+expected_key = "success"
+expected_value = false
+
+[test.cases.payload]
+url = "https://example.com/not-a-shortcut"

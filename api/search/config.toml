@@ -29,3 +29,27 @@ id = "maxLargeSnippetSymbols"
 label = "Max Characters per Snippet"
 type = "number"
 default = 4500
+
+[test]
+endpoint = "/api/search"
+method = "POST"
+
+[[test.cases]]
+name = "Basic search"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+search = ["MIKLIUM"]
+maxSmallSnippets = 2
+maxLargeSnippets = 1
+
+[[test.cases]]
+name = "Multiple terms"
+expected_key = "success"
+expected_value = true
+
+[test.cases.payload]
+search = ["Apple", "Shortcuts"]
+maxSmallSnippets = 1
+maxLargeSnippets = 1
