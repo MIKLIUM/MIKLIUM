@@ -70,7 +70,7 @@ jobs:
           COMMIT_SHA="${{ github.event.pull_request.head.sha || github.sha }}"
           echo "Waiting for deployment of commit $COMMIT_SHA..."
 
-          MAX_ATTEMPTS=60
+          MAX_ATTEMPTS=10
           SLEEP_INTERVAL=10
 
           for i in $(seq 1 $MAX_ATTEMPTS); do
@@ -137,6 +137,7 @@ jobs:
           BASE_URL: ${{ needs.wait-for-deploy.outputs.deploy_url }}
           IS_SCHEDULE: ${{ needs.changes.outputs.is_schedule }}
           CHANGED_PROJECTS: ${{ needs.changes.outputs.changed_projects }}
+          VERCEL_AUTOMATION_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS }}
         run: python .github/scripts/api-tests.py
 
   test-status:
