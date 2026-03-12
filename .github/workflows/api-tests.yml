@@ -137,7 +137,6 @@ jobs:
           BASE_URL: ${{ needs.wait-for-deploy.outputs.deploy_url }}
           IS_SCHEDULE: ${{ needs.changes.outputs.is_schedule }}
           CHANGED_PROJECTS: ${{ needs.changes.outputs.changed_projects }}
-          VERCEL_AUTOMATION_BYPASS: ${{ secrets.VERCEL_AUTOMATION_BYPASS }}
         run: python .github/scripts/api-tests.py
 
   test-status:

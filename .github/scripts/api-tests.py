@@ -13,14 +13,6 @@ except ImportError:
     import toml
 
 
-def get_headers():
-    bypass = os.environ.get("VERCEL_AUTOMATION_BYPASS", "")
-    headers = {"Content-Type": "application/json"}
-    if bypass:
-        headers["x-vercel-protection-bypass"] = bypass
-    return headers
-
-
 def load_test_configs(api_dir="api"):
     configs = {}
     for config_path in sorted(glob.glob(os.path.join(api_dir, "*/config.toml"))):
@@ -54,18 +46,17 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=3):
     payload = case.get("payload", {})
     expected_key = case.get("expected_key")
     expected_value = case.get("expected_value")
-    headers = get_headers()
 
     last_error = None
 
     for attempt in range(1, retries + 1):
         try:
             if method.upper() == "POST":
-                response = requests.post(url, json=payload, headers=headers, timeout=timeout)
+                response = requests.post(url, json=payload, timeout=timeout)
             elif method.upper() == "GET":
-                response = requests.get(url, params=payload, headers=headers, timeout=timeout)
+                response = requests.get(url, params=payload, timeout=timeout)
             else:
-                response = requests.request(method, url, json=payload, headers=headers, timeout=timeout)
+                response = requests.request(method, url, json=payload, timeout=timeout)
 
             raw_text = response.text
 
@@ -138,7 +129,6 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=3):
 
 def warmup(base_url, configs):
     print("Warming up deployment...")
-    headers = get_headers()
 
     endpoints = []
     for project_name, config in configs.items():
@@ -151,7 +141,7 @@ def warmup(base_url, configs):
     for endpoint in endpoints:
         url = base_url + endpoint
         try:
-            r = requests.post(url, json={}, headers=headers, timeout=15)
+            r = requests.post(url, json={}, timeout=15)
             print(f"  POST {endpoint} -> HTTP {r.status_code}")
         except Exception as e:
             print(f"  POST {endpoint} -> failed: {e}")
@@ -162,7 +152,7 @@ def warmup(base_url, configs):
     first_endpoint = endpoints[0]
     url = base_url + first_endpoint
     try:
-        r = requests.post(url, json={}, headers=headers, timeout=15)
+        r = requests.post(url, json={}, timeout=15)
         print(f"  POST {first_endpoint} -> HTTP {r.status_code} (after wait)")
     except Exception as e:
         print(f"  POST {first_endpoint} -> failed: {e}")
@@ -173,8 +163,6 @@ def warmup(base_url, configs):
 def main():
     base_url = os.environ.get("BASE_URL", "https://miklium.vercel.app")
     is_schedule = os.environ.get("IS_SCHEDULE", "false").lower() == "true"
-
-    bypass = os.environ.get("VERCEL_AUTOMATION_BYPASS", "")
 
     changed_projects_raw = os.environ.get("CHANGED_PROJECTS")
     changed_projects = None
@@ -193,7 +181,6 @@ def main():
     print(f"MIKLIUM API Tests")
     print(f"Target: {base_url}")
     print(f"Schedule run: {is_schedule}")
-    print(f"Protection bypass: {'enabled' if bypass else 'not set'}")
     if changed_projects is not None:
         print(f"Changed projects: {', '.join(changed_projects)}")
     print()
