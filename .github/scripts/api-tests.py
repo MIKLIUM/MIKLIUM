@@ -41,7 +41,7 @@ def should_test_project(project_name, is_schedule, changed_projects):
     return project_name in changed_projects
 
 
-def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
+def run_single_test(base_url, endpoint, method, case, timeout=30, retries=3):
     url = base_url + endpoint
     payload = case.get("payload", {})
     expected_key = case.get("expected_key")
@@ -61,7 +61,7 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
             raw_text = response.text
 
             if not raw_text.strip():
-                last_error = f"Empty response (HTTP {response.status_code})"
+                last_error = f"Empty response (HTTP {response.status_code}), attempt {attempt}/{retries}"
                 if attempt < retries:
                     time.sleep(5)
                     continue
@@ -76,7 +76,7 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
             try:
                 data = json.loads(raw_text)
             except json.JSONDecodeError:
-                last_error = f"Non-JSON response (HTTP {response.status_code})"
+                last_error = f"Non-JSON response (HTTP {response.status_code}), attempt {attempt}/{retries}"
                 if attempt < retries:
                     time.sleep(5)
                     continue
@@ -105,12 +105,12 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
             }
 
         except requests.exceptions.Timeout:
-            last_error = f"Request timed out ({timeout}s)"
+            last_error = f"Request timed out ({timeout}s), attempt {attempt}/{retries}"
             if attempt < retries:
                 time.sleep(5)
                 continue
         except requests.exceptions.ConnectionError as e:
-            last_error = f"Connection error: {e}"
+            last_error = f"Connection error: {e}, attempt {attempt}/{retries}"
             if attempt < retries:
                 time.sleep(5)
                 continue
@@ -127,23 +127,35 @@ def run_single_test(base_url, endpoint, method, case, timeout=30, retries=2):
     }
 
 
-def warmup(base_url):
+def warmup(base_url, configs):
     print("Warming up deployment...")
 
-    try:
-        r = requests.get(base_url, timeout=15)
-        print(f"  GET {base_url} -> HTTP {r.status_code} ({len(r.text)} bytes)")
-    except Exception as e:
-        print(f"  Warmup GET failed: {e}")
+    endpoints = []
+    for project_name, config in configs.items():
+        endpoints.append(config["endpoint"])
 
-    print("  Waiting 10 seconds for cold start...")
+    if not endpoints:
+        print("  No endpoints to warm up")
+        return
+
+    for endpoint in endpoints:
+        url = base_url + endpoint
+        try:
+            r = requests.post(url, json={}, timeout=15)
+            print(f"  POST {endpoint} -> HTTP {r.status_code}")
+        except Exception as e:
+            print(f"  POST {endpoint} -> failed: {e}")
+
+    print(f"  Waiting 10 seconds for cold start...")
     time.sleep(10)
 
+    first_endpoint = endpoints[0]
+    url = base_url + first_endpoint
     try:
-        r = requests.get(base_url, timeout=15)
-        print(f"  GET {base_url} -> HTTP {r.status_code} ({len(r.text)} bytes)")
+        r = requests.post(url, json={}, timeout=15)
+        print(f"  POST {first_endpoint} -> HTTP {r.status_code} (after wait)")
     except Exception as e:
-        print(f"  Second warmup failed: {e}")
+        print(f"  POST {first_endpoint} -> failed: {e}")
 
     print()
 
@@ -173,7 +185,7 @@ def main():
         print(f"Changed projects: {', '.join(changed_projects)}")
     print()
 
-    warmup(base_url)
+    warmup(base_url, configs)
 
     print("=" * 60)
     print()
