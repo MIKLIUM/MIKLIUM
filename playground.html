@@ -862,15 +862,8 @@
   </div>
 
   <script>
-    var API_PROJECTS = [
-      'chatbot',
-      'python-sandbox',
-      'search',
-      'shortcut-info',
-      'youtube-transcript'
-    ];
-
     var RAW_BASE = 'https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/main/api/';
+    var GITHUB_API_CONTENTS = 'https://api.github.com/repos/MIKLIUM/MIKLIUM/contents/api';
 
     var API_CONFIGS = {};
     var currentApi = '';
@@ -982,9 +975,25 @@
       return val;
     }
 
+    async function discoverProjects() {
+      try {
+        var response = await fetch(GITHUB_API_CONTENTS);
+        if (response.ok) {
+          var items = await response.json();
+          return items
+            .filter(function(item) { return item.type === 'dir'; })
+            .map(function(item) { return item.name; })
+            .sort();
+        }
+      } catch (e) {}
+      return [];
+    }
+    
     async function loadAllConfigs() {
+      var projects = await discoverProjects();
+    
       var results = await Promise.allSettled(
-        API_PROJECTS.map(function(name) {
+        projects.map(function(name) {
           return fetch(RAW_BASE + name + '/config.toml')
             .then(function(r) {
               if (!r.ok) throw new Error(r.status);
@@ -995,12 +1004,12 @@
             });
         })
       );
-
+    
       results.forEach(function(r) {
         if (r.status !== 'fulfilled') return;
         var parsed = parseTOML(r.value.text);
         if (!parsed.playground) return;
-
+    
         var pg = parsed.playground;
         API_CONFIGS[r.value.name] = {
           name: pg.name || r.value.name,
@@ -1020,7 +1029,7 @@
           })
         };
       });
-
+    
       populateApiDropdown();
     }
 
