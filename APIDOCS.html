@@ -26,6 +26,161 @@
       width: 100%;
       padding-top: calc(var(--nav-height) + 48px);
     }
+    
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--accent-border);
+      box-shadow: inset 0 1px 0 var(--glass-highlight);
+      color: var(--accent);
+      padding: 0.35rem 1rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+    
+    .code-block-wrapper {
+      position: relative;
+      margin: 1rem 0;
+    }
+    
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(13, 17, 23, 0.9);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 12px 12px 0 0;
+      padding: 0.5rem 0.85rem;
+    }
+    
+    .code-block-lang {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .code-block-lang i {
+      font-size: 0.8rem;
+    }
+    
+    .code-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      font-size: 0.7rem;
+      font-weight: 500;
+      font-family: inherit;
+    }
+    
+    .code-copy-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+    }
+    
+    .code-copy-btn.copied {
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.08);
+    }
+    
+    .code-block-wrapper pre {
+      margin: 0 !important;
+      border-radius: 0 0 12px 12px !important;
+      border: 1px solid var(--border) !important;
+      border-top: none !important;
+    }
+    
+    #api-content a[href^="http"],
+    #api-content a[href^="https"] {
+      word-break: break-all;
+    }
+    
+    .link-copy-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+    
+    .link-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.15rem 0.4rem;
+      border-radius: var(--radius-pill);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-tertiary);
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      font-size: 0.6rem;
+      font-family: inherit;
+      flex-shrink: 0;
+    }
+    
+    .link-copy-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-hover);
+      background: var(--surface-hover);
+    }
+    
+    .link-copy-btn.copied {
+      color: #22c55e;
+      border-color: rgba(34, 197, 94, 0.3);
+      background: rgba(34, 197, 94, 0.08);
+    }
+    
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      padding: 0.6rem 1.2rem;
+      border-radius: var(--radius-pill);
+      background: rgba(20, 20, 22, 0.9);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      font-size: 0.82rem;
+      font-weight: 500;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.4s var(--transition-smooth);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+    
+    .toast i {
+      color: #22c55e;
+    }
   </style>
 </head>
 <body>
@@ -65,6 +220,7 @@
   <main>
     <div class="page-header">
       <h2>API Documentation</h2>
+      <span class="count-badge" id="api-count"><i class="fas fa-spinner fa-spin"></i></span>
       <p>Here you will find detailed documentation for each of our APIs.</p>
     </div>
     <div id="api-content">
@@ -80,107 +236,239 @@
   <button id="scrollTop" class="scroll-top-btn" aria-label="Scroll to top">
     <i class="fas fa-arrow-up"></i>
   </button>
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastText">Copied to clipboard</span>
+  </div>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var page = document.documentElement.getAttribute("data-page");
-      document.querySelectorAll("[data-nav]").forEach(function (a) {
-        if (a.getAttribute("data-nav") === page) a.classList.add("active");
-      });
-      var toggle = document.querySelector(".nav-toggle");
-      var mobileLinks = document.querySelector(".nav-mobile-links");
-      var navEl = document.querySelector("nav");
-      if (toggle && mobileLinks && navEl) {
-        toggle.addEventListener("click", function () {
-          var open = mobileLinks.classList.toggle("open");
-          navEl.classList.toggle("nav-expanded", open);
-          toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
-        });
-      }
-      
-      var scrollBtn = document.getElementById("scrollTop");
-      
-      window.addEventListener("scroll", function() {
-        if (window.scrollY > 300) {
-          scrollBtn.classList.add("visible");
-        } else {
-          scrollBtn.classList.remove("visible");
-        }
-      });
-
-      scrollBtn.addEventListener("click", function() {
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-      });
-      
-      var slugs = {};
-
-      function escapeHtml(str) {
-        if (str == null) return "";
-        if (typeof str !== "string") str = String(str);
-        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
-      }
-
-      function slugify(text) {
-        var slug = String(text).toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
-        if (slugs[slug]) { slugs[slug]++; slug = slug + "-" + (slugs[slug] - 1); }
-        else { slugs[slug] = 1; }
-        return slug;
-      }
-
-      async function loadAPIDocs() {
-        var el = document.getElementById("api-content");
-        try {
-          var res = await fetch("https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/APIDOCS.md");
-          if (!res.ok) throw new Error("HTTP " + res.status);
-          var md = await res.text();
-          var processedMd = md.replace(/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/, "");
-
-          var renderer = {
-            blockquote: function (token) {
-              var raw = token.text;
-              if (raw.startsWith("[!IMPORTANT]"))
-                return '<div class="alert alert-important">' + escapeHtml(raw.replace("[!IMPORTANT]", "").trim()) + "</div>";
-              if (raw.startsWith("[!WARNING]"))
-                return '<div class="alert alert-warning">' + escapeHtml(raw.replace("[!WARNING]", "").trim()) + "</div>";
-              if (raw.startsWith("[!NOTE]"))
-                return '<div class="alert alert-note">' + escapeHtml(raw.replace("[!NOTE]", "").trim()) + "</div>";
-              return false;
-            },
-            code: function (token) {
-              var lang = (token.lang || "").split(/\s+/)[0] || "text";
-              var highlighted;
-              try {
-                if (lang !== "text" && hljs.getLanguage(lang))
-                  highlighted = hljs.highlight(token.text, { language: lang }).value;
-                else highlighted = hljs.highlightAuto(token.text).value;
-              } catch (e) { highlighted = escapeHtml(token.text); }
-              return '<pre><code class="hljs language-' + escapeHtml(lang) + '">' + highlighted + "</code></pre>";
-            },
-            heading: function (token) {
-              var textStr = this.parser.parseInline(token.tokens);
-              var id = slugify(token.text);
-              return "<h" + token.depth + ' id="' + id + '" class="anchor-header">' + textStr + '<a href="#' + id + '" class="anchor-link" aria-hidden="true">#</a></h' + token.depth + ">";
-            }
-          };
-
-          marked.use({ renderer: renderer });
-          el.innerHTML = marked.parse(processedMd);
-
-          if (location.hash) {
-            setTimeout(function () {
-              var target = document.querySelector(location.hash);
-              if (target) target.scrollIntoView({ behavior: "smooth" });
-            }, 150);
-          }
-        } catch (err) {
-          el.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Documentation</h3><p>' + escapeHtml(err.message) + "</p></div>";
-        }
-      }
-
-      loadAPIDocs();
+document.addEventListener("DOMContentLoaded", function () {
+  var page = document.documentElement.getAttribute("data-page");
+  document.querySelectorAll("[data-nav]").forEach(function (a) {
+    if (a.getAttribute("data-nav") === page) a.classList.add("active");
+  });
+  var toggle = document.querySelector(".nav-toggle");
+  var mobileLinks = document.querySelector(".nav-mobile-links");
+  var navEl = document.querySelector("nav");
+  if (toggle && mobileLinks && navEl) {
+    toggle.addEventListener("click", function () {
+      var open = mobileLinks.classList.toggle("open");
+      navEl.classList.toggle("nav-expanded", open);
+      toggle.innerHTML = open ? '<i class="fas fa-xmark"></i>' : '<i class="fas fa-bars"></i>';
     });
+  }
+
+  var scrollBtn = document.getElementById("scrollTop");
+  var toastEl = document.getElementById("toast");
+  var toastTextEl = document.getElementById("toastText");
+  var toastTimeout = null;
+
+  window.addEventListener("scroll", function() {
+    if (window.scrollY > 300) {
+      scrollBtn.classList.add("visible");
+    } else {
+      scrollBtn.classList.remove("visible");
+    }
+  });
+
+  scrollBtn.addEventListener("click", function() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  function showToast(message) {
+    toastTextEl.textContent = message;
+    toastEl.classList.add("visible");
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(function() { toastEl.classList.remove("visible"); }, 2000);
+  }
+
+  function scrollToWithOffset(target) {
+    var rect = target.getBoundingClientRect();
+    var offset = window.innerHeight / 3;
+    var scrollTarget = window.scrollY + rect.top - offset;
+    window.scrollTo({ top: Math.max(0, scrollTarget), behavior: "smooth" });
+  }
+
+  var slugs = {};
+
+  function escapeHtml(str) {
+    if (str == null) return "";
+    if (typeof str !== "string") str = String(str);
+    return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+  }
+
+  function slugify(text) {
+    var slug = String(text).toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+    if (slugs[slug]) { slugs[slug]++; slug = slug + "-" + (slugs[slug] - 1); }
+    else { slugs[slug] = 1; }
+    return slug;
+  }
+
+  function getLangInfo(lang) {
+    var map = {
+      javascript: { icon: "fab fa-js", name: "JavaScript" },
+      json: { icon: "fas fa-brackets-curly", name: "JSON" },
+      python: { icon: "fab fa-python", name: "Python" },
+      bash: { icon: "fas fa-terminal", name: "Bash" },
+      shell: { icon: "fas fa-terminal", name: "Shell" },
+      text: { icon: "fas fa-file-lines", name: "Text" },
+      html: { icon: "fab fa-html5", name: "HTML" },
+      css: { icon: "fab fa-css3-alt", name: "CSS" }
+    };
+    return map[lang] || { icon: "fas fa-code", name: lang.charAt(0).toUpperCase() + lang.slice(1) };
+  }
+
+  function detectJsonInJs(code, lang) {
+    if (lang !== "javascript") return lang;
+    var trimmed = code.trim();
+    var cleaned = trimmed.replace(/\/\/.*$/gm, "").trim();
+    if ((cleaned.charAt(0) === "{" && cleaned.charAt(cleaned.length - 1) === "}") ||
+        (cleaned.charAt(0) === "[" && cleaned.charAt(cleaned.length - 1) === "]")) {
+      return "json";
+    }
+    return lang;
+  }
+
+  async function loadAPIDocs() {
+    var el = document.getElementById("api-content");
+    var countBadge = document.getElementById("api-count");
+    try {
+      var res = await fetch("https://raw.githubusercontent.com/MIKLIUM/MIKLIUM/refs/heads/main/APIDOCS.md");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      var md = await res.text();
+      var processedMd = md.replace(/^# MIKLIUM API Documentation\s*(\r\n|\r|\n)/, "");
+      processedMd = processedMd.replace(/\*\*\[Back to MIKLIUM APIs navigation\]\(#navigation\)\*\*/g, "");
+
+      var apiCountMatch = processedMd.match(/>\s*\*\*(\d+)\s+APIs?\s+are\s+avai[l]?able/i);
+      if (apiCountMatch) {
+        countBadge.textContent = apiCountMatch[1] + " APIs available";
+      } else {
+        var h1Matches = processedMd.match(/^# .+ API Documentation$/gm);
+        var apiNum = h1Matches ? h1Matches.length : 0;
+        countBadge.textContent = apiNum + " APIs available";
+      }
+
+      processedMd = processedMd.replace(/>\s*\*\*\d+\s+APIs?\s+are\s+avai[l]?able\s+now:\*\*/g, "");
+
+      var renderer = {
+        blockquote: function (token) {
+          var raw = token.text;
+          if (raw.startsWith("[!IMPORTANT]"))
+            return '<div class="alert alert-important">' + escapeHtml(raw.replace("[!IMPORTANT]", "").trim()) + "</div>";
+          if (raw.startsWith("[!WARNING]"))
+            return '<div class="alert alert-warning">' + escapeHtml(raw.replace("[!WARNING]", "").trim()) + "</div>";
+          if (raw.startsWith("[!NOTE]"))
+            return '<div class="alert alert-note">' + escapeHtml(raw.replace("[!NOTE]", "").trim()) + "</div>";
+          return false;
+        },
+        code: function (token) {
+          var lang = (token.lang || "").split(/\s+/)[0] || "text";
+          var displayLang = detectJsonInJs(token.text, lang);
+          var highlighted;
+          var highlightLang = displayLang === "json" ? "json" : lang;
+          try {
+            if (highlightLang !== "text" && hljs.getLanguage(highlightLang))
+              highlighted = hljs.highlight(token.text, { language: highlightLang }).value;
+            else highlighted = hljs.highlightAuto(token.text).value;
+          } catch (e) { highlighted = escapeHtml(token.text); }
+
+          var info = getLangInfo(displayLang);
+          var escapedCode = escapeHtml(token.text);
+
+          return '<div class="code-block-wrapper">' +
+            '<div class="code-block-header">' +
+              '<span class="code-block-lang"><i class="' + info.icon + '"></i> ' + info.name + '</span>' +
+              '<button class="code-copy-btn" data-code="' + escapedCode + '"><i class="fas fa-copy"></i> Copy</button>' +
+            '</div>' +
+            '<pre><code class="hljs language-' + escapeHtml(highlightLang) + '">' + highlighted + '</code></pre>' +
+          '</div>';
+        },
+        heading: function (token) {
+          var textStr = this.parser.parseInline(token.tokens);
+          var id = slugify(token.text);
+          return "<h" + token.depth + ' id="' + id + '" class="anchor-header">' + textStr + '<a href="#' + id + '" class="anchor-link" aria-hidden="true">#</a></h' + token.depth + ">";
+        }
+      };
+
+      marked.use({ renderer: renderer });
+      el.innerHTML = marked.parse(processedMd);
+
+      el.addEventListener("click", function(e) {
+        var copyBtn = e.target.closest(".code-copy-btn");
+        if (copyBtn) {
+          var code = copyBtn.getAttribute("data-code");
+          var decoded = code.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#039;/g, "'");
+          navigator.clipboard.writeText(decoded).then(function() {
+            copyBtn.classList.add("copied");
+            copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied';
+            showToast("Code copied to clipboard");
+            setTimeout(function() {
+              copyBtn.classList.remove("copied");
+              copyBtn.innerHTML = '<i class="fas fa-copy"></i> Copy';
+            }, 1500);
+          });
+          return;
+        }
+
+        var linkCopyBtn = e.target.closest(".link-copy-btn");
+        if (linkCopyBtn) {
+          var url = linkCopyBtn.getAttribute("data-url");
+          navigator.clipboard.writeText(url).then(function() {
+            linkCopyBtn.classList.add("copied");
+            linkCopyBtn.innerHTML = '<i class="fas fa-check"></i>';
+            showToast("Link copied to clipboard");
+            setTimeout(function() {
+              linkCopyBtn.classList.remove("copied");
+              linkCopyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+            }, 1500);
+          });
+          return;
+        }
+
+        var anchorLink = e.target.closest("a.anchor-link");
+        if (anchorLink) {
+          var href = anchorLink.getAttribute("href");
+          if (href && href.charAt(0) === "#") {
+            e.preventDefault();
+            var target = document.getElementById(href.substring(1));
+            if (target) {
+              history.pushState(null, null, href);
+              scrollToWithOffset(target);
+            }
+          }
+          return;
+        }
+      });
+
+      var externalLinks = el.querySelectorAll('a[href^="http"], a[href^="https"]');
+      externalLinks.forEach(function(link) {
+        if (link.classList.contains("anchor-link")) return;
+        var href = link.getAttribute("href");
+        if (!href) return;
+        var wrapper = document.createElement("span");
+        wrapper.className = "link-copy-wrapper";
+        link.parentNode.insertBefore(wrapper, link);
+        wrapper.appendChild(link);
+        var copyBtn = document.createElement("button");
+        copyBtn.className = "link-copy-btn";
+        copyBtn.setAttribute("data-url", href);
+        copyBtn.title = "Copy link";
+        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+        wrapper.appendChild(copyBtn);
+      });
+
+      if (location.hash) {
+        setTimeout(function () {
+          var target = document.querySelector(location.hash);
+          if (target) scrollToWithOffset(target);
+        }, 150);
+      }
+    } catch (err) {
+      el.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Documentation</h3><p>' + escapeHtml(err.message) + "</p></div>";
+    }
+  }
+
+  loadAPIDocs();
+});
   </script>
 </body>
 </html>
