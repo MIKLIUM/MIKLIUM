@@ -229,9 +229,6 @@
         Loading documentation...
       </div>
     </div>
-    <div class="cta">
-      <a href="index.html" class="btn btn-ghost"><i class="fas fa-arrow-left"></i> Back to Home</a>
-    </div>
   </main>
   <button id="scrollTop" class="scroll-top-btn" aria-label="Scroll to top">
     <i class="fas fa-arrow-up"></i>
@@ -390,7 +387,41 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       marked.use({ renderer: renderer });
-      el.innerHTML = marked.parse(processedMd);
+      setTimeout(function() {
+        var allLinks = el.getElementsByTagName("a");
+        for (var i = allLinks.length - 1; i >= 0; i--) {
+          var link = allLinks[i];
+          if (link.classList.contains("anchor-link")) continue;
+          if (link.closest(".code-block-wrapper")) continue;
+          if (link.closest(".link-copy-wrapper")) continue;
+          var href = link.getAttribute("href");
+          if (!href) continue;
+          if (href.charAt(0) === "#") continue;
+          if (href.indexOf("://") === -1 && href.indexOf("//") !== 0) continue;
+      
+          var copyBtn = document.createElement("button");
+          copyBtn.className = "link-copy-btn";
+          copyBtn.setAttribute("data-url", href);
+          copyBtn.title = "Copy link";
+          copyBtn.type = "button";
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+      
+          var parent = link.parentNode;
+          if (link.closest("table")) {
+            if (link.nextSibling) {
+              parent.insertBefore(copyBtn, link.nextSibling);
+            } else {
+              parent.appendChild(copyBtn);
+            }
+          } else {
+            var wrapper = document.createElement("span");
+            wrapper.className = "link-copy-wrapper";
+            parent.insertBefore(wrapper, link);
+            wrapper.appendChild(link);
+            wrapper.appendChild(copyBtn);
+          }
+        }
+      }, 50);
 
       el.addEventListener("click", function(e) {
         var copyBtn = e.target.closest(".code-copy-btn");
@@ -437,23 +468,6 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           return;
         }
-      });
-
-      var externalLinks = el.querySelectorAll('a[href^="http"], a[href^="https"]');
-      externalLinks.forEach(function(link) {
-        if (link.classList.contains("anchor-link")) return;
-        var href = link.getAttribute("href");
-        if (!href) return;
-        var wrapper = document.createElement("span");
-        wrapper.className = "link-copy-wrapper";
-        link.parentNode.insertBefore(wrapper, link);
-        wrapper.appendChild(link);
-        var copyBtn = document.createElement("button");
-        copyBtn.className = "link-copy-btn";
-        copyBtn.setAttribute("data-url", href);
-        copyBtn.title = "Copy link";
-        copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-        wrapper.appendChild(copyBtn);
       });
 
       if (location.hash) {
