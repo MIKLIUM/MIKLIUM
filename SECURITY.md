@@ -6,6 +6,7 @@ If you discover a security issue in MIKLIUM, please report it responsibly. You c
 
 * Email: miklium@outlook.com
 * In a private message on Discord to _owners_ of MIKLIUM ([they can be found on our server](https://discord.gg/6HUJTXh45t))
+* By creating private [secutiry advisory](https://github.com/MIKLIUM-Team/MIKLIUM/security/advisories/new)
 
 Include in your report:
 

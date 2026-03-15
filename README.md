@@ -2,6 +2,8 @@
 ![](https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
 
 <div align= "center">
+  <p><strong>Great, free, high-quality APIs for everyone</strong></p>
+
   <a href="https://github.com/MIKLIUM-Team/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM-Team/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
   <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
   <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
