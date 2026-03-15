@@ -181,6 +181,40 @@
     .toast i {
       color: #22c55e;
     }
+    
+    .code-block-wrapper pre code {
+      font-size: 0.8rem;
+      line-height: 1.5;
+    }
+    
+    .link-copy-wrapper {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      max-width: 100%;
+    }
+    
+    .link-copy-wrapper a {
+      word-break: break-all;
+      min-width: 0;
+    }
+    
+    #api-content table .link-copy-btn {
+      display: inline-flex;
+      vertical-align: middle;
+      margin-left: 0.25rem;
+    }
+    
+    @media (max-width: 600px) {
+      .code-block-wrapper pre code {
+        font-size: 1.1rem;
+      }
+      
+      .link-copy-btn {
+        padding: 0.2rem 0.45rem;
+        font-size: 0.65rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -237,7 +271,7 @@
     <i class="fas fa-check-circle"></i>
     <span id="toastText">Copied to clipboard</span>
   </div>
-  <script>
+<script>
 document.addEventListener("DOMContentLoaded", function () {
   var page = document.documentElement.getAttribute("data-page");
   document.querySelectorAll("[data-nav]").forEach(function (a) {
@@ -279,9 +313,10 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function scrollToWithOffset(target) {
+    var navHeight = document.querySelector("nav").offsetHeight;
     var rect = target.getBoundingClientRect();
-    var offset = window.innerHeight / 3;
-    var scrollTarget = window.scrollY + rect.top - offset;
+    var viewportThird = (window.innerHeight - navHeight) / 3;
+    var scrollTarget = window.scrollY + rect.top - navHeight - viewportThird;
     window.scrollTo({ top: Math.max(0, scrollTarget), behavior: "smooth" });
   }
 
@@ -303,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function getLangInfo(lang) {
     var map = {
       javascript: { icon: "fab fa-js", name: "JavaScript" },
-      json: { icon: "fas fa-brackets-curly", name: "JSON" },
+      json: { icon: "fas fa-code", name: "JSON" },
       python: { icon: "fab fa-python", name: "Python" },
       bash: { icon: "fas fa-terminal", name: "Bash" },
       shell: { icon: "fas fa-terminal", name: "Shell" },
@@ -387,41 +422,7 @@ document.addEventListener("DOMContentLoaded", function () {
       };
 
       marked.use({ renderer: renderer });
-      setTimeout(function() {
-        var allLinks = el.getElementsByTagName("a");
-        for (var i = allLinks.length - 1; i >= 0; i--) {
-          var link = allLinks[i];
-          if (link.classList.contains("anchor-link")) continue;
-          if (link.closest(".code-block-wrapper")) continue;
-          if (link.closest(".link-copy-wrapper")) continue;
-          var href = link.getAttribute("href");
-          if (!href) continue;
-          if (href.charAt(0) === "#") continue;
-          if (href.indexOf("://") === -1 && href.indexOf("//") !== 0) continue;
-      
-          var copyBtn = document.createElement("button");
-          copyBtn.className = "link-copy-btn";
-          copyBtn.setAttribute("data-url", href);
-          copyBtn.title = "Copy link";
-          copyBtn.type = "button";
-          copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-      
-          var parent = link.parentNode;
-          if (link.closest("table")) {
-            if (link.nextSibling) {
-              parent.insertBefore(copyBtn, link.nextSibling);
-            } else {
-              parent.appendChild(copyBtn);
-            }
-          } else {
-            var wrapper = document.createElement("span");
-            wrapper.className = "link-copy-wrapper";
-            parent.insertBefore(wrapper, link);
-            wrapper.appendChild(link);
-            wrapper.appendChild(copyBtn);
-          }
-        }
-      }, 50);
+      el.innerHTML = marked.parse(processedMd);
 
       el.addEventListener("click", function(e) {
         var copyBtn = e.target.closest(".code-copy-btn");
@@ -470,11 +471,47 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       });
 
+      setTimeout(function() {
+        var allLinks = el.getElementsByTagName("a");
+        for (var i = allLinks.length - 1; i >= 0; i--) {
+          var link = allLinks[i];
+          if (link.classList.contains("anchor-link")) continue;
+          if (link.closest(".code-block-wrapper")) continue;
+          if (link.closest(".link-copy-wrapper")) continue;
+          var href = link.getAttribute("href");
+          if (!href) continue;
+          if (href.charAt(0) === "#") continue;
+          if (href.indexOf("://") === -1 && href.indexOf("//") !== 0) continue;
+
+          var copyBtn = document.createElement("button");
+          copyBtn.className = "link-copy-btn";
+          copyBtn.setAttribute("data-url", href);
+          copyBtn.title = "Copy link";
+          copyBtn.type = "button";
+          copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+
+          var parent = link.parentNode;
+          if (link.closest("table")) {
+            if (link.nextSibling) {
+              parent.insertBefore(copyBtn, link.nextSibling);
+            } else {
+              parent.appendChild(copyBtn);
+            }
+          } else {
+            var wrapper = document.createElement("span");
+            wrapper.className = "link-copy-wrapper";
+            parent.insertBefore(wrapper, link);
+            wrapper.appendChild(link);
+            wrapper.appendChild(copyBtn);
+          }
+        }
+      }, 100);
+
       if (location.hash) {
         setTimeout(function () {
           var target = document.querySelector(location.hash);
           if (target) scrollToWithOffset(target);
-        }, 150);
+        }, 200);
       }
     } catch (err) {
       el.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i><h3>Error Loading Documentation</h3><p>' + escapeHtml(err.message) + "</p></div>";
@@ -483,6 +520,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   loadAPIDocs();
 });
-  </script>
+</script>
 </body>
 </html>
