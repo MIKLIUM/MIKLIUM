@@ -205,6 +205,10 @@
       margin-left: 0.25rem;
     }
     
+    .link-copy-wrapper code {
+      word-break: break-all;
+    }
+    
     @media (max-width: 600px) {
       .code-block-wrapper pre code {
         font-size: 1.1rem;
@@ -213,6 +217,14 @@
       .link-copy-btn {
         padding: 0.2rem 0.45rem;
         font-size: 0.65rem;
+      }
+      
+      .link-copy-wrapper {
+        display: inline;
+      }
+    
+      .link-copy-wrapper code {
+        font-size: 0.78rem;
       }
     }
   </style>
@@ -482,14 +494,14 @@ document.addEventListener("DOMContentLoaded", function () {
           if (!href) continue;
           if (href.charAt(0) === "#") continue;
           if (href.indexOf("://") === -1 && href.indexOf("//") !== 0) continue;
-
+      
           var copyBtn = document.createElement("button");
           copyBtn.className = "link-copy-btn";
           copyBtn.setAttribute("data-url", href);
           copyBtn.title = "Copy link";
           copyBtn.type = "button";
           copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-
+      
           var parent = link.parentNode;
           if (link.closest("table")) {
             if (link.nextSibling) {
@@ -504,6 +516,28 @@ document.addEventListener("DOMContentLoaded", function () {
             wrapper.appendChild(link);
             wrapper.appendChild(copyBtn);
           }
+        }
+      
+        var allCodes = el.querySelectorAll("code");
+        for (var j = 0; j < allCodes.length; j++) {
+          var codeEl = allCodes[j];
+          if (codeEl.closest(".code-block-wrapper")) continue;
+          if (codeEl.closest(".link-copy-wrapper")) continue;
+          if (codeEl.querySelector(".link-copy-btn")) continue;
+          var codeText = codeEl.textContent.trim();
+          if (!/^https?:\/\/\S+$/.test(codeText)) continue;
+      
+          var wrapper = document.createElement("span");
+          wrapper.className = "link-copy-wrapper";
+          codeEl.parentNode.insertBefore(wrapper, codeEl);
+          wrapper.appendChild(codeEl);
+          var cb = document.createElement("button");
+          cb.className = "link-copy-btn";
+          cb.setAttribute("data-url", codeText);
+          cb.title = "Copy link";
+          cb.type = "button";
+          cb.innerHTML = '<i class="fas fa-copy"></i>';
+          wrapper.appendChild(cb);
         }
       }, 100);
 
