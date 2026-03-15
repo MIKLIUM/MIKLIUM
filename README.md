@@ -1,15 +1,14 @@
-![](https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Dark.png#gh-light-mode-only)
-![](https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only)
-
 <div align= "center">
+  <img src="https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Dark.png#gh-light-mode-only">
+  <img src="https://raw.githubusercontent.com/MIKLIUM-Team/MIKLIUM/refs/heads/main/webpage/assets/Logo_Header_Light.png#gh-dark-mode-only">
   <p><strong>Great, free, high-quality APIs for everyone</strong></p>
   
-  <a href="https://github.com/MIKLIUM-Team/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM-Team/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
-  <a href="https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/LICENSE.md"><img alt="GitHub License" src="https://img.shields.io/github/license/MIKLIUM-Team/MIKLIUM?style=for-the-badge"></a>
-  <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
+  <a href="https://github.com/MIKLIUM-Team/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM-Team/MIKLIUM?style=for-the-badge&color=FFD74D"></a> <a href="https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/LICENSE.md"><img alt="GitHub License" src="https://img.shields.io/github/license/MIKLIUM-Team/MIKLIUM?style=for-the-badge"></a> <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
 
-[Website](https://miklium-team.github.io/MIKLIUM/) • [Documentation](https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/APIDOCS.md) • [Announcements](https://github.com/MIKLIUM-Team/MIKLIUM/discussions/categories/announcements) • [Discord](https://discord.gg/6HUJTXh45t)
+[Website](https://miklium-team.github.io/MIKLIUM/) • [Docs](https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/APIDOCS.md) • [Announcements](https://github.com/MIKLIUM-Team/MIKLIUM/discussions/categories/announcements) • [Discord](https://discord.gg/6HUJTXh45t)
 </div>
+
+---
 
 ## Free APIs & Software for Everyone
 
@@ -49,6 +48,10 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a> <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
 
 <a href="https://github.com/MIKLIUM-Team/MIKLIUM/actions/workflows/api-tests.yml?query=branch%3Amain"><img alt="API Tests status" src="https://img.shields.io/github/actions/workflow/status/MIKLIUM-Team/MIKLIUM/api-tests.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&label=API%20TESTS"></a>
+
+## Contribute
+
+Information describing how to contribute can be found in the [`Contributing to MIKLIUM`](https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/CONTRIBUTING.md).
 
 ## Stats
 
