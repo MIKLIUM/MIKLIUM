@@ -3,11 +3,12 @@
 
 <div align= "center">
   <p><strong>Great, free, high-quality APIs for everyone</strong></p>
-
+  
   <a href="https://github.com/MIKLIUM-Team/MIKLIUM/stargazers"><img alt="GitHub repository stars" src="https://img.shields.io/github/stars/MIKLIUM-Team/MIKLIUM?style=for-the-badge&color=FFD74D"></a>
+  <a href="https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/LICENSE.md"><img alt="GitHub License" src="https://img.shields.io/github/license/MIKLIUM-Team/MIKLIUM?style=for-the-badge"></a>
   <a href="https://discord.gg/6HUJTXh45t"><img alt="Our discord" src="https://img.shields.io/discord/1409942072127000701?style=for-the-badge&label=discord&color=586AEA"></a>
-  <a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a>
-  <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
+
+[Website](https://miklium-team.github.io/MIKLIUM/) • [Documentation](https://github.com/MIKLIUM-Team/MIKLIUM/blob/main/APIDOCS.md) • [Announcements](https://github.com/MIKLIUM-Team/MIKLIUM/discussions/categories/announcements) • [Discord](https://discord.gg/6HUJTXh45t)
 </div>
 
 ## Free APIs & Software for Everyone
@@ -29,7 +30,7 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
   - [YouTube Transcription API Documentation](https://github.com/MIKLIUM/MIKLIUM/tree/main/api/youtube-transcript/README.md)
 <!-- API_LIST_END -->
 
-[API Documentation](APIDOCS.md) is available for developers who want to integrate with our services.
+**[Full API Documentation](APIDOCS.md)** is available for developers who want to integrate with our services.
 
 ## Featured Projects Powered with MIKLIUM 
 > **<!-- README_FEATURED_COUNT_START -->3<!-- README_FEATURED_COUNT_END --> community projects powered with <a href="https://github.com/MIKLIUM/MIKLIUM">MIKLIUM</a> are featured:**
@@ -44,6 +45,11 @@ At MIKLIUM, we empower developers and users with high-quality, free APIs and sof
 [See all projects →](FEATURED_PROJECTS.md)
 <!-- FEATURED_PROJECTS_END -->
 
+## Status of Deployments and Tests
+<a href="https://miklium.vercel.app/api/"><img alt="Vercel server deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/Production?style=for-the-badge&logo=vercel&label=APIs"></a> <a href="https://miklium-team.github.io/MIKLIUM/"><img alt="GitHub website deployment" src="https://img.shields.io/github/deployments/MIKLIUM-Team/MIKLIUM/github-pages?style=for-the-badge&logo=github&label=Website"></a>
+
+<a href="https://github.com/MIKLIUM-Team/MIKLIUM/actions/workflows/api-tests.yml?query=branch%3Amain"><img alt="API Tests status" src="https://img.shields.io/github/actions/workflow/status/MIKLIUM-Team/MIKLIUM/api-tests.yml?branch=main&style=for-the-badge&logo=github-actions&logoColor=white&label=API%20TESTS"></a>
+
 ## Stats
 
-![](https://repobeats.axiom.co/api/embed/c42a15b5310e14cdf02106d3e2bea022b0c39cc3.svg "Repobeats analytics image")
+![](https://repobeats.axiom.co/api/embed/c42a15b5310e14cdf02106d3e2bea022b0c39cc3.svg)
